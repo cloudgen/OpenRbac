@@ -21,7 +21,8 @@ class Desk:
     """Database, session file, and the verbs both surfaces call.
 
     The web listener is created only when serve is chosen. A missing database
-    password stays quiet until a verb asks for a connection.
+    password stays quiet until a verb asks for a connection. A domain verb,
+    serve, and the text menu call ensure_database when the tables are missing.
     """
 
     def __init__(self, logger=None, environ=None):
@@ -125,14 +126,22 @@ class Desk:
         """General Purpose: Describe the signed-in account. No password and no token."""
         return self.access.describe(self.require_actor())
 
+    def ensure_database(self) -> str:
+        """General Purpose: Create missing tables and seed when sys_user is empty.
+
+        A later call returns present and does not add another administrator.
+        """
+        return self.schema.ensure()
+
     def db_init(self) -> str:
         """General Purpose: Create tables and seed only when sys_user is empty."""
-        state = self.schema.ensure()
+        state = self.ensure_database()
         name = self.settings.database()["database"]
         return "Database {0}: {1}.".format(name, state)
 
     def serve_background(self) -> str:
         """General Purpose: Start the site on a background thread and report the URL."""
+        self.ensure_database()
         url = self.web().start_background()
         return "Web interface: {0}\nIt stays up while this process is open.".format(url)
 
@@ -140,6 +149,7 @@ class Desk:
         """General Purpose: Run one domain verb and return the text to show."""
         if verb == "db-init":
             return self.db_init()
+        self.ensure_database()
         if verb == "login":
             return self.login(
                 self._need(options, "user_name", "py-rbac login --user-name NAME"),

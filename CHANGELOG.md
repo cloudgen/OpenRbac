@@ -3,6 +3,14 @@
 All notable changes to **PyRbac** are documented here.
 Version SSOT: `pyproject.toml` + `src/PyRbac/__init__.__version__`.
 
+## [1.0.1] - 2026-10-11
+
+### Changed
+
+- A terminal with no arguments asks for an account name and a password before the menu. Esc leaves without the menu.
+- The front board no longer has a session row. Numbers 2–9 stay. `login`, `logout`, and `whoami` remain typed verbs.
+- The menu, `serve`, and every domain verb create missing tables and seed an empty `sys_user` before they continue. A later init still reports `present`.
+
 ## [1.0.0] - 2026-10-11
 
 ### Added

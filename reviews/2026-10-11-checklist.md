@@ -11,8 +11,8 @@ Use this list before a push to `cloudgen/PyRbac`.
 
 ## Behavior
 
-- [x] Empty argv on a terminal opens the menu and does not run pip
-- [x] Front rows are session, access, system-log, language, setup, audit, serve, self-management, Exit
+- [x] Empty argv on a terminal asks for a sign-in, then opens the menu, and does not run pip
+- [x] Front rows are access, system-log, language, setup, audit, serve, self-management, Exit. There is no session row
 - [x] Language stays on row 4, codes 41–53, leaf `~/.local/PyRbac/language`
 - [x] System-log stays on 3 and 31–33. Self-management stays on 8 and 82–87
 - [x] Data scope 1–4. Unknown scope shows no users
@@ -23,6 +23,7 @@ Use this list before a push to `cloudgen/PyRbac`.
 
 - [x] Product schema is `pyrbac`. Tests use `pyrbac_test`
 - [x] `db-init` seeds only when `sys_user` is empty
+- [x] A menu, `serve`, or domain verb initializes a missing database before it continues
 - [x] Tests do not write `ruoyi_db` or `ry`
 
 ## Document

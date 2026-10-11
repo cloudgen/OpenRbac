@@ -48,7 +48,7 @@ Each module defines one class. An error type may sit beside the class that raise
 
 1. **Logger.** A class that accepts `logger` **MUST** log `instantiated` from `__init__` when the logger is present.
 2. **Nested handler.** `WebApp.make_server` **MAY** define the standard-library request handler as a nested class because `ThreadingHTTPServer` constructs it. That handler **MUST** call `WebApp`. No other module **MAY** add a second product class.
-3. **Version.** `__version__` in `__init__.py` is the only version string. It is `1.0.0`.
+3. **Version.** `__version__` in `__init__.py` is the only version string. It is `1.0.1`.
 4. **No hello.** There is no `Tui.hello_text`.
 
 ## Terminologies

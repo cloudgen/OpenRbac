@@ -15,8 +15,8 @@ class MenuModel:
 
     boards, when set, replaces the rows for this session. Omit boards and
     the painter supplies the live rows, so a language save repaints them.
-    Front rows are session, access, system-log, language, setup, audit,
-    serve, self-management, and Exit.
+    Front rows are access, system-log, language, setup, audit,
+    serve, self-management, and Exit. There is no session row.
     System-log is under 3. Language is under 4.
     """
 
@@ -264,7 +264,7 @@ class MenuModel:
             self.buffer = ""
             self.cursor = 0
             return None
-        if kind in ("session", "access", "setup", "audit"):
+        if kind in ("access", "setup", "audit"):
             self.layer = kind
             self.index = 0
             self.focus = "list"

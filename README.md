@@ -1,19 +1,20 @@
 # PyRbac
 
-![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-blue)
+![Version 1.0.1](https://img.shields.io/badge/version-1.0.1-blue)
 ![License MIT](https://img.shields.io/badge/license-MIT-green)
 [![CIAO](https://img.shields.io/badge/CIAO-cloudgen-black)](https://github.com/cloudgen/ciao)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
 
 PyRbac is online role-based access control and centralized configuration. The text menu, the typed commands, and the local web pages call the same service.
 
-It is specialized from the HelloTui menu and studied from [RuoYi-FastAPI](https://github.com/insistence/RuoYi-FastAPI). The web pages are plain HTML. There is no JavaScript bundle.
+It is specialized from the HelloTui menu. The web pages are plain HTML. There is no JavaScript bundle.
 
 **Domain:** Online RBAC and centralized configuration.
 
 ## Features
 
-- Front board rows: session, access, system-log, language, setup, audit, serve, self-management, and Exit.
+- A terminal with no arguments asks for an account and a password, then opens the menu.
+- Front board rows: access, system-log, language, setup, audit, serve, self-management, and Exit. There is no session row.
 - The same user, role, menu, department, post, parameter, dictionary, notice, and audit actions on the menu, on the command line, and on the web page.
 - Data scope 1 all, 2 custom departments, 3 this department, 4 this department and children. Any other scope shows no rows.
 - MariaDB or MySQL. The product database is `pyrbac`.
@@ -25,7 +26,7 @@ It is specialized from the HelloTui menu and studied from [RuoYi-FastAPI](https:
 - One permission check for every surface. A button that your role cannot use is not shown.
 - The menu keeps the path line, the local clock, and the rounded input box.
 - Menu language is row 4, codes 41–53. `PYRBAC_LANG` overrides it and does not write the language file.
-- `py-rbac` with no arguments on a terminal opens the menu and does not run pip.
+- `py-rbac` with no arguments on a terminal signs in, then opens the menu, and does not run pip. A missing database is created before that question.
 
 ## Quick Installation
 
@@ -41,20 +42,22 @@ From a checkout:
 python -m pip install -e .
 ```
 
-Create the tables once. The database password comes from the environment or from `~/.local/PyRbac/database` when that file is mode `0600`.
+The database password comes from the environment or from `~/.local/PyRbac/database` when that file is mode `0600`. A menu, `serve`, or any domain verb creates the tables when they are missing. `py-rbac db-init` does the same and prints the result.
 
 ```bash
 export PYRBAC_DB_PASSWORD='the-password-you-chose'
 py-rbac db-init
 ```
 
-The first run prints `Database pyrbac: seeded.` A later run prints `present` and does not add another administrator.
+The first init prints `Database pyrbac: seeded.` A later init prints `present` and does not add another administrator.
 
 ## Usage
 
-On a terminal, `py-rbac` opens the menu. `py-rbac help` lists the verbs. `py-rbac serve` prints a URL and listens until you interrupt it. Menu row 7 starts that site in the background for as long as the process stays open.
+On a terminal, `py-rbac` asks for the account name and then the password. After a match it opens the menu. Esc leaves without the menu. `py-rbac help` lists the verbs. `py-rbac serve` prints a URL and listens until you interrupt it. Menu row 7 starts that site in the background for as long as the process stays open.
 
-`--password` is visible in the process list. The menu asks for the password in a masked field.
+`login`, `logout`, and `whoami` are typed verbs. They are not rows on the menu.
+
+`--password` is visible in the process list. The sign-in question and the menu mask the password field.
 
 ### Seeded accounts
 
@@ -69,12 +72,12 @@ Change these after the first sign-in.
 
 A suggested password for a new account is the parameter `sys.user.initPassword`, seeded as `123456`.
 
-### How this differs from RuoYi-FastAPI
+### Passwords and sessions
 
-- Passwords are stored as PBKDF2-HMAC-SHA256 (`pbkdf2_sha256$…`). Upstream stores bcrypt.
-- Signed-in sessions are rows in `sys_session`. Upstream keeps them in Redis.
-- Data scope uses 1, 2, 3, and 4, which matches the studied role-column comment. Scope 5 is not granted.
-- Captcha, export, import, scheduled jobs, code generation, and the Vue applications are not in this version.
+- Passwords are stored as PBKDF2-HMAC-SHA256 (`pbkdf2_sha256$…`), rather than bcrypt.
+- Signed-in sessions are rows in `sys_session`, rather than Redis.
+- Data scope uses 1, 2, 3, and 4. Scope 5 is not granted.
+- Captcha, export, import, scheduled jobs, code generation, and a Vue application are not in this version.
 
 ### Environment
 
@@ -96,15 +99,11 @@ These are captures of the running text menu.
 
 ![Front board](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/main-menu-en.png)
 
-*Front board. Row 1 is session. Row 4 is language. Row 9 is Exit.*
-
-![Session](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/session-menu.png)
-
-*Session: login, whoami, and logout.*
+*Front board after sign-in. Row 2 is access. Row 4 is language. Row 9 is Exit. This capture still shows the earlier session row.*
 
 ![Login prompt](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/login-prompt.png)
 
-*The login question. The password field is masked.*
+*The sign-in question that opens before the menu. The password field is masked.*
 
 ![Access](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/access-menu.png)
 
@@ -145,6 +144,7 @@ These are captures of the running text menu.
 ## Examples
 
 ```bash
+py-rbac
 py-rbac db-init
 py-rbac login --user-name admin
 py-rbac user-list
@@ -153,7 +153,7 @@ py-rbac logout
 py-rbac serve
 ```
 
-On a terminal, the same `user-list` is row 2, then row 21.
+On a terminal, after sign-in, the same `user-list` is row 2, then row 21.
 
 ## Platform Compatibility
 
@@ -163,7 +163,6 @@ Linux is the primary host. The menu needs a terminal. The database client is PyM
 
 - https://github.com/cloudgen/PyRbac
 - https://pypi.org/project/PyRbac/
-- https://github.com/insistence/RuoYi-FastAPI
 - https://github.com/Wilgat/ChronicleLogger
 - https://github.com/cloudgen/ciao
 - https://github.com/cloudgen/ciao-lite

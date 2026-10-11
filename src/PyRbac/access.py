@@ -25,9 +25,9 @@ class AccessError(Exception):
 class Access:
     """Users, roles, menus, departments, and posts.
 
-    Data scope follows the RuoYi-FastAPI column comment: 1 all, 2 custom
-    departments, 3 this department, 4 this department and children. Any other
-    scope contributes no rows. role_key admin bypasses permission and scope.
+    Data scope is 1 all, 2 custom departments, 3 this department, and 4 this
+    department and children. Any other scope contributes no rows. role_key
+    admin bypasses permission and scope.
     """
 
     USER_NAME = re.compile(r"^[A-Za-z][A-Za-z0-9_]{2,29}$")

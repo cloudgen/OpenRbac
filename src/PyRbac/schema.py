@@ -12,9 +12,8 @@ from .password_hash import PasswordHash
 class Schema:
     """Create the RBAC tables and seed them once when sys_user is empty.
 
-    The column names follow RuoYi-FastAPI. This product does not import that
-    project's SQL file. The password column is wider because the hash is PBKDF2.
-    Online sessions live in sys_session. Upstream keeps those sessions in Redis.
+    This product writes its own SQL. The password column is VARCHAR(255) because
+    the hash is PBKDF2. Online sessions live in sys_session.
     """
 
     INITIAL_ADMIN_PASSWORD = "admin123"

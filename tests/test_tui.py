@@ -195,7 +195,6 @@ class TestWideColumns(unittest.TestCase):
 
             expected = {
                 "zh-Hans": [
-                    "1. session : sign in, who you are, and sign out",
                     "2. access  : users, roles, menus, departments, and posts",
                     "3. 系统日志: 查看、清空，以及日志文件夹",
                     "4. 语言    : 此菜单的显示语言",
@@ -206,7 +205,6 @@ class TestWideColumns(unittest.TestCase):
                     "9. 离开    : 离开",
                 ],
                 "zh-Hant": [
-                    "1. session : sign in, who you are, and sign out",
                     "2. access  : users, roles, menus, departments, and posts",
                     "3. 系統日誌: 查看、清空，以及日誌資料夾",
                     "4. 語言    : 這個選單的顯示語言",
@@ -217,7 +215,6 @@ class TestWideColumns(unittest.TestCase):
                     "9. 離開    : 離開",
                 ],
                 "ko": [
-                    "1. session    : sign in, who you are, and sign out",
                     "2. access     : users, roles, menus, departments, and posts",
                     "3. 시스템 로그: 보기, 비우기, 로그 폴더",
                     "4. 언어       : 이 메뉴의 표시 언어",
@@ -228,7 +225,6 @@ class TestWideColumns(unittest.TestCase):
                     "9. 종료       : 종료",
                 ],
                 "ja": [
-                    "1. session     : sign in, who you are, and sign out",
                     "2. access      : users, roles, menus, departments, and posts",
                     "3. システムログ: 表示、消去、ログフォルダ",
                     "4. 言語        : このメニューの表示言語",

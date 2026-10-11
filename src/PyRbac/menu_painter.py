@@ -95,7 +95,6 @@ class MenuPainter:
     MIN_HEIGHT = MIN_MENU_ABOVE + CHROME_ROWS
     MIN_PLACEABLE = 2 + len(" " + INPUT_MARK) + 1
     MENU_ROWS = (
-        (1, "session", "sign in, who you are, and sign out", "session"),
         (2, "access", "users, roles, menus, departments, and posts", "access"),
         (3, "system-log", "view, clear, and the log folder", "system-log"),
         (4, "language", "display language for this menu", "language"),
@@ -104,12 +103,6 @@ class MenuPainter:
         (7, "serve", "start the web interface on this computer", "serve"),
         (8, "self-management", "version, about, and pip lifecycle", "self-management"),
         (9, "Exit", "leave", "exit"),
-    )
-    SESSION_ROWS = (
-        (11, "login", "sign in with a user name and a password", "login"),
-        (12, "whoami", "show the signed-in account", "whoami"),
-        (13, "logout", "sign out this terminal", "logout"),
-        (0, "Back", "return to the main menu", "back"),
     )
     ACCESS_ROWS = (
         (21, "user-list", "accounts you are allowed to see", "user-list"),
@@ -172,7 +165,6 @@ class MenuPainter:
         "view-log": "view-log",
         "clear-log": "clear-log",
         "log-folder": "log-folder",
-        "session": "session",
         "access": "access",
         "setup": "setup",
         "audit": "audit",
@@ -211,8 +203,6 @@ class MenuPainter:
             return self.SELF_ROWS
         if layer == "log":
             return self.LOG_ROWS
-        if layer == "session":
-            return self.SESSION_ROWS
         if layer == "access":
             return self.ACCESS_ROWS
         if layer == "setup":
@@ -294,8 +284,6 @@ class MenuPainter:
             return language.text("title_log")
         if layer == "lang":
             return language.text("title_language")
-        if layer == "session":
-            return language.text("title_session")
         if layer == "access":
             return language.text("title_access")
         if layer == "setup":

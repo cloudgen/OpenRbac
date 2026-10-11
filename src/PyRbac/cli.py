@@ -208,10 +208,11 @@ class Cli:
             formatter_class=argparse.RawDescriptionHelpFormatter,
             description=(
                 "{0} — online RBAC and centralized configuration.\n"
-                "With no arguments on a terminal, opens the text menu.\n"
+                "With no arguments on a terminal, asks for an account and a password,\n"
+                "then opens the text menu. It creates missing tables first.\n"
                 "With no arguments and no terminal, prints this help and stops.\n"
                 "Product verbs: {1}.\n"
-                "The text menu repeats every web page. Row 7 serve starts the site.\n"
+                "The text menu has no session row. Row 7 serve starts the site.\n"
                 "This program does not join media or list files in this folder.\n"
                 "version-check runs: python -m pip index versions {0}\n"
                 "self-update runs: python -m pip install --upgrade {0}\n"
@@ -353,8 +354,9 @@ class Cli:
 
     def _verb_serve(self):
         """Listen until interrupted. The menu uses a background listener instead."""
-        web = self.desk.web()
         try:
+            self.desk.ensure_database()
+            web = self.desk.web()
             web.make_server()
         except (SettingsError, StoreError, OSError) as exc:
             nxt = getattr(exc, "nxt", "keep PYRBAC_BIND=127.0.0.1")

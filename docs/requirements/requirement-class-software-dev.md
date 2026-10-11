@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-class-software-dev.md
-**Status**: Active (Version 1.1.2 – PyRbac software-development class law + residual stack)
+**Status**: Active (Version 1.1.3 – PyRbac software-development class law + residual stack)
 **Area**: class
 **Key**: `requirement-class-software-dev`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -124,6 +124,7 @@ This file is class law plus the residual SSOT. It is not a second copy of domain
 | Project class membership | **this file** | Fixed |
 | Primary language + toolchain policy | **this file** | Python / CPython |
 | Package/build tool + lockfile | **this file** + `requirement-python-packaging` | packaging owns the PEP 621 tables and the ChronicleLogger floor |
+| Maintainer `./build.sh` commands | `requirement-python-build-script` | The CLI does not require this script to run |
 | Project layout | `requirement-python-project-structure` | Running tree versus the class map |
 | Class homes | `requirement-python-oop` | One class per file. Do not duplicate the map |
 | CLI entry / typed verbs | `requirement-python-cli-interface` | Empty argv and the verb table |
@@ -192,6 +193,7 @@ This file is class law plus the residual SSOT. It is not a second copy of domain
 | Key | Relationship |
 |-----|----------------|
 | `requirement-python-packaging` | Manifest, entry point, logger floor |
+| `requirement-python-build-script` | Maintainer `./build.sh` commands |
 | `requirement-python-project-structure` | Layout |
 | `requirement-python-oop` | Class map |
 | `requirement-python-cli-interface` | Typed verbs and empty argv |
@@ -225,9 +227,10 @@ On Termux, Git Bash, Windows cmd, or the same class, PyRbac runs as the normal u
 | 2026-10-04 | Active 1.1.0 | Residual pointers for the text menu, the logger, the class map, and pip lifecycle. Shell Type O stays absent |
 | 2026-10-04 | Active 1.1.1 | Menu language points at `requirement-python-cli-language`. No new actor file |
 | 2026-10-04 | Active 1.1.2 | Residual row for the about page. Product version **1.0.5** |
+| 2026-10-11 | Active 1.1.3 | Maintainer `./build.sh` points at `requirement-python-build-script` |
 
 ---
 
-**Last Updated**: 2026-10-04
+**Last Updated**: 2026-10-11
 **Owner**: project maintainers
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

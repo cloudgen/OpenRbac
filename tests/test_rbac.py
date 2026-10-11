@@ -143,6 +143,48 @@ class TestRbacDatabase(unittest.TestCase):
     def setUp(self):
         self.desk.sessions.clear()
 
+    def test_run_initializes_when_tables_are_missing(self):
+        def run(argv):
+            app = Cli()
+            from io import StringIO
+            from contextlib import redirect_stderr, redirect_stdout
+            out = StringIO()
+            err = StringIO()
+            with redirect_stdout(out), redirect_stderr(err):
+                code = app.run(argv)
+            return code, out.getvalue(), err.getvalue()
+
+        self.desk.store.execute("DROP TABLE IF EXISTS {0}".format(", ".join(TABLES)))
+        try:
+            code, out, err = run(["user-list"])
+            self.assertEqual(code, 1, err)
+            self.assertIn("Not signed in", err)
+            count = self.desk.store.query_one("SELECT COUNT(*) AS n FROM sys_user")
+            self.assertEqual(int(count["n"]), 4)
+            admins = self.desk.store.query_one(
+                "SELECT COUNT(*) AS n FROM sys_user WHERE user_name = 'admin'"
+            )
+            self.assertEqual(int(admins["n"]), 1)
+            self.desk.store.execute("DROP TABLE IF EXISTS {0}".format(", ".join(TABLES)))
+            note = self.desk.serve_background()
+            self.assertIn("http://127.0.0.1:", note)
+            count = self.desk.store.query_one("SELECT COUNT(*) AS n FROM sys_user")
+            self.assertEqual(int(count["n"]), 4)
+            code, out, err = run([
+                "login", "--user-name", "admin", "--password", Schema.INITIAL_ADMIN_PASSWORD,
+            ])
+            self.assertEqual(code, 0, err)
+            self.assertIn("Signed in as admin", out)
+            code, out, err = run(["db-init"])
+            self.assertEqual(code, 0, err)
+            self.assertIn("present", out)
+            self.assertNotIn("seeded", out)
+        finally:
+            web = self.desk.web()
+            if web.httpd is not None:
+                web.stop()
+            self.desk.db_init()
+
     def test_seed_once_and_scopes(self):
         self.assertIn("pyrbac_test: seeded", self.assert_seed)
         again = self.desk.db_init()

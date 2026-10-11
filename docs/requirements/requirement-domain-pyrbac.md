@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-domain-pyrbac.md
-**Status**: Active (Version 1.0.0)
+**Status**: Active (Version 1.2.0)
 **Area**: domain
 **Key**: `requirement-domain-pyrbac`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -8,7 +8,7 @@
 
 This requirement is the domain surface for PyRbac. The product is online role-based access control and centralized configuration. The same actions are available from the text menu, from typed verbs, and from the local web pages.
 
-The studied upstream is [RuoYi-FastAPI](https://github.com/insistence/RuoYi-FastAPI). PyRbac keeps that product's user, role, menu, department, post, dictionary, parameter, notice, and audit ideas. It does not copy the Vue applications, the FastAPI process, Redis, or the code generator.
+PyRbac owns users, roles, menus, departments, posts, dictionaries, parameters, notices, and audit records.
 
 This file is the sole Active `requirement-domain-*`.
 
@@ -24,13 +24,13 @@ This file is the sole Active `requirement-domain-*`.
 
 | Includes | Excludes |
 |----------|----------|
-| Session, access, setup, audit, and serve as one product | Code generation, AI chat, plugins, file storage, scheduled jobs |
+| Access, setup, audit, and serve as one product, after a sign-in | Code generation, AI chat, plugins, file storage, scheduled jobs |
 | One service layer for the menu, the verbs, and the pages | A second permission check that the web page skips |
-| English seed labels written for this product | A verbatim copy of the upstream Chinese seed |
+| English seed labels written for this product | Seed text copied from another product |
 
 | Surface | What you open | What for |
 |---------|---------------|----------|
-| Text menu | `py-rbac` on a terminal | Rows 1, 2, 5, 6, and 7 |
+| Text menu | `py-rbac` on a terminal | Sign in, then rows 2, 5, 6, and 7 |
 | Typed verb | `py-rbac user-list` | The same list the menu shows |
 | Web page | the URL printed by `serve` | The same list, with a cookie |
 
@@ -38,8 +38,8 @@ This file is the sole Active `requirement-domain-*`.
 
 1. **Domain sentence.** The about page **MUST** say `Domain: Online RBAC and centralized configuration`.
 2. **Shared service.** Class `Desk` **MUST** be the command path for the terminal and the text menu. Class `WebApp` **MUST** call `Access` and `Catalog` for the same facts.
-3. **Non-goals for 1.0.0.** The product **MUST NOT** ship code generation, an AI feature, plugins, a file manager, scheduled jobs, a Redis cache, a Vue build, or transport encryption of the page body.
-4. **Upstream difference.** Passwords are PBKDF2-HMAC-SHA256, not the upstream bcrypt string. Online sessions are rows in `sys_session`, not Redis keys. Both differences **MUST** stay visible in the user document.
+3. **Non-goals.** The product **MUST NOT** ship code generation, an AI feature, plugins, a file manager, scheduled jobs, a Redis cache, a Vue build, or transport encryption of the page body. The front board **MUST NOT** include a session row.
+4. **Storage.** Passwords are PBKDF2-HMAC-SHA256, rather than a bcrypt string. Online sessions are rows in `sys_session`, rather than Redis keys. Both facts **MUST** stay visible in the user document.
 5. **Sole domain.** `requirement-domain-videojoin` stays Retired.
 
 ## 3. Acceptance checks
@@ -57,13 +57,14 @@ This file is the sole Active `requirement-domain-*`.
 | Online RBAC | Accounts, roles, menus, departments, and posts checked on each action |
 | Centralized configuration | Parameters, dictionary values, and notices in this product's database |
 | Surface | The text menu, a typed verb, or the web page |
-| Upstream | insistence/RuoYi-FastAPI as studied on 2026-10-11 |
 
 ## 7. Status history
 
 | Date | Status | Note |
 |------|--------|------|
 | 2026-10-11 | Active 1.0.0 | PyRbac domain. Welcome-line domain retired |
+| 2026-10-11 | Active 1.1.0 | Sign-in before the menu. No session row |
+| 2026-10-11 | Active 1.2.0 | This product does not depend on another admin framework |
 
 ---
 

@@ -1,16 +1,16 @@
 **file**: docs/requirements/requirement-python-packaging.md
-**Status**: Active (Version 1.3.0)
+**Status**: Active (Version 1.3.2)
 **Area**: python
 **Key**: `requirement-python-packaging`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
 
 ## 1. Purpose
 
-`pyproject.toml` is the install manifest. The package name is `PyRbac`, the version is `1.0.0`, and the console script is `py-rbac`.
+`pyproject.toml` is the install manifest. The package name is `PyRbac`, the version is `1.0.1`, and the console script is `py-rbac`.
 
 ### 1.1 Human-facing
 
-**In one sentence:** pip installs PyRbac 1.0.0, the command `py-rbac`, ChronicleLogger, and PyMySQL.
+**In one sentence:** pip installs PyRbac 1.0.1, the command `py-rbac`, ChronicleLogger, and PyMySQL.
 
 | Box | Meaning | Example |
 |-----|---------|---------|
@@ -20,12 +20,13 @@
 
 ## 2. Normative rules
 
-1. **Name and version.** `name` is `PyRbac`. `version` is `1.0.0`, the same string as `__version__`.
+1. **Name and version.** `name` is `PyRbac`. `version` is `1.0.1`, the same string as `__version__`.
 2. **Script.** `py-rbac = PyRbac.cli:main`.
 3. **Dependencies.** `ChronicleLogger>=1.3.1` and `PyMySQL>=1.1.0` are required. The package **MUST NOT** re-export ChronicleLogger.
 4. **Author.** Wong Chun Fai, `cloudgen.wong@gmail.com`. Homepage `https://github.com/cloudgen/PyRbac`.
 5. **Python.** `requires-python` is `>=3.9`.
 6. **Secrets.** The manifest **MUST NOT** contain a database password.
+7. **Maintainer tool.** Commands of `./build.sh` are owned by `requirement-python-build-script`. This file owns the install manifest.
 
 ## Terminologies
 
@@ -40,6 +41,8 @@
 |------|--------|------|
 | 2026-10-04 | Active 1.2.2 | Earlier package identity |
 | 2026-10-11 | Active 1.3.0 | PyRbac 1.0.0, `py-rbac`, PyMySQL |
+| 2026-10-11 | Active 1.3.1 | Maintainer commands point at `requirement-python-build-script` |
+| 2026-10-11 | Active 1.3.2 | Product version 1.0.1 |
 
 ---
 

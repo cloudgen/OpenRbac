@@ -112,7 +112,7 @@ Pyenv and conda path reads for this page stay in this file. This product does no
 Values in angle brackets are the live read. They are not a frozen login or home path.
 
 ```text
-PyRbac 1.0.0
+PyRbac 1.0.1
 Domain: Online RBAC and centralized configuration
 Runtime tools: MariaDB or MySQL, PyMySQL
 Entry points: py-rbac, python -m PyRbac

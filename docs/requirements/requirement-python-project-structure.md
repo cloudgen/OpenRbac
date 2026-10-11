@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-python-project-structure.md
-**Status**: Active (Version 1.1.0)
+**Status**: Active (Version 1.1.1)
 **Area**: python
 **Key**: `requirement-python-project-structure`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -25,6 +25,7 @@ The installable package is `src/PyRbac`. Tests live in `tests/`. Product law tha
 3. **Reviews.** A review, checklist, or test plan that must be in the public repository **MUST** live under `reviews/`.
 4. **Screenshots.** Running-menu captures live in `screenshots/` and are tracked.
 5. **Samples.** This product has no `sample-videos/` tree.
+6. **Build script.** `./build.sh` is tracked at the repository root. Its commands are owned by `requirement-python-build-script`.
 
 ## Terminologies
 
@@ -39,6 +40,7 @@ The installable package is `src/PyRbac`. Tests live in `tests/`. Product law tha
 |------|--------|------|
 | 2026-10-04 | Active 1.0.0 | Earlier package path |
 | 2026-10-11 | Active 1.1.0 | `src/PyRbac` and `reviews/` |
+| 2026-10-11 | Active 1.1.1 | `./build.sh` is tracked. Commands live on `requirement-python-build-script` |
 
 ---
 

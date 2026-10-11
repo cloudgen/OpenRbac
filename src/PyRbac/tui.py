@@ -30,8 +30,9 @@ class Tui:
     """Text menu session. The front board and the result pages stay on this screen.
 
     MenuModel, MenuSession, and MenuPainter live in their own modules.
-    The rows are session, access, system-log, language, setup, audit, serve,
-    self-management, and Exit. Domain rows call Desk, the same service as the verbs.
+    The rows are access, system-log, language, setup, audit, serve,
+    self-management, and Exit. There is no session row. Empty arguments ask
+    for an account and a password before that board. Domain rows call Desk.
     """
 
     def __init__(self, app=None, app_name="PyRbac", version=None, logger=None):
@@ -93,8 +94,8 @@ class Tui:
             "Verbs: {1}.\n"
             "version shows the installed version and does not call pip.\n"
             "about shows the about page.\n"
-            "login, logout, and whoami are row 1. access, setup, and audit\n"
-            "repeat the web pages. serve starts the web interface.\n"
+            "Sign in before this menu. login, logout, and whoami are typed verbs.\n"
+            "access, setup, and audit repeat the web pages. serve starts the site.\n"
             "This program does not join media or list files in this folder.\n"
             "version-check runs: python -m pip index versions {0}\n"
             "self-update runs: python -m pip install --upgrade {0}\n"
@@ -265,12 +266,59 @@ class Tui:
             return False
         return True
 
+    def login_lines(self, state="", error="", database_name=""):
+        """General Purpose: The sign-in text shown before the front board."""
+        lines = [
+            "Sign in before the menu.",
+            "Type the account name, then the password.",
+            "The password is masked. Esc leaves.",
+        ]
+        if state == "seeded" and database_name:
+            lines.append("Database {0}: seeded.".format(database_name))
+            lines.append("Seeded accounts are in the product README. Change them after this sign-in.")
+        if error:
+            lines.append("")
+            lines.append("ERROR: {0}".format(error))
+        return lines
+
+    def login_gate(self, ask, state="present", database_name=""):
+        """General Purpose: Ask until the password matches. Esc returns False.
+
+        ask(lines) returns a dict with user_name and password, or None.
+        """
+        error = ""
+        while True:
+            picked = ask(self.login_lines(state, error, database_name))
+            if picked is None:
+                return False
+            if self.app is None or getattr(self.app, "desk", None) is None:
+                error = "This menu has no command desk."
+                continue
+            try:
+                self.app.desk.login(
+                    picked.get("user_name", ""),
+                    picked.get("password", ""),
+                )
+                return True
+            except Exception as exc:
+                error = str(exc)
+
     def open_text_menu(self):
         """
-        General Purpose: Draw the front board. Does not show the welcome page
-        and does not run pip. Returns "missing" when the screen cannot open.
+        General Purpose: Initialize a missing database, ask for a sign-in,
+        then draw the front board. Does not run pip. Returns "missing"
+        when the screen cannot open or the database cannot be prepared.
         """
         if not self._require_terminal():
+            return "missing"
+        if self.app is None or getattr(self.app, "desk", None) is None:
+            return self._screen_error(False)
+        try:
+            state = self.app.desk.ensure_database()
+            database_name = self.app.desk.settings.database()["database"]
+        except Exception as exc:
+            nxt = getattr(exc, "nxt", "py-rbac db-init")
+            self.app.report_error(str(exc), nxt)
             return "missing"
         try:
             import curses
@@ -317,6 +365,15 @@ class Tui:
 
         def _wrapped(screen):
             screen_box["screen"] = screen
+            signed_in = self.login_gate(
+                lambda lines: self._ask_fields(
+                    screen, session.model, "login", self.ASKS["login"],
+                ),
+                state=state,
+                database_name=database_name,
+            )
+            if not signed_in:
+                return
             session.run(screen)
 
         try:

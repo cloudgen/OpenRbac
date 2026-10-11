@@ -12,7 +12,7 @@ import secrets
 
 
 class PasswordHash:
-    """PBKDF2-HMAC-SHA256 passwords. Upstream RuoYi-FastAPI stores bcrypt.
+    """PBKDF2-HMAC-SHA256 passwords.
 
     This class stays on the standard library. A stored value that is not this
     scheme never matches.

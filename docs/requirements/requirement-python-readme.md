@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-python-readme.md
-**Status**: Active (Version 1.1.0)
+**Status**: Active (Version 1.2.0)
 **Area**: python
 **Key**: `requirement-python-readme`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -24,13 +24,14 @@ Features, Advantages, Quick Installation, Usage, Screenshots, Examples, Platform
 
 ## 3. Normative rules
 
-1. **Badge.** The version token is `1.0.0`.
+1. **Badge.** The version token is `1.0.1`.
 2. **Images.** A picture **MUST** use the absolute raw URL above. A relative `screenshots/` link is not enough.
 3. **Seed.** The document **MUST** list admin / admin123, operator / operator123, clerk / clerk123, and lead / lead123, and **MUST** tell the operator to change them.
 4. **Differences.** The document **MUST** say passwords are PBKDF2 rather than bcrypt, sessions are `sys_session` rather than Redis, and data scope is 1–4.
 5. **Bind.** The document **MUST** say the site listens on `127.0.0.1` unless `PYRBAC_ALLOW_REMOTE=yes`.
 6. **Process list.** The document **MUST** say `--password` is visible in the process list and the menu masks the field.
 7. **No secrets.** The document **MUST NOT** include a vault path, a private key, or the live database password.
+8. **Sign-in.** The document **MUST** say that a terminal with no arguments asks for an account and a password before the menu, that the menu has no session row, and that a run creates missing tables before that question.
 
 ## Terminologies
 
@@ -45,6 +46,7 @@ Features, Advantages, Quick Installation, Usage, Screenshots, Examples, Platform
 |------|--------|------|
 | 2026-10-04 | Active 1.0.0 | Earlier picture catalog |
 | 2026-10-11 | Active 1.1.0 | PyRbac captures and seed disclosure |
+| 2026-10-11 | Active 1.2.0 | Badge 1.0.1. Sign-in before the menu. No session row |
 
 ---
 
