@@ -116,11 +116,15 @@ These are captures of the running text menu.
 
 ![Front board](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/main-menu-en.png)
 
-*Front board after sign-in. Row 2 is access. Row 4 is language. Row 9 is Exit. This capture still shows the earlier session row.*
+*Front board after sign-in. Row 2 is access. Row 4 is language. Row 9 is Exit. There is no session row.*
 
 ![Login prompt](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/login-prompt.png)
 
-*The sign-in question that opens before the menu. The password field is masked.*
+*The sign-in question before the menu. It names the sqlite3 file. The password is masked.*
+
+![Exit](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/exit-prompt.png)
+
+*Row 9 Exit. Enter or y logs out and removes the saved sign-in. n keeps it. Esc stays.*
 
 ![Access](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/access-menu.png)
 
@@ -128,7 +132,7 @@ These are captures of the running text menu.
 
 ![Setup](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/setup-menu.png)
 
-*Parameters, dictionaries, and notices.*
+*Parameters, dictionaries, notices, and the database engine.*
 
 ![Audit](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/audit-menu.png)
 

@@ -32,7 +32,7 @@ Use this list before a push to `cloudgen/PyRbac`.
 
 ## Document
 
-- [x] README screenshots use absolute raw GitHub URLs
+- [x] README screenshots are the current menu (1.0.4, no session row) and use absolute raw GitHub URLs
 - [x] Seeded passwords are documented with a change-them warning
 - [x] No vault path, private key, or live database password in versioned docs
 

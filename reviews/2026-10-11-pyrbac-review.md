@@ -2,7 +2,7 @@
 
 **Product:** PyRbac 1.0.4
 **Scope:** Requirements, RBAC behavior, database isolation, web pages, text menu, local sign-in, and ChronicleLogger.
-**Result:** Pass with the limits below. `tests/run.sh` reported 46 tests OK.
+**Result:** Pass with the limits below. `tests/run.sh` reported 47 tests OK.
 
 ## What was checked
 
@@ -31,10 +31,9 @@
 ## Limits
 
 - Captcha, export, import, and batch logout are not in 1.0.4.
-- The front-board screenshots still show the earlier session row. The live menu does not.
+- The screenshots are frames of the current text menu at version 1.0.4. The front board has no session row. They are a fixed-size capture of that menu, not a browser capture of the HTML pages.
 - `user-add` and `role-grant` use sequential statements. A crash between them can leave a partial write. The seed itself is one transaction.
 - The web grant form can read menu ids for an editor who has role edit without menu list. The seeded administrator has both.
-- Screenshots are captures of the running text menu at a fixed size. They are not a browser capture of the HTML pages.
 
 ## Storage choices
 

@@ -12,6 +12,8 @@ Version SSOT: `pyproject.toml` + `src/PyRbac/__init__.__version__`.
 ### Changed
 
 - Row 9 Exit asks before it leaves. Enter or y logs out and removes the saved sign-in. n leaves and keeps it. Esc stays on the menu. End of input still leaves without the question.
+- The sign-in question keeps its instructions, including the sqlite3 file, above the account name and the password.
+- The README pictures show the current menu: version 1.0.4, no session row, the sign-in question, and the Exit question.
 
 ## [1.0.3] - 2026-10-11
 

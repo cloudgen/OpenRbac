@@ -31,6 +31,7 @@ HEADINGS = (
 SHOTS = (
     "main-menu-en.png",
     "login-prompt.png",
+    "exit-prompt.png",
     "access-menu.png",
     "setup-menu.png",
     "audit-menu.png",

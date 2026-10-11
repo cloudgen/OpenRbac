@@ -193,6 +193,43 @@ class TestSavedSignIn(unittest.TestCase):
         finally:
             desk.web().stop()
 
+    def test_login_question_keeps_the_preface(self):
+        class Box:
+            error = ""
+            mask = False
+            buffer = ""
+            cursor = 0
+
+            def _backspace(self):
+                return None
+
+            def _slide(self, _key):
+                return None
+
+            def _insert(self, _ch):
+                return None
+
+        seen = []
+
+        def read_key(_screen, _model, lines, title="menu"):
+            seen.append((title, list(lines)))
+            return "admin" if len(seen) == 1 else "secret"
+
+        tui = Tui()
+        tui.read_key = read_key
+        preface = [
+            "Sign in before the menu.",
+            "Database engine: sqlite3 /tmp/PyRbac/pyrbac.sqlite3 (default file).",
+        ]
+        picked = tui._ask_fields(None, Box(), "login", Tui.ASKS["login"], preface=preface)
+        self.assertEqual(picked, {"user_name": "admin", "password": "secret"})
+        self.assertEqual(seen[0][0], "login")
+        self.assertIn("Sign in before the menu.", seen[0][1])
+        self.assertIn("pyrbac.sqlite3", seen[0][1][1])
+        self.assertEqual(seen[0][1][-1], "user_name")
+        self.assertEqual(seen[1][1][-1], "password")
+        self.assertIn("(default file).", seen[1][1][1])
+
 
 class TestExitQuestion(unittest.TestCase):
     """Row 9 asks. End of input does not."""

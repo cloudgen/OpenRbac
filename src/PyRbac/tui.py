@@ -473,7 +473,7 @@ class Tui:
                 return
             signed_in = self.sign_in_or_restore(
                 lambda lines: self._ask_fields(
-                    screen, session.model, "login", self.ASKS["login"],
+                    screen, session.model, "login", self.ASKS["login"], preface=lines,
                 ),
                 state=state,
                 database_name=database_name,
@@ -689,13 +689,21 @@ class Tui:
         "online-logout": (("token", "session token", False),),
     }
 
-    def _ask_fields(self, screen, model, title, fields):
-        """One field at a time. Esc returns None. A password field is masked."""
+    def _ask_fields(self, screen, model, title, fields, preface=None):
+        """One field at a time. Esc returns None. A password field is masked.
+
+        preface stays above the field label. The sign-in question uses it for
+        the account instructions and the database file.
+        """
         values = {}
         for name, label, secret in fields:
             model.mask = bool(secret)
+            body = list(preface or [])
+            if body:
+                body.append("")
+            body.append(label)
             try:
-                text = self.read_key(screen, model, [label], title=title)
+                text = self.read_key(screen, model, body, title=title)
             finally:
                 model.mask = False
             if text is None:
