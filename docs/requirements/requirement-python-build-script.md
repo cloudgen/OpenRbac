@@ -88,7 +88,7 @@ The examples **MUST** include `./build.sh version`, `./build.sh build`, `./build
 |-------|-------|
 | Script | `./build.sh` |
 | Package | `PyRbac` |
-| Version read | `src/PyRbac/__init__.py` → `__version__` (`1.0.1`) |
+| Version read | `src/PyRbac/__init__.py` → `__version__` (`1.0.2`) |
 | Pip name | `[project].name` in `pyproject.toml` (`PyRbac`) |
 | `test-install` target | The repository directory that contains `build.sh` |
 | `test` target | `tests/run.sh` |

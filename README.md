@@ -1,6 +1,6 @@
 # PyRbac
 
-![Version 1.0.1](https://img.shields.io/badge/version-1.0.1-blue)
+![Version 1.0.2](https://img.shields.io/badge/version-1.0.2-blue)
 ![License MIT](https://img.shields.io/badge/license-MIT-green)
 [![CIAO](https://img.shields.io/badge/CIAO-cloudgen-black)](https://github.com/cloudgen/ciao)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
@@ -13,11 +13,11 @@ It is specialized from the HelloTui menu. The web pages are plain HTML. There is
 
 ## Features
 
-- A terminal with no arguments asks for an account and a password, then opens the menu.
+- A terminal with no arguments asks for the database engine, then an account and a password, then opens the menu.
 - Front board rows: access, system-log, language, setup, audit, serve, self-management, and Exit. There is no session row.
 - The same user, role, menu, department, post, parameter, dictionary, notice, and audit actions on the menu, on the command line, and on the web page.
 - Data scope 1 all, 2 custom departments, 3 this department, 4 this department and children. Any other scope shows no rows.
-- MariaDB or MySQL. The product database is `pyrbac`.
+- sqlite3 or MariaDB or MySQL. The default is the sqlite3 file `~/.local/PyRbac/pyrbac.sqlite3`. mysql uses the database `pyrbac`.
 - ChronicleLogger for the status file. Passwords are not written there.
 - The site listens on `127.0.0.1` unless you set `PYRBAC_ALLOW_REMOTE=yes`.
 
@@ -30,7 +30,7 @@ It is specialized from the HelloTui menu. The web pages are plain HTML. There is
 
 ## Quick Installation
 
-You provide MariaDB or MySQL. pip installs this package, ChronicleLogger, and PyMySQL. pip does not install the database server, and this program does not call sudo.
+The default database is a sqlite3 file. You do not install a database server for that choice. mysql is optional: you provide MariaDB or MySQL yourself. pip installs this package, ChronicleLogger, and PyMySQL. pip does not install a database server, and this program does not call sudo.
 
 ```bash
 python -m pip install PyRbac
@@ -42,18 +42,32 @@ From a checkout:
 python -m pip install -e .
 ```
 
-The database password comes from the environment or from `~/.local/PyRbac/database` when that file is mode `0600`. A menu, `serve`, or any domain verb creates the tables when they are missing. `py-rbac db-init` does the same and prints the result.
+The default engine is sqlite3. `py-rbac db-init` creates `~/.local/PyRbac/pyrbac.sqlite3` when that file is missing. A password is not required for sqlite3.
 
 ```bash
-export PYRBAC_DB_PASSWORD='the-password-you-chose'
 py-rbac db-init
 ```
 
-The first init prints `Database pyrbac: seeded.` A later init prints `present` and does not add another administrator.
+The first init prints `seeded`. A later init prints `present` and does not add another administrator.
+
+Choose the engine from the terminal, from the text menu, or from the web sign-in page. Choice 1 is the sqlite3 file. Choice 2 is mysql. Enter keeps the current engine. `py-rbac db-engine` does not open the database.
+
+```bash
+py-rbac db-engine --engine sqlite3
+py-rbac db-engine --engine mysql
+```
+
+mysql reads the password from the environment or from `~/.local/PyRbac/database` when that file is mode `0600`. The sqlite3 data file is also mode `0600`. The product mysql database is `pyrbac`.
+
+```bash
+export PYRBAC_DB_PASSWORD='the-password-you-chose'
+py-rbac db-engine --engine mysql
+py-rbac db-init
+```
 
 ## Usage
 
-On a terminal, `py-rbac` asks for the account name and then the password. After a match it opens the menu. Esc leaves without the menu. `py-rbac help` lists the verbs. `py-rbac serve` prints a URL and listens until you interrupt it. Menu row 7 starts that site in the background for as long as the process stays open.
+On a terminal, `py-rbac` asks for the database engine, then asks for the account name, then the password. A menu, `serve`, or any domain verb creates the tables when they are missing. After a match it opens the menu. Esc on the engine question or the sign-in question leaves without the menu. Setup row 78 asks for the same engine choice. `py-rbac help` lists the verbs. `py-rbac serve` prints a URL and listens until you interrupt it. Menu row 7 starts that site in the background for as long as the process stays open. The web sign-in page has the same two engine choices. A signed-in administrator can also open Database.
 
 `login`, `logout`, and `whoami` are typed verbs. They are not rows on the menu.
 
@@ -83,6 +97,8 @@ A suggested password for a new account is the parameter `sys.user.initPassword`,
 
 | Name | Default |
 |------|---------|
+| `PYRBAC_DB_ENGINE` | `sqlite3`. The other value is `mysql` |
+| `PYRBAC_SQLITE_FILE` | `~/.local/PyRbac/pyrbac.sqlite3` |
 | `PYRBAC_DB_HOST` | `127.0.0.1` |
 | `PYRBAC_DB_PORT` | `3306` |
 | `PYRBAC_DB_NAME` | `pyrbac` |

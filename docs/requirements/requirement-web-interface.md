@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-web-interface.md
-**Status**: Active (Version 1.0.0)
+**Status**: Active (Version 1.1.0)
 **Area**: domain
 **Key**: `requirement-web-interface`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -10,7 +10,7 @@ The web interface is a small standard-library HTTP site. It has no JavaScript. E
 
 ### 1.1 Human-facing
 
-**In one sentence:** Open the printed URL, sign in, and the pages you see are the actions your role allows.
+**In one sentence:** Open the printed URL, choose sqlite3 or mysql, sign in, and the pages you see are the actions your role allows.
 
 | Box | Meaning | Example |
 |-----|---------|---------|
@@ -20,7 +20,7 @@ The web interface is a small standard-library HTTP site. It has no JavaScript. E
 
 | Includes | Excludes |
 |----------|----------|
-| Login, users, roles, menus, departments, posts, parameters, dictionaries, notices, both logs, online users | A Vue bundle or a JSON API clone |
+| Login, the engine choice, users, roles, menus, departments, posts, parameters, dictionaries, notices, both logs, online users | A Vue bundle or a JSON API clone |
 | A hidden CSRF field on POST | A script that fetches the next page |
 | Forms only when the account has that permission | Showing an Add button the account cannot use |
 
@@ -34,6 +34,7 @@ The web interface is a small standard-library HTTP site. It has no JavaScript. E
 6. **Escape.** Text placed in HTML **MUST** be escaped. The online page **MUST** show an 8-character token prefix on the button and **MUST** send the full token only as a hidden field. The terminal `online-list` **MUST** show the full token so the operator can pass `--token`.
 7. **Handler.** `ThreadingHTTPServer` constructs a nested handler inside `WebApp.make_server`. That nested class is the one exception to one-class-per-module. It **MUST** delegate to `WebApp`.
 8. **Nav.** A link **MUST** be omitted when the account lacks the matching list permission.
+9. **Engine choice.** The sign-in page **MUST** offer sqlite3, including the default file path, and mysql. The checked value **MUST** be the current engine. A sign-in from loopback **MAY** store a different engine before the password is checked. A sign-in from any other address **MUST NOT** switch the engine. The Database page **MUST** require `system:config:edit` and the session CSRF field. Saving a different engine there **MUST** clear the session cookie, because the session row remains in the previous database.
 
 ## 3. Acceptance checks
 
@@ -44,6 +45,7 @@ The web interface is a small standard-library HTTP site. It has no JavaScript. E
 | AC-3 | The operator users page omits Add a user and omits clerk |
 | AC-4 | The operator roles page is 403 |
 | AC-5 | A users request without a cookie redirects to `/login` |
+| AC-6 | The sign-in page offers sqlite3, the default file, and mysql |
 
 ## Terminologies
 
@@ -59,6 +61,7 @@ The web interface is a small standard-library HTTP site. It has no JavaScript. E
 | Date | Status | Note |
 |------|--------|------|
 | 2026-10-11 | Active 1.0.0 | Loopback HTML site, cookie, and CSRF |
+| 2026-10-11 | Active 1.1.0 | Sign-in and Database pages choose sqlite3 or mysql |
 
 ---
 

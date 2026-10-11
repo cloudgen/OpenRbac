@@ -3,6 +3,13 @@
 All notable changes to **PyRbac** are documented here.
 Version SSOT: `pyproject.toml` + `src/PyRbac/__init__.__version__`.
 
+## [1.0.2] - 2026-10-11
+
+### Added
+
+- sqlite3 and mysql. The default is the sqlite3 file `~/.local/PyRbac/pyrbac.sqlite3`.
+- The terminal, the text menu, and the web sign-in page each offer choice 1 sqlite3 and choice 2 mysql. `py-rbac db-engine` stores the choice and does not open the database. Setup row 78 and the Database page offer the same choice.
+
 ## [1.0.1] - 2026-10-11
 
 ### Changed

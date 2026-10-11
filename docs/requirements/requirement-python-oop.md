@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-python-oop.md
-**Status**: Active (Version 1.1.0)
+**Status**: Active (Version 1.1.1)
 **Area**: python
 **Key**: `requirement-python-oop`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -48,7 +48,7 @@ Each module defines one class. An error type may sit beside the class that raise
 
 1. **Logger.** A class that accepts `logger` **MUST** log `instantiated` from `__init__` when the logger is present.
 2. **Nested handler.** `WebApp.make_server` **MAY** define the standard-library request handler as a nested class because `ThreadingHTTPServer` constructs it. That handler **MUST** call `WebApp`. No other module **MAY** add a second product class.
-3. **Version.** `__version__` in `__init__.py` is the only version string. It is `1.0.1`.
+3. **Version.** `__version__` in `__init__.py` is the only version string. It is `1.0.2`.
 4. **No hello.** There is no `Tui.hello_text`.
 
 ## Terminologies
@@ -64,6 +64,7 @@ Each module defines one class. An error type may sit beside the class that raise
 |------|--------|------|
 | 2026-10-04 | Active 1.0.0 | Menu and about classes |
 | 2026-10-11 | Active 1.1.0 | Desk, RBAC, and web classes |
+| 2026-10-11 | Active 1.1.1 | Version string 1.0.2. Store still one class for both engines |
 
 ---
 

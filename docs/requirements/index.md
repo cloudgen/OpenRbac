@@ -2,7 +2,7 @@
 
 **Product:** PyRbac (Python CLI — text menu and local web pages for online RBAC)
 **Workspace state:** Specialized product law; **software-development** class; **pip/local package** install.
-**Product version:** **1.0.1** (`pyproject.toml`, `src/PyRbac/__init__.py`, root `README.md`)
+**Product version:** **1.0.2** (`pyproject.toml`, `src/PyRbac/__init__.py`, root `README.md`)
 **Updated:** 2026-10-11
 
 | ID / key | Title | Area | Status | Path | Updated |
@@ -11,7 +11,7 @@
 | requirement-domain-pyrbac | Domain surface: online RBAC and centralized configuration. Sign-in before the menu | domain | Active | `requirement-domain-pyrbac.md` | 2026-10-11 |
 | requirement-domain-videojoin | Retired welcome-line domain | domain | Retired | `requirement-domain-videojoin.md` | 2026-10-11 |
 | requirement-rbac | RBAC system map, permissions, data scope 1–4, seed on an empty database, protected rows | domain | Active | `requirement-rbac.md` | 2026-10-11 |
-| requirement-database | MariaDB table structure, pyrbac schema, seed-once, auto-init | domain | Active | `requirement-database.md` | 2026-10-11 |
+| requirement-database | sqlite3 default file and mysql tables, seed-once, auto-init | domain | Active | `requirement-database.md` | 2026-10-11 |
 | requirement-environment | PYRBAC_* names, mode-0600 file, loopback bind | domain | Active | `requirement-environment.md` | 2026-10-11 |
 | requirement-web-interface | Local HTML site, cookie, CSRF, shared service | domain | Active | `requirement-web-interface.md` | 2026-10-11 |
 | requirement-python-about | About page: identity, host check, star box. No `--json` | python | Active | `requirement-python-about.md` | 2026-10-11 |
@@ -27,7 +27,7 @@
 | requirement-python-project-structure | Repository and `src/PyRbac` layout | python | Active | `requirement-python-project-structure.md` | 2026-10-11 |
 | requirement-python-readme | Root user document: sections, badges, absolute screenshot URLs | python | Active | `requirement-python-readme.md` | 2026-10-11 |
 | requirement-python-error-handling | Fail-closed errors; console sentences stay | python | Active | `requirement-python-error-handling.md` | 2026-10-04 |
-| requirement-runtime-prerequisites | MariaDB or MySQL, PyMySQL, ChronicleLogger; no root auto-install | runtime | Active | `requirement-runtime-prerequisites.md` | 2026-10-11 |
+| requirement-runtime-prerequisites | sqlite3 by default; mysql and PyMySQL when chosen; ChronicleLogger; no root auto-install | runtime | Active | `requirement-runtime-prerequisites.md` | 2026-10-11 |
 
 ## Intentionally absent (by design)
 
@@ -35,7 +35,7 @@
 |---------|----------------------|
 | Shell online install / `curl\|sh` | **Absent** |
 | Type 1 sudoers / root elevation inside the program | **Absent** |
-| Code generation, AI, plugins, jobs, Redis, Vue bundle | **Absent** for 1.0.1 |
+| Code generation, AI, plugins, jobs, Redis, Vue bundle | **Absent** for 1.0.2 |
 | Second Active `requirement-domain-*` | **Forbidden** while `requirement-domain-pyrbac` is Active |
 | `hello`, `join`, `list-videos`, FFmpeg | **Absent** |
 | `requirement-python-json-output` | **Absent**. No `--json` |
@@ -44,7 +44,7 @@
 
 **Logger:** required (`ChronicleLogger>=1.3.1`). `def main` in `src/PyRbac/cli.py` writes `ChronicleLogger(...)`.
 
-**Database:** MariaDB or MySQL through `PyMySQL>=1.1.0`. Product schema `pyrbac`. Tests use `pyrbac_test`.
+**Database:** sqlite3 by default, file `pyrbac.sqlite3`. mysql through `PyMySQL>=1.1.0` when `PYRBAC_DB_ENGINE=mysql`. Product mysql schema `pyrbac`. mysql tests use `pyrbac_test`.
 
 **Rules for agents:**
 

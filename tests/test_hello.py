@@ -41,7 +41,7 @@ class TestFrontBoard(unittest.TestCase):
             self.assertFalse(Cli.opens_text_screen(["version"]))
             self.assertFalse(Cli.opens_text_screen(["self-update"]))
         finally:
-            Cli.stdout_is_tty = previous
+            Cli.stdout_is_tty = staticmethod(previous)
 
     def test_front_rows_have_no_session(self):
         home = tempfile.mkdtemp(prefix="pyrbac_menu_", dir="/tmp")

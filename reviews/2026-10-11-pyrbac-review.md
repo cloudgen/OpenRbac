@@ -1,6 +1,6 @@
 # PyRbac review — 2026-10-11
 
-**Product:** PyRbac 1.0.1
+**Product:** PyRbac 1.0.2
 **Scope:** Requirements, RBAC behavior, database isolation, web pages, text menu, and ChronicleLogger.
 **Result:** Pass with the limits below.
 
@@ -21,11 +21,12 @@
 | Menu rows 2–9, no session row, language 41–53, path label ignores `LANG` | Pass |
 | Sign-in question before the menu. A wrong password is asked again | Pass |
 | A domain verb and serve initialize a database that has no tables, once | Pass |
-| `ruoyi_db` and `ry` are not opened by the tests | Pass. The tests set `PYRBAC_DB_NAME=pyrbac_test` |
+| Default engine is the sqlite3 file. Choice 1 keeps that file. Choice 2 is mysql | Pass in `tests/test_rbac.py` |
+| `ruoyi_db` and `ry` are not opened by the tests | Pass. mysql cases set `PYRBAC_DB_NAME=pyrbac_test` |
 
 ## Limits
 
-- Captcha, export, import, and batch logout are not in 1.0.1.
+- Captcha, export, import, and batch logout are not in 1.0.2.
 - The front-board screenshots still show the earlier session row. The live menu does not.
 - `user-add` and `role-grant` use sequential statements. A crash between them can leave a partial write. The seed itself is one transaction.
 - The web grant form can read menu ids for an editor who has role edit without menu list. The seeded administrator has both.

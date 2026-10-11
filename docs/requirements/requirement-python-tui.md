@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-python-tui.md
-**Status**: Active (Version 1.2.0)
+**Status**: Active (Version 1.3.0)
 **Area**: python
 **Key**: `requirement-python-tui`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -8,11 +8,11 @@
 
 The text menu is the front board plus nested boards. The first row is the working directory on the left and the local clock on the right. The bottom of the screen is a rounded input box. The status line under the box names the product, the version, and the board.
 
-Empty arguments on a terminal ask for an account name and a password, then open this menu. They do not run pip. The same domain actions are typed verbs (`requirement-python-cli-interface`) and web pages (`requirement-web-interface`). The front board has no session row. `login`, `logout`, and `whoami` stay typed verbs.
+Empty arguments on a terminal ask for the database engine, then an account name and a password, then open this menu. They do not run pip. The same domain actions are typed verbs (`requirement-python-cli-interface`) and web pages (`requirement-web-interface`). The front board has no session row. `login`, `logout`, and `whoami` stay typed verbs.
 
 ### 1.1 Human-facing
 
-**In one sentence:** On a terminal, `py-rbac` asks for an account and a password, then opens a numbered menu that has no session row.
+**In one sentence:** On a terminal, `py-rbac` asks for sqlite3 or mysql, then an account and a password, then opens a numbered menu that has no session row.
 
 | Box | Meaning | Example |
 |-----|---------|---------|
@@ -27,7 +27,7 @@ Empty arguments on a terminal ask for an account name and a password, then open 
 | 2 | access | users, roles, menus, departments, posts, numbers 21–33, Back 0 |
 | 3 | system-log | view-log 31, clear-log 32, log-folder 33, Back 0 |
 | 4 | language | codes 41–53 and Back 0 |
-| 5 | setup | parameters, dictionaries, notices, numbers 71–77, Back 0 |
+| 5 | setup | parameters, dictionaries, notices, the database engine, numbers 71–78, Back 0 |
 | 6 | audit | oper-log 61, login-log 62, online-list 63, online-logout 64, Back 0 |
 | 7 | serve | start the web listener and show the URL |
 | 8 | self-management | 82 version, 83 about, 84 version-check, 85 self-update, 86 self-uninstall, 87 self-install, Back 0 |
@@ -45,7 +45,8 @@ Empty arguments on a terminal ask for an account name and a password, then open 
 6. **Result.** A string returned by a row **MUST** be a result page. Up and Down scroll it when it overflows. Another key returns to the front board.
 7. **Pip.** Rows 84–87 and the matching verbs use `python -m pip`. Empty arguments **MUST NOT** run them. `self-uninstall` on the command line **MUST** require `--force`.
 8. **Inherited numbers.** System-log stays 3 and 31–33. Language stays 4 and 41–53. Self-management stays 8 and 82–87. Exit stays 9. Access stays 2. The front board **MUST NOT** include a session row, and number 1 **MUST NOT** be a row.
-9. **Sign-in first.** Empty arguments on a terminal **MUST** prepare the database (`requirement-database`), then ask for `user_name` and a masked password, one field at a time. A wrong password **MUST** show the error and ask again. A match **MUST** open the front board. The menu **MUST NOT** appear before that match.
+9. **Sign-in first.** Empty arguments on a terminal **MUST** ask for the database engine, then prepare the database (`requirement-database`), then ask for `user_name` and a masked password, one field at a time. Choice 1 **MUST** be sqlite3 and **MUST** show the default file when `PYRBAC_SQLITE_FILE` is empty. Choice 2 **MUST** be mysql. Enter **MUST** keep the current engine. Esc on the engine question **MUST** leave without opening the menu. A wrong password **MUST** show the error and ask again. A match **MUST** open the front board. The menu **MUST NOT** appear before that match.
+10. **Setup row.** Number 78 **MUST** be `db-engine` with the explain `sqlite3 file or mysql`. It **MUST** ask for the same two choices. Esc **MUST** stay on the setup board.
 
 ## 4. Acceptance checks
 
@@ -71,6 +72,7 @@ Empty arguments on a terminal ask for an account name and a password, then open 
 | 2026-10-04 | Active 1.0.0 | Inherited frame, path, clock, and columns |
 | 2026-10-11 | Active 1.1.0 | Session, access, setup, audit, and serve join the front board |
 | 2026-10-11 | Active 1.2.0 | Sign-in before the menu. The session row is gone. Numbers 2–9 stay |
+| 2026-10-11 | Active 1.3.0 | Engine choice before sign-in. Setup row 78 is db-engine |
 
 ---
 

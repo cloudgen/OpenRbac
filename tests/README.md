@@ -8,7 +8,7 @@ Executable proof for product law. The public plan is `reviews/test-plan.md`.
 ./tests/run.sh
 ```
 
-RBAC cases use MariaDB database `pyrbac_test`. They do not write `ruoyi_db` or `ry`.
+RBAC cases use a temporary sqlite3 file. A mysql case uses database `pyrbac_test` when that server is reachable and skips otherwise. They do not write `ruoyi_db` or `ry`.
 
 | File | What it proves |
 |------|----------------|

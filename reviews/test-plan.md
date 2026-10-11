@@ -1,6 +1,6 @@
 # PyRbac test plan — 2026-10-11
 
-Run `tests/run.sh` from the repository root. The RBAC cases need MariaDB, the `pyrbac_test` schema, and `PYRBAC_DB_PASSWORD` in the mode-0600 database file or in the environment. They set `PYRBAC_DB_NAME=pyrbac_test` themselves.
+Run `tests/run.sh` from the repository root. The RBAC cases use a temporary sqlite3 file. They do not need MariaDB. `tests/test_rbac.py` also tries mysql database `pyrbac_test` when the mode-0600 database file has a password and the server accepts it. That case skips when mysql is down. Neither case writes `ruoyi_db` or `ry`.
 
 | ID | File | Proves |
 |----|------|--------|
@@ -13,6 +13,7 @@ Run `tests/run.sh` from the repository root. The RBAC cases need MariaDB, the `p
 | TP-RBAC-01 | `tests/test_rbac.py` | Seed once, scopes 3, 4, and 5, protected user and role |
 | TP-WEB-01 | `tests/test_rbac.py` | Login cookie, CSRF 400, operator 403, redirect |
 | TP-ENV-01 | `tests/test_rbac.py` | Mode 0600 file, environment wins, remote bind refused |
+| TP-DB-03 | `tests/test_rbac.py` | Default sqlite3 file, `db-engine` choices, web radios, file mode 0600, mysql seed when the server is up |
 | TP-LOG-01 | `tests/test_rbac.py` | ChronicleLogger construct. Password absent from the log file |
 | TP-DOC-01 | `tests/test_docs.py` | README headings, version badge, absolute screenshot URLs |
 | TP-BUILD-01 | todo | `./build.sh` help lists every maintainer command. Not executed yet |

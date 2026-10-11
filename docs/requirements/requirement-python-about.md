@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-python-about.md
-**Status**: Active (Version 1.0.0)
+**Status**: Active (Version 1.1.0)
 **Area**: python
 **Key**: `requirement-python-about`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -48,7 +48,7 @@ Pyenv and conda path reads for this page stay in this file. This product does no
 ## 2. Core Rules (Mandatory)
 
 1. **One page.** Menu action **about** and the verb `py-rbac about` **MUST** show one result page whose body is this file. The verb **MUST NOT** ask for a folder or a file. The page **MUST** be three blocks in this order: identity, host check, star box. A blank line **MUST** separate the blocks. The page **MUST NOT** be `--version`. Without a terminal, that page **MUST** be the whole of standard output. This product does not claim `--json`. The page **MUST NOT** gain a JSON stream.
-2. **Identity block.** The first four lines **MUST** be, in order: `{APP_NAME} {version}`, `Domain: Online RBAC and centralized configuration`, `Runtime tools: MariaDB or MySQL, PyMySQL`, `Entry points: py-rbac, python -m PyRbac`. `{version}` **MUST** be the package version string `__version__`. The domain sentence **MUST** stay the sentence on `requirement-domain-pyrbac`. The runtime-tools line is static. It **MUST NOT** name FFmpeg. The page **MUST NOT** name `py-tui`. It **MUST NOT** print `python -m pip install` or an author email.
+2. **Identity block.** The first four lines **MUST** be, in order: `{APP_NAME} {version}`, `Domain: Online RBAC and centralized configuration`, `Runtime tools: sqlite3 (default file) or MariaDB or MySQL, PyMySQL`, `Entry points: py-rbac, python -m PyRbac`. `{version}` **MUST** be the package version string `__version__`. The domain sentence **MUST** stay the sentence on `requirement-domain-pyrbac`. The runtime-tools line is static. It **MUST NOT** name FFmpeg. The page **MUST NOT** name `py-tui`. It **MUST NOT** print `python -m pip install` or an author email.
 3. **Host-check header.** The check **MUST** start with `{local stamp} {APP_NAME}(v{version})  [CHECK SYSTEM]:` and the next line **MUST** be two spaces then `Now checking your operation system!`. The stamp **MUST** be local time `YYYY-MM-DD HH:MM:SS.ffffff` from `datetime.datetime.now()`. There are two spaces before `[CHECK SYSTEM]:`.
 4. **Host-check fields.** After the header, the page **MUST** print these labels in this order, each starting with four spaces, then the label, a colon, a space, and the value. A missing value **MUST** leave the line in place. The check **MUST NOT** spawn `python2`, `python3`, `conda`, `pyenv`, or `id`.
 
@@ -112,9 +112,9 @@ Pyenv and conda path reads for this page stay in this file. This product does no
 Values in angle brackets are the live read. They are not a frozen login or home path.
 
 ```text
-PyRbac 1.0.1
+PyRbac 1.0.2
 Domain: Online RBAC and centralized configuration
-Runtime tools: MariaDB or MySQL, PyMySQL
+Runtime tools: sqlite3 (default file) or MariaDB or MySQL, PyMySQL
 Entry points: py-rbac, python -m PyRbac
 
 2026-10-04 11:16:23.700590 PyRbac(v1.0.5)  [CHECK SYSTEM]:
@@ -283,7 +283,8 @@ TP-ABOUT-01 asserts the identity line, every host-check label, the star-box titl
 | Date | Status | Note |
 |------|--------|------|
 | 2026-10-04 | Active 1.0.0 | About page: identity, host check, star box. Pyenv and conda reads stay here. No `--json`. Product version **1.0.5**. `./tests/run.sh` — 23 tests, OK. `TP-ABOUT-01` through `TP-ABOUT-14` and `TP-ABOUT-16` are have. There is no `TP-ABOUT-15` |
+| 2026-10-11 | Active 1.1.0 | Runtime tools name sqlite3 as the default file, then MariaDB or MySQL |
 
-**Last Updated**: 2026-10-04
+**Last Updated**: 2026-10-11
 **Owner**: project maintainers
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).
