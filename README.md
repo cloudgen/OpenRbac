@@ -1,6 +1,6 @@
 # PyRbac
 
-![Version 1.0.2](https://img.shields.io/badge/version-1.0.2-blue)
+![Version 1.0.4](https://img.shields.io/badge/version-1.0.4-blue)
 ![License MIT](https://img.shields.io/badge/license-MIT-green)
 [![CIAO](https://img.shields.io/badge/CIAO-cloudgen-black)](https://github.com/cloudgen/ciao)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
@@ -13,8 +13,8 @@ It is specialized from the HelloTui menu. The web pages are plain HTML. There is
 
 ## Features
 
-- A terminal with no arguments asks for the database engine, then an account and a password, then opens the menu.
-- Front board rows: access, system-log, language, setup, audit, serve, self-management, and Exit. There is no session row.
+- A terminal with no arguments uses the sqlite3 default file. When a saved sign-in still matches, it opens the menu without asking again. Otherwise it asks for an account and a password.
+- Front board rows: access, system-log, language, setup, audit, serve, self-management, and Exit. There is no session row. Exit asks before it leaves. Enter or y logs out. n keeps the saved sign-in. Esc stays.
 - The same user, role, menu, department, post, parameter, dictionary, notice, and audit actions on the menu, on the command line, and on the web page.
 - Data scope 1 all, 2 custom departments, 3 this department, 4 this department and children. Any other scope shows no rows.
 - sqlite3 or MariaDB or MySQL. The default is the sqlite3 file `~/.local/PyRbac/pyrbac.sqlite3`. mysql uses the database `pyrbac`.
@@ -50,7 +50,7 @@ py-rbac db-init
 
 The first init prints `seeded`. A later init prints `present` and does not add another administrator.
 
-Choose the engine from the terminal, from the text menu, or from the web sign-in page. Choice 1 is the sqlite3 file. Choice 2 is mysql. Enter keeps the current engine. `py-rbac db-engine` does not open the database.
+`py-rbac` uses sqlite3 and `~/.local/PyRbac/pyrbac.sqlite3` without asking for a path. `py-rbac db-engine` still offers choice 1 sqlite3 and choice 2 mysql. Enter selects sqlite3 and that default file. `py-rbac db-engine` does not open the database.
 
 ```bash
 py-rbac db-engine --engine sqlite3
@@ -67,7 +67,7 @@ py-rbac db-init
 
 ## Usage
 
-On a terminal, `py-rbac` asks for the database engine, then asks for the account name, then the password. A menu, `serve`, or any domain verb creates the tables when they are missing. After a match it opens the menu. Esc on the engine question or the sign-in question leaves without the menu. Setup row 78 asks for the same engine choice. `py-rbac help` lists the verbs. `py-rbac serve` prints a URL and listens until you interrupt it. Menu row 7 starts that site in the background for as long as the process stays open. The web sign-in page has the same two engine choices. A signed-in administrator can also open Database.
+On a terminal, `py-rbac` uses the sqlite3 default file, then asks for the account name, then the password, unless a saved sign-in still matches. A match stores the account and password in encrypted files under the home folder. Both files are mode 0600. A later start decodes them and skips the question when the login still works. A failed restore removes the saved sign-in and asks again. The web sign-in page does not write those files. A menu, `serve`, or any domain verb creates the tables when they are missing. After a match it opens the menu. Esc on the sign-in question leaves without the menu. Row 9 Exit asks before it leaves. Enter or y logs out and removes the saved sign-in. n leaves and keeps it. Esc stays on the menu. Setup row 78 asks for the engine. Enter there selects sqlite3 and the default file. `py-rbac help` lists the verbs. `py-rbac serve` prints a URL and listens until you interrupt it. Menu row 7 starts that site in the background for as long as the process stays open. The web sign-in page has sqlite3 and the default file already selected. A signed-in administrator can also open Database.
 
 `login`, `logout`, and `whoami` are typed verbs. They are not rows on the menu.
 
@@ -91,6 +91,7 @@ A suggested password for a new account is the parameter `sys.user.initPassword`,
 - Passwords are stored as PBKDF2-HMAC-SHA256 (`pbkdf2_sha256$…`), rather than bcrypt.
 - Signed-in sessions are rows in `sys_session`, rather than Redis.
 - Data scope uses 1, 2, 3, and 4. Scope 5 is not granted.
+- A terminal sign-in also stores the account and password encrypted under `~/.local/PyRbac`. Reading only the login file does not show the password. Logout removes that saved sign-in. The web sign-in page does not write it. Someone who can already read this account's files can still recover the password.
 - Captcha, export, import, scheduled jobs, code generation, and a Vue application are not in this version.
 
 ### Environment

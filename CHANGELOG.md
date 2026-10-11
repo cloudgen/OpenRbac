@@ -3,6 +3,23 @@
 All notable changes to **PyRbac** are documented here.
 Version SSOT: `pyproject.toml` + `src/PyRbac/__init__.__version__`.
 
+## [1.0.4] - 2026-10-11
+
+### Added
+
+- A successful terminal sign-in stores the account and password in encrypted files under the home folder. A later start uses them when the login still works and does not ask again. A failed restore removes the saved sign-in. The web sign-in page does not write those files.
+
+### Changed
+
+- Row 9 Exit asks before it leaves. Enter or y logs out and removes the saved sign-in. n leaves and keeps it. Esc stays on the menu. End of input still leaves without the question.
+
+## [1.0.3] - 2026-10-11
+
+### Changed
+
+- A terminal with no arguments uses sqlite3 and `~/.local/PyRbac/pyrbac.sqlite3`. It asks for the account and the password, and it does not ask for the engine or the file path.
+- Enter on `py-rbac db-engine` and on setup row 78 selects sqlite3 and that default file. Choice 2 is still mysql. The web sign-in page has sqlite3 already selected.
+
 ## [1.0.2] - 2026-10-11
 
 ### Added

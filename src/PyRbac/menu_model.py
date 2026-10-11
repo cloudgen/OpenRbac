@@ -74,13 +74,14 @@ class MenuModel:
         self.error = ""
 
     def apply_key(self, key: int, screen_height: int = 24) -> str | None:
-        """Return 'exit', a row kind, or None to stay.
+        """Return 'exit', 'exit-now', a row kind, or None to stay.
 
         Esc (27) leaves a result page or a nested board for the front board.
-        It is not row 9 Exit. End-of-input (-1) still leaves the program from
-        the front board so a closed script does not spin. The one-second clock
-        wait never arrives here as -1. A saved-language notice lasts until
-        the next key.
+        It is not row 9 Exit. End-of-input (-1) returns exit-now from the
+        front board so a closed script does not spin and does not ask. Row 9
+        returns exit, and the session asks before it leaves. The one-second
+        clock wait never arrives here as -1. A saved-language notice lasts
+        until the next key.
         """
         self.notice = ""
         if key == 27:
@@ -94,7 +95,7 @@ class MenuModel:
             if self.layer != "front":
                 self.show_front()
                 return None
-            return "exit"
+            return "exit-now"
         if self.phase == "result":
             lines = self.result_text.splitlines() or [""]
             if self.painter._result_overflow(screen_height, len(lines)) and key in (

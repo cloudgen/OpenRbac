@@ -209,10 +209,13 @@ class Cli:
             formatter_class=argparse.RawDescriptionHelpFormatter,
             description=(
                 "{0} — online RBAC and centralized configuration.\n"
-                "With no arguments on a terminal, asks for the database engine,\n"
-                "then an account and a password, then opens the text menu.\n"
-                "The default engine is the sqlite3 file. It creates missing tables first.\n"
-                "db-engine chooses sqlite3 or mysql and does not open the database.\n"
+                "With no arguments on a terminal, uses the sqlite3 default file,\n"
+                "then opens the text menu when a saved sign-in still matches.\n"
+                "Otherwise it asks for an account and a password.\n"
+                "It creates missing tables first. Row 9 Exit asks before it leaves.\n"
+                "Enter there logs out. n keeps the saved sign-in. db-engine:\n"
+                "Enter selects sqlite3 and that file. 2 selects mysql.\n"
+                "db-engine does not open the database.\n"
                 "With no arguments and no terminal, prints this help and stops.\n"
                 "Product verbs: {1}.\n"
                 "The text menu has no session row. Row 7 serve starts the site.\n"
@@ -380,7 +383,7 @@ class Cli:
         if not Cli.stdout_is_tty():
             return 0
         try:
-            picked = input("Choice [keep]: ")
+            picked = input("Choice [sqlite3]: ")
         except EOFError:
             return 0
         try:

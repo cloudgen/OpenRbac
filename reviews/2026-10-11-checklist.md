@@ -5,19 +5,22 @@ Use this list before a push to `cloudgen/PyRbac`.
 ## Requirements
 
 - [x] Exactly one Active domain file: `requirement-domain-pyrbac`
-- [x] RBAC, database, environment, web, TUI, and CLI requirements exist
+- [x] RBAC, database, environment, local login, web, TUI, and CLI requirements exist
 - [x] ChronicleLogger is required at `>=1.3.1` and constructed in `def main`
 - [x] Index status matches the file headers for the new rows
 
 ## Behavior
 
-- [x] Empty argv on a terminal asks for the engine, then a sign-in, then opens the menu, and does not run pip
+- [x] Empty argv on a terminal uses the sqlite3 default file, restores a saved sign-in when it still matches, otherwise asks, then opens the menu, and does not run pip
 - [x] Front rows are access, system-log, language, setup, audit, serve, self-management, Exit. There is no session row
+- [x] Row 9 Exit asks. Enter or y logs out and removes the saved sign-in. n keeps it. Esc stays. End of input leaves without the question
 - [x] Language stays on row 4, codes 41–53, leaf `~/.local/PyRbac/language`
 - [x] System-log stays on 3 and 31–33. Self-management stays on 8 and 82–87
 - [x] Data scope 1–4. Unknown scope shows no users
 - [x] Web bind defaults to loopback. CSRF and cookie are present
 - [x] Passwords are not written to the ChronicleLogger file
+- [x] A terminal sign-in stores the account and password as ciphertext, mode 0600, and logout removes that file
+- [x] A failed restore removes the saved sign-in. A web sign-in does not write it
 
 ## Database
 

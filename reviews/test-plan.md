@@ -8,6 +8,7 @@ Run `tests/run.sh` from the repository root. The RBAC cases use a temporary sqli
 | TP-TUI-10 | `tests/test_tui.py` | Wide columns count as two. The front board fits the new rows |
 | TP-LANG-01 | `tests/test_language.py` | Row 4, codes 41–53, mode 0600 leaf, `PYRBAC_LANG` does not write |
 | TP-MENU-01 | `tests/test_hello.py` | Front numbers 2–9. No session row. Sign-in gate retries a wrong password. `login` does not open the menu. `hello` is absent |
+| TP-LOCAL-01 | `tests/test_local_login.py` | Encrypted local sign-in, restore, logout clears it, web sign-in does not write it, Exit asks |
 | TP-DB-02 | `tests/test_rbac.py` | A domain verb and `serve` seed a database that has no tables, once |
 | TP-ABOUT | `tests/test_about.py` | Identity block, host check, star box |
 | TP-RBAC-01 | `tests/test_rbac.py` | Seed once, scopes 3, 4, and 5, protected user and role |

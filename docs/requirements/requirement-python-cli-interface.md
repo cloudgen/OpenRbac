@@ -1,12 +1,12 @@
 **file**: docs/requirements/requirement-python-cli-interface.md
-**Status**: Active (Version 1.3.0)
+**Status**: Active (Version 1.5.0)
 **Area**: python
 **Key**: `requirement-python-cli-interface`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
 
 ## 1. Purpose
 
-`py-rbac` is the console script. With no arguments on a terminal it asks for the database engine, prepares a missing database, asks for an account and a password, and then opens the text menu. With no arguments and no terminal it prints help and returns 0. A product verb runs that verb and does not open the menu.
+`py-rbac` is the console script. With no arguments on a terminal it uses the sqlite3 default file, prepares a missing database, opens the text menu when a saved sign-in still matches, and otherwise asks for an account and a password. With no arguments and no terminal it prints help and returns 0. A product verb runs that verb and does not open the menu.
 
 ### 1.1 Human-facing
 
@@ -22,7 +22,7 @@
 
 Lifecycle: `help`, `version`, `about`, `self-install`, `version-check`, `self-update`, `self-uninstall`.
 
-Settings: `db-engine`. It prints choice 1 sqlite3, including the default file, and choice 2 mysql. `--engine sqlite3` or `--engine mysql` stores the choice. With no `--engine` and no terminal it prints the choices and does not ask. It does not open the database.
+Settings: `db-engine`. It prints choice 1 sqlite3, including the default file, and choice 2 mysql. Enter selects sqlite3 and that file. `--engine sqlite3` or `--engine mysql` stores the choice. With no `--engine` and no terminal it prints the choices and does not ask. It does not open the database.
 
 Domain: `login`, `logout`, `whoami`, `serve`, `db-init`, `user-list`, `user-add`, `user-edit`, `user-remove`, `user-reset-password`, `role-list`, `role-grant`, `menu-list`, `menu-add`, `dept-list`, `dept-add`, `post-list`, `post-add`, `config-list`, `config-set`, `config-add`, `dict-list`, `dict-add`, `notice-list`, `notice-add`, `oper-log`, `login-log`, `online-list`, `online-logout`.
 
@@ -30,8 +30,8 @@ Domain: `login`, `logout`, `whoami`, `serve`, `db-init`, `user-list`, `user-add`
 
 ## 3. Normative rules
 
-1. **Gate.** `--help`, `-h`, `--version`, any flag, and any product verb **MUST NOT** open the menu. `about` on a terminal **MUST** open the about page on the text screen. Empty argv on a terminal **MUST** ask for the engine, then a sign-in, and **MUST** open the menu only after that sign-in succeeds. Esc on the engine question or the sign-in question **MUST** leave without the menu.
-2. **Engine verb.** `db-engine` **MUST** offer sqlite3, including the default file path, and mysql. `--engine` **MUST** accept only `sqlite3` or `mysql`. A terminal with no `--engine` **MUST** accept Enter as "keep the current engine". No terminal and no `--engine` **MUST** print the choices and return 0. This verb **MUST NOT** open the database.
+1. **Gate.** `--help`, `-h`, `--version`, any flag, and any product verb **MUST NOT** open the menu. `about` on a terminal **MUST** open the about page on the text screen. Empty argv on a terminal **MUST** use sqlite3 and the default file, then try the saved local sign-in (`requirement-local-login`). When that sign-in still matches, the menu **MUST** open without a question. Otherwise it **MUST** ask for a sign-in, and **MUST** open the menu only after that sign-in succeeds. It **MUST NOT** ask for the engine or the file path. Esc on the sign-in question **MUST** leave without the menu.
+2. **Engine verb.** `db-engine` **MUST** offer sqlite3, including the default file path, and mysql. `--engine` **MUST** accept only `sqlite3` or `mysql`. A terminal with no `--engine` **MUST** accept Enter as sqlite3 and the default file. When the environment already sets an engine, Enter **MUST** keep that engine. No terminal and no `--engine` **MUST** print the choices and return 0. This verb **MUST NOT** open the database.
 3. **Uninstall.** `--force` **MUST** be accepted only with `self-uninstall`.
 4. **Errors.** A failure **MUST** print `ERROR:` and `Next:` on stderr and return 1. The next step **MUST** tell the operator what to run.
 5. **Password flag.** `--password` is allowed for a non-interactive test. Help **MUST** say that the process list can show it. The sign-in question and every later password question **MUST** ask one field at a time and mask the password.
@@ -42,7 +42,7 @@ Domain: `login`, `logout`, `whoami`, `serve`, `db-init`, `user-list`, `user-add`
 
 | ID | Check |
 |----|-------|
-| AC-1 | Empty argv on a terminal is the engine choice, then the sign-in gate, then the menu. `login` is not |
+| AC-1 | Empty argv on a terminal uses the sqlite3 default file, then a saved sign-in or the sign-in gate, then the menu. `login` is not |
 | AC-4 | `db-engine` prints sqlite3, the default file, and mysql, and does not create the sqlite3 file |
 | AC-2 | `hello` is not a product verb |
 | AC-3 | A domain failure prints ERROR and Next |
@@ -52,7 +52,7 @@ Domain: `login`, `logout`, `whoami`, `serve`, `db-init`, `user-list`, `user-add`
 | Term | Meaning in this file |
 |------|----------------------|
 | Product verb | One word from section 2 |
-| Menu gate | Empty argv on a terminal, after the sign-in question |
+| Menu gate | Empty argv on a terminal, after a saved sign-in or the sign-in question |
 | Next step | The line after `Next:` |
 
 ## 7. Status history
@@ -63,6 +63,8 @@ Domain: `login`, `logout`, `whoami`, `serve`, `db-init`, `user-list`, `user-add`
 | 2026-10-11 | Active 1.1.0 | RBAC verbs replace `hello` |
 | 2026-10-11 | Active 1.2.0 | Empty argv signs in before the menu |
 | 2026-10-11 | Active 1.3.0 | `db-engine` chooses sqlite3 or mysql and does not open the database |
+| 2026-10-11 | Active 1.4.0 | Empty argv uses the sqlite3 default file. Enter on `db-engine` selects it |
+| 2026-10-11 | Active 1.5.0 | A matching saved sign-in opens the menu without a question |
 
 ---
 

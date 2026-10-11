@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-web-interface.md
-**Status**: Active (Version 1.1.0)
+**Status**: Active (Version 1.2.0)
 **Area**: domain
 **Key**: `requirement-web-interface`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -35,6 +35,7 @@ The web interface is a small standard-library HTTP site. It has no JavaScript. E
 7. **Handler.** `ThreadingHTTPServer` constructs a nested handler inside `WebApp.make_server`. That nested class is the one exception to one-class-per-module. It **MUST** delegate to `WebApp`.
 8. **Nav.** A link **MUST** be omitted when the account lacks the matching list permission.
 9. **Engine choice.** The sign-in page **MUST** offer sqlite3, including the default file path, and mysql. The checked value **MUST** be the current engine. A sign-in from loopback **MAY** store a different engine before the password is checked. A sign-in from any other address **MUST NOT** switch the engine. The Database page **MUST** require `system:config:edit` and the session CSRF field. Saving a different engine there **MUST** clear the session cookie, because the session row remains in the previous database.
+10. **Local sign-in.** A web sign-in **MUST NOT** write the terminal session file or the local login files from `requirement-local-login`. It uses the cookie only.
 
 ## 3. Acceptance checks
 
@@ -62,6 +63,7 @@ The web interface is a small standard-library HTTP site. It has no JavaScript. E
 |------|--------|------|
 | 2026-10-11 | Active 1.0.0 | Loopback HTML site, cookie, and CSRF |
 | 2026-10-11 | Active 1.1.0 | Sign-in and Database pages choose sqlite3 or mysql |
+| 2026-10-11 | Active 1.2.0 | A web sign-in does not write the local login files |
 
 ---
 

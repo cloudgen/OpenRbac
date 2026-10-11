@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-environment.md
-**Status**: Active (Version 1.1.0)
+**Status**: Active (Version 1.2.0)
 **Area**: domain
 **Key**: `requirement-environment`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -38,7 +38,7 @@ Process settings come from the environment, then from a mode-0600 file, then fro
 | `PYRBAC_PORT` | `8765` | Web port. `0` asks for a free port |
 | `PYRBAC_ALLOW_REMOTE` | unset | Must be `yes` before a non-loopback bind |
 | `PYRBAC_LANG` | unset | Menu language. Does not write the language leaf |
-| `PYRBAC_HOME` | unset | When set, replaces `~/.local/PyRbac` for the session and the database file |
+| `PYRBAC_HOME` | unset | When set, replaces `~/.local/PyRbac` for the session, the database file, and the local sign-in |
 
 ## 3. Normative rules
 
@@ -48,6 +48,7 @@ Process settings come from the environment, then from a mode-0600 file, then fro
 4. **Session file.** The terminal token file is `session` in that same directory, mode `0600`, after the directory is mode `0700`. A file that is not mode `0600` **MUST** be treated as signed out. The web cookie is not this file.
 5. **Bind.** `127.0.0.1`, `localhost`, and `::1` are loopback. Any other address **MUST** raise a refusal unless `PYRBAC_ALLOW_REMOTE` is `yes`.
 6. **Secrets in docs.** Versioned product documents **MUST NOT** contain a host vault path, a private key name, or a live password. The seeded initial passwords in the user document are the demo values the operator is told to change.
+7. **Local sign-in.** The encrypted sign-in files from `requirement-local-login` live in this same home folder. This file does not define a password default for them.
 
 ## 4. Acceptance checks
 
@@ -74,6 +75,7 @@ Process settings come from the environment, then from a mode-0600 file, then fro
 |------|--------|------|
 | 2026-10-11 | Active 1.0.0 | Environment names, 0600 file, loopback bind |
 | 2026-10-11 | Active 1.1.0 | `PYRBAC_DB_ENGINE` defaults to sqlite3. `PYRBAC_SQLITE_FILE` names the data file |
+| 2026-10-11 | Active 1.2.0 | The home folder also holds the local sign-in files |
 
 ---
 

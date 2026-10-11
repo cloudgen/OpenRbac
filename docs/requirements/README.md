@@ -5,7 +5,7 @@ Authoritative specialized product law for **PyRbac** lives here.
 | Fact | Value |
 |------|-------|
 | Product / package | `PyRbac` |
-| Version SSOT | **`1.0.2`** (`pyproject.toml` + `src/PyRbac/__init__.py`) |
+| Version SSOT | **`1.0.4`** (`pyproject.toml` + `src/PyRbac/__init__.py`) |
 | Console script | `py-rbac` |
 | Module | `python -m PyRbac` |
 | Install mode | pip / local package |

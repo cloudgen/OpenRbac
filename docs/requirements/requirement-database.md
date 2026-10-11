@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-database.md
-**Status**: Active (Version 1.3.0)
+**Status**: Active (Version 1.5.0)
 **Area**: domain
 **Key**: `requirement-database`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -298,8 +298,8 @@ Each link table is only the two ids. The pair is the primary key.
 4. **Tables.** `db-init` **MUST** create `sys_dept`, `sys_user`, `sys_post`, `sys_role`, `sys_menu`, `sys_user_role`, `sys_role_menu`, `sys_role_dept`, `sys_user_post`, `sys_oper_log`, `sys_dict_type`, `sys_dict_data`, `sys_config`, `sys_logininfor`, `sys_notice`, and `sys_session` when they are missing.
 5. **Shape.** A mysql table created by `db-init` **MUST** use InnoDB and `utf8mb4` and **MUST** have the columns and keys in section 1.2. A sqlite3 table **MUST** have those columns and keys, with `INTEGER PRIMARY KEY AUTOINCREMENT` where section 1.2 says `AUTO_INCREMENT`, and **MUST NOT** declare an engine or a charset. `db-init` **MUST NOT** declare a foreign key. `db-init` **MUST NOT** change a table that already exists.
 6. **Seed once.** When `sys_user` has any row, `db-init` **MUST** return `present` and **MUST NOT** insert another admin. The first empty run **MUST** return `seeded`.
-7. **Automatic init.** The text menu, `serve`, and every domain verb **MUST** call the same init as `db-init` when the tables are missing or `sys_user` is empty. On the text menu that call **MUST** happen after the engine choice and before the sign-in question. On a domain verb it **MUST** happen before the verb body. A later call **MUST** return `present` and **MUST NOT** insert another administrator. `help`, `version`, `about`, `db-engine`, and the pip verbs **MUST NOT** open the database. A connection failure **MUST** still name the settings to check. `db-init` **MUST** remain and **MUST** print `seeded` or `present`.
-8. **Choice.** The command `db-engine`, the text menu before sign-in, setup row 78, the web sign-in page, and the signed-in Database page **MUST** each offer choice 1 sqlite3, including the default file path, and choice 2 mysql. An empty choice **MUST** keep the current engine. The environment **MUST** win over the mode-0600 file. A web sign-in from a non-loopback address **MUST NOT** switch the engine.
+7. **Automatic init.** The text menu, `serve`, and every domain verb **MUST** call the same init as `db-init` when the tables are missing or `sys_user` is empty. On the text menu that call **MUST** happen before the sign-in question and before a restored local sign-in. The menu **MUST** use sqlite3 and the default file for that call unless an engine is already stored. On a domain verb it **MUST** happen before the verb body. A later call **MUST** return `present` and **MUST NOT** insert another administrator. `help`, `version`, `about`, `db-engine`, and the pip verbs **MUST NOT** open the database. A connection failure **MUST** still name the settings to check. `db-init` **MUST** remain and **MUST** print `seeded` or `present`.
+8. **Choice.** The command `db-engine`, setup row 78, the web sign-in page, and the signed-in Database page **MUST** each offer choice 1 sqlite3, including the default file path, and choice 2 mysql. An empty choice **MUST** select sqlite3 and the default file. When the environment sets an engine, an empty choice **MUST** keep that engine. The text menu before sign-in **MUST NOT** ask for this choice. The environment **MUST** win over the mode-0600 file. A web sign-in from a non-loopback address **MUST NOT** switch the engine. The web sign-in page **MUST** have sqlite3 selected when that is the current engine.
 
 ## 3. Acceptance checks
 
@@ -331,6 +331,8 @@ Each link table is only the two ids. The pair is the primary key.
 | 2026-10-11 | Active 1.1.0 | Column lists, keys, and the join diagram |
 | 2026-10-11 | Active 1.2.0 | A menu, serve, or domain verb initializes a missing database |
 | 2026-10-11 | Active 1.3.0 | sqlite3 default file and mysql. The same choice on the command, the menu, and the web page. The table text names this product only |
+| 2026-10-11 | Active 1.4.0 | Sign-in uses the sqlite3 default file. Enter on `db-engine` selects it |
+| 2026-10-11 | Active 1.5.0 | Init still happens before a restored local sign-in |
 
 ---
 

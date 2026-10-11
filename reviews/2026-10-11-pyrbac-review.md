@@ -1,8 +1,8 @@
 # PyRbac review — 2026-10-11
 
-**Product:** PyRbac 1.0.2
-**Scope:** Requirements, RBAC behavior, database isolation, web pages, text menu, and ChronicleLogger.
-**Result:** Pass with the limits below.
+**Product:** PyRbac 1.0.4
+**Scope:** Requirements, RBAC behavior, database isolation, web pages, text menu, local sign-in, and ChronicleLogger.
+**Result:** Pass with the limits below. `tests/run.sh` reported 46 tests OK.
 
 ## What was checked
 
@@ -22,11 +22,15 @@
 | Sign-in question before the menu. A wrong password is asked again | Pass |
 | A domain verb and serve initialize a database that has no tables, once | Pass |
 | Default engine is the sqlite3 file. Choice 1 keeps that file. Choice 2 is mysql | Pass in `tests/test_rbac.py` |
+| A terminal sign-in stores ciphertext. A later start restores it. Logout removes it | Pass in `tests/test_local_login.py` |
+| A bad mode or a bad check does not return the password. The log does not contain it | Pass |
+| A web sign-in does not write the local login file | Pass |
+| Row 9 Exit asks. Enter logs out. n keeps the saved sign-in. Esc stays. End of input does not ask | Pass |
 | `ruoyi_db` and `ry` are not opened by the tests | Pass. mysql cases set `PYRBAC_DB_NAME=pyrbac_test` |
 
 ## Limits
 
-- Captcha, export, import, and batch logout are not in 1.0.2.
+- Captcha, export, import, and batch logout are not in 1.0.4.
 - The front-board screenshots still show the earlier session row. The live menu does not.
 - `user-add` and `role-grant` use sequential statements. A crash between them can leave a partial write. The seed itself is one transaction.
 - The web grant form can read menu ids for an editor who has role edit without menu list. The seeded administrator has both.
@@ -36,4 +40,5 @@
 
 - Passwords are PBKDF2-HMAC-SHA256, rather than bcrypt.
 - Online sessions are `sys_session`, rather than Redis.
+- A terminal sign-in also keeps the account and password as HMAC-SHA256 ciphertext beside a separate mode-0600 key. Reading only the login file does not show the password. A person who can read both files can. The web sign-in page does not write those files.
 - Data scope stops at 4.

@@ -266,13 +266,24 @@ class Tui:
             return False
         return True
 
-    def login_lines(self, state="", error="", database_name=""):
+    def login_lines(self, state="", error="", database_name="", saved_failed=False):
         """General Purpose: The sign-in text shown before the front board."""
         lines = [
             "Sign in before the menu.",
             "Type the account name, then the password.",
             "The password is masked. Esc leaves.",
         ]
+        if saved_failed:
+            lines.append("The saved sign-in did not match.")
+        settings = None
+        desk = getattr(self.app, "desk", None) if self.app is not None else None
+        if desk is not None:
+            settings = getattr(desk, "settings", None)
+        if settings is not None:
+            try:
+                lines.append(settings.engine_sentence())
+            except Exception:
+                pass
         if state == "seeded" and database_name:
             lines.append("Database {0}: seeded.".format(database_name))
             lines.append("Seeded accounts are in the product README. Change them after this sign-in.")
@@ -281,14 +292,14 @@ class Tui:
             lines.append("ERROR: {0}".format(error))
         return lines
 
-    def login_gate(self, ask, state="present", database_name=""):
+    def login_gate(self, ask, state="present", database_name="", saved_failed=False):
         """General Purpose: Ask until the password matches. Esc returns False.
 
         ask(lines) returns a dict with user_name and password, or None.
         """
         error = ""
         while True:
-            picked = ask(self.login_lines(state, error, database_name))
+            picked = ask(self.login_lines(state, error, database_name, saved_failed=saved_failed))
             if picked is None:
                 return False
             if self.app is None or getattr(self.app, "desk", None) is None:
@@ -303,11 +314,82 @@ class Tui:
             except Exception as exc:
                 error = str(exc)
 
+    def sign_in_or_restore(self, ask, state="present", database_name=""):
+        """General Purpose: Use a saved sign-in when it still matches. Otherwise ask."""
+        desk = getattr(self.app, "desk", None) if self.app is not None else None
+        saved_failed = False
+        if desk is not None and hasattr(desk, "restore_local"):
+            had = False
+            local = getattr(desk, "local_login", None)
+            if local is not None and hasattr(local, "present"):
+                try:
+                    had = bool(local.present())
+                except Exception:
+                    had = False
+            try:
+                if desk.restore_local():
+                    return True
+            except Exception:
+                pass
+            if had:
+                saved_failed = True
+        return self.login_gate(
+            ask,
+            state=state,
+            database_name=database_name,
+            saved_failed=saved_failed,
+        )
+
+    def _exit_choice(self, screen, model):
+        """Ask before leaving the front board.
+
+        Enter or y logs out and leaves. n leaves and keeps the saved sign-in.
+        Esc stays on the board.
+        """
+        lines = [
+            "Leave the menu?",
+            "Enter or y logs out and removes the saved sign-in.",
+            "n leaves and keeps the saved sign-in for the next start.",
+            "Esc stays on the menu.",
+        ]
+        model.error = ""
+        while True:
+            raw = self.read_key(screen, model, lines, title="exit")
+            if raw is None:
+                return "stay"
+            text = raw.strip().lower()
+            if text in ("", "y", "yes"):
+                self._logout_for_exit()
+                return "leave"
+            if text in ("n", "no"):
+                return "leave"
+            model.error = "Enter, y, or n"
+
+    def _logout_for_exit(self) -> None:
+        """General Purpose: Log out for row 9. A missing token still drops the saved sign-in."""
+        desk = getattr(self.app, "desk", None) if self.app is not None else None
+        if desk is None or not hasattr(desk, "logout"):
+            return
+        try:
+            desk.logout()
+        except Exception:
+            return
+
+    def _bind_exit(self, session, screen_box) -> None:
+        """General Purpose: Row 9 asks. End of input still leaves without the question."""
+        def on_exit():
+            screen = screen_box.get("screen")
+            if screen is None:
+                return "leave"
+            return self._exit_choice(screen, session.model)
+
+        session.on_exit = on_exit
+
     def _menu_engine(self, screen, model):
-        """Ask for sqlite3 or mysql. Esc returns None. Enter keeps the current engine."""
+        """Ask for sqlite3 or mysql. Esc returns None. Enter selects sqlite3 and the default file."""
         while True:
             lines = list(self.app.desk.settings.choice_lines())
-            lines.append("1 sqlite3 file, 2 mysql, or Enter to keep. Esc leaves.")
+            lines.append("Enter uses sqlite3 and the default file. 2 uses mysql. Esc leaves.")
             text = self.read_key(screen, model, lines, title="database")
             if text is None:
                 return None
@@ -325,10 +407,12 @@ class Tui:
 
     def open_text_menu(self):
         """
-        General Purpose: Ask for the database engine, initialize a missing
-        database, ask for a sign-in, then draw the front board. Does not run
-        pip. Returns "missing" when the screen cannot open or the database
-        cannot be prepared.
+        General Purpose: Use sqlite3 and the default file unless a choice is
+        already stored, initialize a missing database, restore a saved sign-in
+        when it still matches, otherwise ask, then draw the front board.
+        Does not ask for the engine or the file path.
+        Does not run pip. Returns "missing" when the screen cannot open or
+        the database cannot be prepared.
         """
         if not self._require_terminal():
             return "missing"
@@ -377,18 +461,17 @@ class Tui:
             logger=self.logger,
             painter=self.painter,
         )
+        self._bind_exit(session, screen_box)
 
         def _wrapped(screen):
             screen_box["screen"] = screen
             try:
-                if self._menu_engine(screen, session.model) is None:
-                    return
                 state = self.app.desk.ensure_database()
                 database_name = self.app.desk.settings.storage_label()
             except Exception as exc:
                 error_box["exc"] = exc
                 return
-            signed_in = self.login_gate(
+            signed_in = self.sign_in_or_restore(
                 lambda lines: self._ask_fields(
                     screen, session.model, "login", self.ASKS["login"],
                 ),
@@ -426,6 +509,7 @@ class Tui:
             return 1
 
         code_box = {"code": 0}
+        screen_box = {}
         session = MenuSession(
             self._name(),
             self._ver(),
@@ -436,8 +520,10 @@ class Tui:
             logger=self.logger,
             painter=self.painter,
         )
+        self._bind_exit(session, screen_box)
 
         def _wrapped(screen):
+            screen_box["screen"] = screen
             try:
                 if kind != "about":
                     code_box["code"] = 1

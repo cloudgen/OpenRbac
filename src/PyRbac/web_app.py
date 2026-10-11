@@ -518,7 +518,8 @@ class WebApp:
             "<p>Seeded accounts and initial passwords are in the product README. "
             "Change them after the first sign-in. This site listens on this computer only "
             "unless remote bind was explicitly allowed. "
-            "The default database is the sqlite3 file. mysql needs PYRBAC_DB_PASSWORD.</p>"
+            "sqlite3 and the default file are already selected. "
+            "Change that only when you want mysql. mysql needs PYRBAC_DB_PASSWORD.</p>"
         ).format(error=self._error_line(error), engine=self.engine_fields())
         return self.page(None, "Sign in", body)
 

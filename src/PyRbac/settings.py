@@ -53,7 +53,7 @@ class Settings:
         self._file_cache = None
 
     def app_home(self) -> str:
-        """General Purpose: The folder that holds the language leaf, the session, and the database file."""
+        """General Purpose: The folder for the language leaf, the session, the database file, and the local sign-in."""
         override = self.environ.get("PYRBAC_HOME", "")
         if override:
             return override
@@ -140,7 +140,7 @@ class Settings:
         if self.get("PYRBAC_SQLITE_FILE") == "":
             mark = " (default file)"
         return [
-            "Database engine. Enter keeps the current engine.",
+            "Database engine. Enter uses sqlite3 and the default file.",
             "1 sqlite3  {0}{1}".format(path, mark),
             "2 mysql    {0}".format(self.get("PYRBAC_DB_NAME")),
             "Current: {0}".format(self.engine()),
@@ -149,14 +149,19 @@ class Settings:
     def engine_sentence(self) -> str:
         """General Purpose: One sentence naming the engine that the next connection uses."""
         if self.engine() == "sqlite3":
-            return "Database engine: sqlite3 {0}.".format(self.sqlite_path())
+            mark = ""
+            if self.get("PYRBAC_SQLITE_FILE") == "":
+                mark = " (default file)"
+            return "Database engine: sqlite3 {0}{1}.".format(self.sqlite_path(), mark)
         return "Database engine: mysql {0}.".format(self.get("PYRBAC_DB_NAME"))
 
     def apply_choice(self, token: str) -> str:
-        """General Purpose: Keep, or store sqlite3 or mysql. The environment wins over the file."""
-        text = "" if token is None else str(token).strip().lower()
-        if text == "":
-            return self.engine_sentence()
+        """General Purpose: Store sqlite3 or mysql. Enter selects sqlite3 and the default file.
+
+        A set environment value wins and is not overwritten.
+        """
+        raw = "" if token is None else str(token).strip().lower()
+        text = "sqlite3" if raw == "" else raw
         if text in ("1", "sqlite3"):
             engine = "sqlite3"
         elif text in ("2", "mysql"):
@@ -176,12 +181,14 @@ class Settings:
                     logger=self.logger,
                 )
             if env != engine:
+                if raw == "":
+                    return self.engine_sentence() + " The environment wins."
                 raise SettingsError(
                     "PYRBAC_DB_ENGINE is set in the environment.",
                     "unset PYRBAC_DB_ENGINE to store the choice in the database file",
                     logger=self.logger,
                 )
-            return self.engine_sentence() + " The environment wins."
+            return self.engine_sentence()
         self.save_engine(engine)
         return self.engine_sentence()
 

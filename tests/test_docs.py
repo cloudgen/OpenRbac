@@ -58,8 +58,8 @@ class TestReadme(unittest.TestCase):
 
     def test_tp_doc_01_structure_badge_and_absolute_images(self):
         version = _package_version()
-        self.assertEqual(version, "1.0.2")
-        self.assertIn("version-1.0.2", README)
+        self.assertEqual(version, "1.0.4")
+        self.assertIn("version-1.0.4", README)
         for heading in HEADINGS:
             self.assertIn("\n## {0}\n".format(heading), "\n" + README)
         for url in RELATED:
@@ -71,6 +71,8 @@ class TestReadme(unittest.TestCase):
         self.assertNotIn("](screenshots/", README)
         self.assertIn("no session row", README)
         self.assertIn("asks for the account name", README)
+        self.assertIn("saved sign-in", README)
+        self.assertIn("removes the saved sign-in", README)
         self.assertIn("creates the tables when they are missing", README)
         self.assertIn("admin123", README)
         self.assertIn("operator123", README)

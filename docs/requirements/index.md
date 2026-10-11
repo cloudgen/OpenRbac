@@ -2,7 +2,7 @@
 
 **Product:** PyRbac (Python CLI — text menu and local web pages for online RBAC)
 **Workspace state:** Specialized product law; **software-development** class; **pip/local package** install.
-**Product version:** **1.0.2** (`pyproject.toml`, `src/PyRbac/__init__.py`, root `README.md`)
+**Product version:** **1.0.4** (`pyproject.toml`, `src/PyRbac/__init__.py`, root `README.md`)
 **Updated:** 2026-10-11
 
 | ID / key | Title | Area | Status | Path | Updated |
@@ -13,12 +13,13 @@
 | requirement-rbac | RBAC system map, permissions, data scope 1–4, seed on an empty database, protected rows | domain | Active | `requirement-rbac.md` | 2026-10-11 |
 | requirement-database | sqlite3 default file and mysql tables, seed-once, auto-init | domain | Active | `requirement-database.md` | 2026-10-11 |
 | requirement-environment | PYRBAC_* names, mode-0600 file, loopback bind | domain | Active | `requirement-environment.md` | 2026-10-11 |
+| requirement-local-login | Encrypted local sign-in and the Exit logout question | domain | Active | `requirement-local-login.md` | 2026-10-11 |
 | requirement-web-interface | Local HTML site, cookie, CSRF, shared service | domain | Active | `requirement-web-interface.md` | 2026-10-11 |
 | requirement-python-about | About page: identity, host check, star box. No `--json` | python | Active | `requirement-python-about.md` | 2026-10-11 |
 | requirement-video-ffmpeg-pipeline | Retired. No encoder, no concat, no media publish | video | Retired | `requirement-video-ffmpeg-pipeline.md` | 2026-10-11 |
-| requirement-python-cli-interface | CLI entry, typed verbs, sign-in then menu on a terminal | python | Active | `requirement-python-cli-interface.md` | 2026-10-11 |
+| requirement-python-cli-interface | CLI entry, typed verbs, saved sign-in or question, then menu | python | Active | `requirement-python-cli-interface.md` | 2026-10-11 |
 | requirement-python-cli-logging | ChronicleLogger construct in `def main`; no passwords in the log | python | Active | `requirement-python-cli-logging.md` | 2026-10-11 |
-| requirement-python-tui | Text menu rows 2–9, sign-in first, path word, display columns | python | Active | `requirement-python-tui.md` | 2026-10-11 |
+| requirement-python-tui | Text menu rows 2–9, saved sign-in, Exit asks, path word, display columns | python | Active | `requirement-python-tui.md` | 2026-10-11 |
 | requirement-python-cli-language | Menu language: front row 4, codes 41–53, leaf `~/.local/PyRbac/language` | python | Active | `requirement-python-cli-language.md` | 2026-10-11 |
 | requirement-python-oop | Class map, including Desk, Access, and WebApp | python | Active | `requirement-python-oop.md` | 2026-10-11 |
 | requirement-python-coding-style | Python style; one class per module; end state is the class map | python | Active | `requirement-python-coding-style.md` | 2026-10-04 |
@@ -35,7 +36,7 @@
 |---------|----------------------|
 | Shell online install / `curl\|sh` | **Absent** |
 | Type 1 sudoers / root elevation inside the program | **Absent** |
-| Code generation, AI, plugins, jobs, Redis, Vue bundle | **Absent** for 1.0.2 |
+| Code generation, AI, plugins, jobs, Redis, Vue bundle | **Absent** for 1.0.4 |
 | Second Active `requirement-domain-*` | **Forbidden** while `requirement-domain-pyrbac` is Active |
 | `hello`, `join`, `list-videos`, FFmpeg | **Absent** |
 | `requirement-python-json-output` | **Absent**. No `--json` |

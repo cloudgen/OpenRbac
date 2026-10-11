@@ -29,6 +29,7 @@ class MenuSession:
         on_about: Callable[[], str],
         boards: dict | None = None,
         on_kind: Callable[[str], str | None] | None = None,
+        on_exit: Callable[[], str] | None = None,
         logger=None,
         painter=None,
     ) -> None:
@@ -40,6 +41,7 @@ class MenuSession:
         self.on_version = on_version
         self.on_about = on_about
         self.on_kind = on_kind
+        self.on_exit = on_exit
         self.leave_kind = None
         if painter is None:
             self.painter = MenuPainter(logger=logger)
@@ -97,7 +99,14 @@ class MenuSession:
 
     def take_action(self, action) -> str:
         """Run one committed kind. A language pick saves, then returns to the front board."""
+        if action == "exit-now":
+            return "exit"
         if action == "exit":
+            if self.on_exit is None:
+                return "exit"
+            choice = self.on_exit()
+            if choice == "stay":
+                return "stay"
             return "exit"
         if isinstance(action, str) and action.startswith("set-"):
             message = self.painter.language.save(action[4:])

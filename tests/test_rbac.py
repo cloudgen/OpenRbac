@@ -432,10 +432,16 @@ class TestEngineChoice(unittest.TestCase):
         self.assertTrue(settings.sqlite_path().endswith(os.path.join("PyRbac", "pyrbac.sqlite3")) or settings.sqlite_path().endswith("pyrbac.sqlite3"))
         self.assertIn("pyrbac.sqlite3", settings.sqlite_path())
         lines = settings.choice_lines()
+        self.assertIn("Enter uses sqlite3", lines[0])
+        self.assertIn("default file", lines[0])
         self.assertIn("1 sqlite3", lines[1])
         self.assertIn("pyrbac.sqlite3", lines[1])
         self.assertIn("(default file)", lines[1])
         self.assertIn("2 mysql", lines[2])
+        blank = settings.apply_choice("")
+        self.assertIn("sqlite3", blank)
+        self.assertIn("(default file)", blank)
+        self.assertIn("PYRBAC_DB_ENGINE=sqlite3", (Path(home) / "database").read_text(encoding="utf-8"))
         sentence = settings.apply_choice("1")
         self.assertIn("sqlite3", sentence)
         path = Path(home) / "database"
@@ -454,6 +460,11 @@ class TestEngineChoice(unittest.TestCase):
             locked.apply_choice("2")
         self.assertIn("environment", str(caught.exception))
         self.assertEqual(locked.apply_choice(""), locked.engine_sentence())
+        mysql_env = self._settings(home, PYRBAC_DB_ENGINE="mysql")
+        kept = mysql_env.apply_choice("")
+        self.assertIn("mysql", kept)
+        self.assertIn("environment", kept)
+        self.assertEqual(mysql_env.engine(), "mysql")
         with self.assertRaises(SettingsError):
             settings.apply_choice("postgres")
 
@@ -525,6 +536,7 @@ class TestEngineChoice(unittest.TestCase):
         self.assertIn("pyrbac.sqlite3", page)
         self.assertIn("mysql", page)
         self.assertIn('name="engine"', page)
+        self.assertIn("already selected", page)
         plain = Desk(environ={
             "PYRBAC_HOME": home,
             "HOME": home,

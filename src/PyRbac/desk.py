@@ -8,6 +8,7 @@ from __future__ import annotations
 from .access import Access, AccessError
 from .audit_log import AuditLog
 from .catalog import Catalog
+from .local_login import LocalLogin
 from .password_hash import PasswordHash
 from .report_text import ReportText
 from .schema import Schema
@@ -31,6 +32,7 @@ class Desk:
             logger.log_message("instantiated", component="Desk")
         self.settings = Settings(environ=environ, logger=logger)
         self.sessions = SessionFile(self.settings, logger=logger)
+        self.local_login = LocalLogin(self.settings, logger=logger)
         self.store = Store(self.settings, logger=logger)
         self.audit = AuditLog(self.store, logger=logger)
         self.passwords = PasswordHash(logger=logger)
@@ -109,19 +111,46 @@ class Desk:
         return found
 
     def login(self, user_name, password) -> str:
-        """General Purpose: Check the password and store the terminal token."""
+        """General Purpose: Check the password, store the token, and save the local sign-in."""
         user = self.access.login(user_name, password, ipaddr="127.0.0.1", surface="cli", user_agent="py-rbac")
         self.sessions.write(user["token"])
+        self.local_login.save(user["user_name"], password)
         return "Signed in as {0}.".format(user["user_name"])
 
     def logout(self) -> str:
-        """General Purpose: Drop this terminal session and remove the token file."""
-        token = self.sessions.read()
-        if not token:
-            raise AccessError("Not signed in.", "py-rbac login --user-name NAME", logger=self.logger)
-        self.access.logout(token)
-        self.sessions.clear()
-        return "Signed out."
+        """General Purpose: Drop this terminal session and remove the saved sign-in.
+
+        The ciphertext is removed even when the token is already gone. A missing
+        token still raises Not signed in.
+        """
+        try:
+            token = self.sessions.read()
+            if not token:
+                raise AccessError("Not signed in.", "py-rbac login --user-name NAME", logger=self.logger)
+            self.access.logout(token)
+            self.sessions.clear()
+            return "Signed out."
+        finally:
+            self.local_login.clear()
+
+    def restore_local(self) -> bool:
+        """General Purpose: Skip a new question when the previous sign-in still works.
+
+        A live terminal token is enough. Otherwise the saved account and password
+        are decoded and tried. A failed try removes the saved sign-in.
+        """
+        if self.actor() is not None:
+            return True
+        loaded = self.local_login.load()
+        if loaded is None:
+            return False
+        user_name, password = loaded
+        try:
+            self.login(user_name, password)
+        except Exception:
+            self.local_login.clear()
+            return False
+        return True
 
     def whoami(self) -> str:
         """General Purpose: Describe the signed-in account. No password and no token."""
