@@ -3,9 +3,9 @@ requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "PyRbac"
-version = "1.0.4"
-description = "PyRbac is online RBAC and centralized configuration for the terminal and a local web page."
+name = "OpenRbac"
+version = "1.0.5"
+description = "OpenRbac is online RBAC and centralized configuration for the terminal and a local web page."
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
@@ -20,12 +20,12 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/cloudgen/PyRbac"
-Repository = "https://github.com/cloudgen/PyRbac"
-Issues = "https://github.com/cloudgen/PyRbac/issues"
+Homepage = "https://github.com/cloudgen/OpenRbac"
+Repository = "https://github.com/cloudgen/OpenRbac"
+Issues = "https://github.com/cloudgen/OpenRbac/issues"
 
 [project.scripts]
-py-rbac = "PyRbac.cli:main"
+open-rbac = "OpenRbac.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

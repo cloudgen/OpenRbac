@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-class-software-dev.md
-**Status**: Active (Version 1.1.3 – PyRbac software-development class law + residual stack)
+**Status**: Active (Version 1.1.4 – OpenRbac software-development class law + residual stack)
 **Area**: class
 **Key**: `requirement-class-software-dev`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -12,7 +12,7 @@ This file is class law plus the residual SSOT. It is not a second copy of domain
 
 ### 1.1 Human-facing
 
-**In one sentence:** This file records that PyRbac is Python, built with setuptools, and it points at the requirement that owns each other topic.
+**In one sentence:** This file records that OpenRbac is Python, built with setuptools, and it points at the requirement that owns each other topic.
 
 | Box | Meaning | Example |
 |-----|---------|---------|
@@ -30,13 +30,13 @@ This file is class law plus the residual SSOT. It is not a second copy of domain
 |---------|---------------|----------|
 | This file | Residual table | Which requirement owns the topic |
 | `pyproject.toml` | Package tool facts | The concrete manifest. Packaging owns the tables |
-| `py-rbac` | The program | You run it as the normal user |
+| `open-rbac` | The program | You run it as the normal user |
 
 | You do… | What it means | What you type |
 |---------|---------------|---------------|
-| Find the menu law | Open the TUI requirement. Do not expect the picture in this file. | `py-rbac` |
-| Find the logger law | Open the logging requirement. The floor is packaging and runtime. | `py-rbac version` |
-| Install | Use pip. There is no shell installer. | `python -m pip install PyRbac` |
+| Find the menu law | Open the TUI requirement. Do not expect the picture in this file. | `open-rbac` |
+| Find the logger law | Open the logging requirement. The floor is packaging and runtime. | `open-rbac version` |
+| Install | Use pip. There is no shell installer. | `python -m pip install OpenRbac` |
 
 ## 2. Core Rules (Mandatory)
 
@@ -91,13 +91,13 @@ This file is class law plus the residual SSOT. It is not a second copy of domain
 
 ### 2.7 Implementation Notes (this project)
 
-| Field | Value (PyRbac) |
+| Field | Value (OpenRbac) |
 |-------|---------------------|
-| **Project display name** | PyRbac |
+| **Project display name** | OpenRbac |
 | **Project class** | software-development |
 | **Class requirement basename** | `requirement-class-software-dev.md` |
 | **Primary language(s)** | Python |
-| **Language role** | primary only for the runtime package under `src/PyRbac/` |
+| **Language role** | primary only for the runtime package under `src/OpenRbac/` |
 | **Execution model** | interpreted package. Optional Cython or `build.sh` tooling is not required for the CLI |
 | **Toolchain / interpreter** | CPython |
 | **Toolchain version policy** | range declared in `pyproject.toml` (`requires-python`). Re-verify before advertising a specific minor as tested |
@@ -108,12 +108,12 @@ This file is class law plus the residual SSOT. It is not a second copy of domain
 | **Linter/formatter** | none as project law |
 | **Primary runtime / OS family** | multi-OS where Python and FFmpeg run (documented focus: Linux; macOS and Windows when the dependencies exist) |
 | **Architectures supported** | any architecture with CPython and an FFmpeg binary |
-| **Git surface** | used — remote `https://github.com/cloudgen/PyRbac` |
-| **Ship surface** | installable Python package `PyRbac`; console script `py-rbac`; module form `python -m PyRbac` |
-| **Product version SSOT** | `src/PyRbac/__init__.py` → `__version__` and `pyproject.toml` `[project].version` stay equal when either is bumped (current: **1.0.5**) |
+| **Git surface** | used — remote `https://github.com/cloudgen/OpenRbac` |
+| **Ship surface** | installable Python package `OpenRbac`; console script `open-rbac`; module form `python -m OpenRbac` |
+| **Product version SSOT** | `src/OpenRbac/__init__.py` → `__version__` and `pyproject.toml` `[project].version` stay equal when either is bumped (current: **1.0.5**) |
 | **Install mode** | pip / local package. Not a shell online-install product |
 | **Type 1 elevation** | intentionally absent. No root or sudo product surface |
-| **Actor / role / subject / approver** | **Considered — no dest approver.** The human operator of `py-rbac` is the only actor. No dest approval machine. **None** is valid. Do not add an actor requirement file |
+| **Actor / role / subject / approver** | **Considered — no dest approver.** The human operator of `open-rbac` is the only actor. No dest approval machine. **None** is valid. Do not add an actor requirement file |
 | **Dest fence conditions** | **Considered — no dest fence conditions.** No dest inbound, approve, or reject queue |
 | **Author contact (non-secret)** | Wilgat Wong · `wilgat.wong@gmail.com` |
 
@@ -129,7 +129,7 @@ This file is class law plus the residual SSOT. It is not a second copy of domain
 | Class homes | `requirement-python-oop` | One class per file. Do not duplicate the map |
 | CLI entry / typed verbs | `requirement-python-cli-interface` | Empty argv and the verb table |
 | Text menu | `requirement-python-tui` | Front board and the picture |
-| Menu language | `requirement-python-cli-language` | Front row 4, the thirteen codes, and the language leaf |
+| Menu language | `requirement-python-cli-language` | Front row 7, the thirteen codes, and the language leaf |
 | Status logger | `requirement-python-cli-logging` | Construct in `def main` |
 | Domain surface | `requirement-domain-videojoin` | Four pillars. The about page uses the domain sentence |
 | About page | `requirement-python-about` | Identity, host check, and the star box |
@@ -217,20 +217,21 @@ This file is class law plus the residual SSOT. It is not a second copy of domain
 
 ## Under command line for normal user only
 
-On Termux, Git Bash, Windows cmd, or the same class, PyRbac runs as the normal user. **This requirement:** do not use administrator privilege, `sudo`, `apt`, or a dedicated system user. Do not pipe a downloaded script into a shell. Type 1 and Type 2 are unused on Termux, Git Bash, and Windows cmd. Git Bash and Windows cmd do not call Termux `pkg`. Pip lifecycle, when the operator asks for it, is `python -m pip` from the CLI and TUI requirements.
+On Termux, Git Bash, Windows cmd, or the same class, OpenRbac runs as the normal user. **This requirement:** do not use administrator privilege, `sudo`, `apt`, or a dedicated system user. Do not pipe a downloaded script into a shell. Type 1 and Type 2 are unused on Termux, Git Bash, and Windows cmd. Git Bash and Windows cmd do not call Termux `pkg`. Pip lifecycle, when the operator asks for it, is `python -m pip` from the CLI and TUI requirements.
 
 ## 8. Status history
 
 | Date | Status | Note |
 |------|--------|------|
-| 2026-08-09 | Active 1.0.0 | Initial software-dev class law for PyRbac |
+| 2026-08-09 | Active 1.0.0 | Initial software-dev class law for OpenRbac |
 | 2026-10-04 | Active 1.1.0 | Residual pointers for the text menu, the logger, the class map, and pip lifecycle. Shell Type O stays absent |
 | 2026-10-04 | Active 1.1.1 | Menu language points at `requirement-python-cli-language`. No new actor file |
 | 2026-10-04 | Active 1.1.2 | Residual row for the about page. Product version **1.0.5** |
 | 2026-10-11 | Active 1.1.3 | Maintainer `./build.sh` points at `requirement-python-build-script` |
+| 2026-10-14 | Active 1.1.4 | The menu-language pointer names front row 7 |
 
 ---
 
-**Last Updated**: 2026-10-11
+**Last Updated**: 2026-10-14
 **Owner**: project maintainers
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

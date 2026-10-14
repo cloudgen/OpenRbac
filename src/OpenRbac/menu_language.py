@@ -12,28 +12,28 @@ class MenuLanguage:
     """The thirteen menu languages, the saved code, and the words the menu prints.
 
     English is the default when the leaf is missing, empty, or not one of the
-    codes. LANG is not read. PYRBAC_LANG wins at startup and does not write
+    codes. LANG is not read. OPENRBAC_LANG wins at startup and does not write
     the leaf. A menu pick writes the leaf and updates this process.
     """
 
     CODES = (
-        ("en", "English", 41),
-        ("zh-Hans", "简体中文", 42),
-        ("zh-Hant", "繁體中文", 43),
-        ("es", "Español", 44),
-        ("ar", "العربية", 45),
-        ("fr", "Français", 46),
-        ("pt", "Português", 47),
-        ("ru", "Русский", 48),
-        ("de", "Deutsch", 49),
-        ("ja", "日本語", 50),
-        ("ko", "한국어", 51),
-        ("nl", "Nederlands", 52),
-        ("el", "Ελληνικά", 53),
+        ("en", "English", 71),
+        ("zh-Hans", "简体中文", 72),
+        ("zh-Hant", "繁體中文", 73),
+        ("es", "Español", 74),
+        ("ar", "العربية", 75),
+        ("fr", "Français", 76),
+        ("pt", "Português", 77),
+        ("ru", "Русский", 78),
+        ("de", "Deutsch", 79),
+        ("ja", "日本語", 80),
+        ("ko", "한국어", 81),
+        ("nl", "Nederlands", 82),
+        ("el", "Ελληνικά", 83),
     )
-    BLOCK_FIRST = 40
-    BLOCK_LAST = 59
-    APP_DIR = "PyRbac"
+    BLOCK_FIRST = 70
+    BLOCK_LAST = 89
+    APP_DIR = "OpenRbac"
     LEAF_NAME = "language"
 
     def __init__(self, logger=None, home=None) -> None:
@@ -79,11 +79,11 @@ class MenuLanguage:
     def load(self) -> None:
         """Pick the code for this process. Does not write the leaf.
 
-        PYRBAC_LANG wins when it is one of the thirteen codes. Otherwise the
+        OPENRBAC_LANG wins when it is one of the thirteen codes. Otherwise the
         first line of the leaf is used. A missing, empty, or other line is English.
         An other line is not rewritten.
         """
-        forced = os.environ.get("PYRBAC_LANG", "")
+        forced = os.environ.get("OPENRBAC_LANG", "")
         if forced in self.codes():
             self._code = forced
             return
@@ -179,6 +179,7 @@ _SHORT_KEY = {
     "self-management": "self_short",
     "exit": "exit_short",
     "back": "back_short",
+    "back-server": "back_short",
 }
 
 _LONG_KEY = {
@@ -188,6 +189,7 @@ _LONG_KEY = {
     "self-management": "self_long",
     "exit": "exit_long",
     "back": "back_long",
+    "back-server": "back_server_long",
     "view-log": "view_long",
     "clear-log": "clear_long",
     "log-folder": "folder_long",
@@ -280,7 +282,9 @@ _FRONT_TOKENS = {
     "αρχείο καταγραφής": "system-log",
     "سجل النظام": "system-log",
     "session": "session",
-    "access": "access",
+    "rbac": "rbac",
+    "access": "rbac",
+    "server": "server",
     "setup": "setup",
     "audit": "audit",
     "serve": "serve",
@@ -325,6 +329,7 @@ _TEXTS = {
         "exit_long": "leave",
         "back_short": "Back",
         "back_long": "return to the main menu",
+        "back_server_long": "return to the server menu",
         "hello_long": "show a welcome message",
         "view_long": "list a log file and show it",
         "clear_long": "empty one log file",
@@ -340,7 +345,8 @@ _TEXTS = {
         "title_log": "system-log",
         "title_self": "self-management",
         "title_session": "session",
-        "title_access": "access",
+        "title_rbac": "rbac",
+        "title_server": "server",
         "title_setup": "setup",
         "title_audit": "audit",
         "invalid": "That choice is not on this list. Pick a listed number.",
@@ -360,6 +366,7 @@ _TEXTS = {
         "exit_long": "离开",
         "back_short": "返回",
         "back_long": "返回主菜单",
+        "back_server_long": "返回服务器菜单",
         "hello_long": "显示一条欢迎消息",
         "view_long": "列出日志文件并显示",
         "clear_long": "清空一个日志文件",
@@ -391,6 +398,7 @@ _TEXTS = {
         "exit_long": "離開",
         "back_short": "返回",
         "back_long": "返回主選單",
+        "back_server_long": "返回伺服器選單",
         "hello_long": "顯示一則歡迎訊息",
         "view_long": "列出日誌檔並顯示",
         "clear_long": "清空一個日誌檔",
@@ -422,6 +430,7 @@ _TEXTS = {
         "exit_long": "salir",
         "back_short": "Atrás",
         "back_long": "volver al menú principal",
+        "back_server_long": "volver al menú del servidor",
         "hello_long": "muestra un mensaje de bienvenida",
         "view_long": "listar un archivo de registro y mostrarlo",
         "clear_long": "vaciar un archivo de registro",
@@ -453,6 +462,7 @@ _TEXTS = {
         "exit_long": "خروج",
         "back_short": "رجوع",
         "back_long": "العودة إلى القائمة الرئيسية",
+        "back_server_long": "العودة إلى قائمة الخادم",
         "hello_long": "اعرض رسالة ترحيب",
         "view_long": "سرد ملف سجل وعرضه",
         "clear_long": "إفراغ ملف سجل واحد",
@@ -484,6 +494,7 @@ _TEXTS = {
         "exit_long": "quitter",
         "back_short": "Retour",
         "back_long": "revenir au menu principal",
+        "back_server_long": "revenir au menu du serveur",
         "hello_long": "afficher un message de bienvenue",
         "view_long": "lister un fichier journal et l'afficher",
         "clear_long": "vider un fichier journal",
@@ -515,6 +526,7 @@ _TEXTS = {
         "exit_long": "sair",
         "back_short": "Voltar",
         "back_long": "voltar ao menu principal",
+        "back_server_long": "voltar ao menu do servidor",
         "hello_long": "mostra uma mensagem de boas-vindas",
         "view_long": "listar um ficheiro de registo e mostrá-lo",
         "clear_long": "esvaziar um ficheiro de registo",
@@ -546,6 +558,7 @@ _TEXTS = {
         "exit_long": "выход",
         "back_short": "Назад",
         "back_long": "вернуться в главное меню",
+        "back_server_long": "вернуться в меню сервера",
         "hello_long": "показать приветствие",
         "view_long": "показать список файлов журнала и открыть один",
         "clear_long": "очистить один файл журнала",
@@ -577,6 +590,7 @@ _TEXTS = {
         "exit_long": "beenden",
         "back_short": "Zurück",
         "back_long": "zurück zum Hauptmenü",
+        "back_server_long": "zurück zum Servermenü",
         "hello_long": "eine Willkommensnachricht anzeigen",
         "view_long": "eine Protokolldatei auflisten und anzeigen",
         "clear_long": "eine Protokolldatei leeren",
@@ -608,6 +622,7 @@ _TEXTS = {
         "exit_long": "終了",
         "back_short": "戻る",
         "back_long": "メインメニューに戻る",
+        "back_server_long": "サーバーメニューに戻る",
         "hello_long": "歓迎のメッセージを表示する",
         "view_long": "ログファイルを一覧して表示する",
         "clear_long": "ログファイルを1つ空にする",
@@ -639,6 +654,7 @@ _TEXTS = {
         "exit_long": "종료",
         "back_short": "뒤로",
         "back_long": "주 메뉴로 돌아가기",
+        "back_server_long": "서버 메뉴로 돌아가기",
         "hello_long": "환영 메시지를 보여 줍니다",
         "view_long": "로그 파일을 나열하고 표시합니다",
         "clear_long": "로그 파일 하나를 비웁니다",
@@ -670,6 +686,7 @@ _TEXTS = {
         "exit_long": "afsluiten",
         "back_short": "Terug",
         "back_long": "terug naar het hoofdmenu",
+        "back_server_long": "terug naar het servermenu",
         "hello_long": "toon een welkomstbericht",
         "view_long": "een logbestand tonen en weergeven",
         "clear_long": "één logbestand legen",
@@ -701,6 +718,7 @@ _TEXTS = {
         "exit_long": "έξοδος",
         "back_short": "Πίσω",
         "back_long": "επιστροφή στο κύριο μενού",
+        "back_server_long": "επιστροφή στο μενού διακομιστή",
         "hello_long": "δείξε ένα μήνυμα καλωσορίσματος",
         "view_long": "λίστα αρχείων καταγραφής και εμφάνιση",
         "clear_long": "εκκένωση ενός αρχείου καταγραφής",

@@ -20,17 +20,17 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from PyRbac.cli import Cli  # noqa: E402
+from OpenRbac.cli import Cli  # noqa: E402
 
 
 class TestAbout(unittest.TestCase):
     def _cli(self):
-        from PyRbac import cli
+        from OpenRbac import cli
 
         return cli
 
     def _page(self):
-        from PyRbac.cli import Cli
+        from OpenRbac.cli import Cli
 
         return Cli().about
 
@@ -98,7 +98,7 @@ class TestAbout(unittest.TestCase):
 
     def test_check_system_stamp_and_field_order(self):
         """TP-ABOUT-02: stamp, CHECK SYSTEM header, and field order."""
-        from PyRbac.check_system import CheckSystem
+        from OpenRbac.check_system import CheckSystem
 
         when = datetime.datetime(2026, 10, 1, 11, 16, 23, 700590)
         rows = CheckSystem(app_name=Cli.APP_NAME, version=Cli.VERSION, console_name=Cli.CONSOLE_NAME).check_system_lines(now=when)
@@ -174,7 +174,7 @@ class TestAbout(unittest.TestCase):
 
     def test_compiler_arch_and_libc_labels(self):
         """TP-ABOUT-05: compiler token, arch map, and libc token."""
-        from PyRbac.check_system import CheckSystem
+        from OpenRbac.check_system import CheckSystem
 
         host = CheckSystem(app_name=Cli.APP_NAME, version=Cli.VERSION, console_name=Cli.CONSOLE_NAME)
         py, lib = host.parse_sys_version(
@@ -228,8 +228,8 @@ class TestAbout(unittest.TestCase):
 
     def test_docker_marker_and_missing_command(self):
         """TP-ABOUT-07: docker marker file; missing tool location stays blank."""
-        import PyRbac.check_system as check_mod
-        from PyRbac.check_system import CheckSystem
+        import OpenRbac.check_system as check_mod
+        from OpenRbac.check_system import CheckSystem
 
         host = CheckSystem(app_name=Cli.APP_NAME, version=Cli.VERSION, console_name=Cli.CONSOLE_NAME)
         self.assertFalse(host.inside_docker(marker="/tmp/videojoin-no-such-dockerenv"))
@@ -312,7 +312,7 @@ class TestAbout(unittest.TestCase):
 
     def test_pyenv_paths_stay_inside_the_root(self):
         """TP-ABOUT-09: under pyenv, bin/pyenv and interpreters inside the root."""
-        from PyRbac.check_system import CheckSystem
+        from OpenRbac.check_system import CheckSystem
 
         host = CheckSystem(app_name=Cli.APP_NAME, version=Cli.VERSION, console_name=Cli.CONSOLE_NAME)
         with tempfile.TemporaryDirectory() as tmp:
@@ -389,8 +389,8 @@ class TestAbout(unittest.TestCase):
 
     def test_named_root_without_launcher_is_not_under_pyenv(self):
         """TP-ABOUT-10: a PYENV_ROOT with no bin/pyenv stays on shutil.which."""
-        import PyRbac.check_system as check_mod
-        from PyRbac.check_system import CheckSystem
+        import OpenRbac.check_system as check_mod
+        from OpenRbac.check_system import CheckSystem
 
         host = CheckSystem(app_name=Cli.APP_NAME, version=Cli.VERSION, console_name=Cli.CONSOLE_NAME)
         found = {
@@ -475,7 +475,7 @@ class TestAbout(unittest.TestCase):
 
     def test_conda_paths_stay_inside_the_prefix(self):
         """TP-ABOUT-11: under conda, bin/conda and interpreters inside the prefix."""
-        from PyRbac.check_system import CheckSystem
+        from OpenRbac.check_system import CheckSystem
 
         host = CheckSystem(app_name=Cli.APP_NAME, version=Cli.VERSION, console_name=Cli.CONSOLE_NAME)
         with tempfile.TemporaryDirectory() as tmp:
@@ -551,8 +551,8 @@ class TestAbout(unittest.TestCase):
 
     def test_named_exe_without_launcher_is_not_under_conda(self):
         """TP-ABOUT-12: a CONDA_EXE outside bin or condabin stays on shutil.which."""
-        import PyRbac.check_system as check_mod
-        from PyRbac.check_system import CheckSystem
+        import OpenRbac.check_system as check_mod
+        from OpenRbac.check_system import CheckSystem
 
         host = CheckSystem(app_name=Cli.APP_NAME, version=Cli.VERSION, console_name=Cli.CONSOLE_NAME)
         found = {
@@ -619,7 +619,7 @@ class TestAbout(unittest.TestCase):
         """TP-ABOUT-16: in_venv, in_pyenv, and in_conda are the logger methods."""
         import inspect
 
-        from PyRbac.check_system import CheckSystem
+        from OpenRbac.check_system import CheckSystem
 
         class _Env:
             """Stand-in logger. The check calls these three methods."""
@@ -677,7 +677,7 @@ class TestAbout(unittest.TestCase):
             self.assertIn(call_name, body)
             self.assertNotIn(banned, body)
 
-        ship = (ROOT / "src" / "PyRbac" / "check_system.py").read_text(encoding="utf-8")
+        ship = (ROOT / "src" / "OpenRbac" / "check_system.py").read_text(encoding="utf-8")
         for banned_call in ("pyenvVenv", "pyenv_versions", "condaPath", "conda_env_list"):
             self.assertNotIn(banned_call, ship)
 
@@ -754,9 +754,9 @@ class TestAbout(unittest.TestCase):
         """About host check: CheckSystem owns the methods. cli.py does not."""
         import inspect
 
-        from PyRbac import cli
-        from PyRbac.about_page import AboutPage
-        from PyRbac.check_system import CheckSystem
+        from OpenRbac import cli
+        from OpenRbac.about_page import AboutPage
+        from OpenRbac.check_system import CheckSystem
 
         names = (
             "check_system_lines",
@@ -797,9 +797,9 @@ class TestAbout(unittest.TestCase):
         self.assertTrue(inspect.isclass(CheckSystem))
         self.assertEqual(
             Path(inspect.getfile(CheckSystem)).resolve(),
-            (ROOT / "src" / "PyRbac" / "check_system.py").resolve(),
+            (ROOT / "src" / "OpenRbac" / "check_system.py").resolve(),
         )
-        ship = (ROOT / "src" / "PyRbac" / "cli.py").read_text(encoding="utf-8")
+        ship = (ROOT / "src" / "OpenRbac" / "cli.py").read_text(encoding="utf-8")
         for name in names:
             self.assertTrue(inspect.isfunction(inspect.getattr_static(CheckSystem, name)), name)
             self.assertFalse(inspect.isfunction(getattr(cli, name, None)), name)
@@ -810,7 +810,7 @@ class TestAbout(unittest.TestCase):
         self.assertIn("self.check", about)
         self.assertIn("self_location", box)
         self.assertIn("self.check", box)
-        page = (ROOT / "src" / "PyRbac" / "about_page.py").read_text(encoding="utf-8")
+        page = (ROOT / "src" / "OpenRbac" / "about_page.py").read_text(encoding="utf-8")
         self.assertIn("CheckSystem", page)
         self.assertIn("def framework_about(", page)
         self.assertIn("def about_box_lines(", page)
@@ -819,7 +819,7 @@ class TestAbout(unittest.TestCase):
 
     def test_run_lines_name_pid_cache_persistence_and_tty(self):
         """TP-ABOUT-13: run lines after Location; the check does not create them."""
-        from PyRbac.check_system import CheckSystem
+        from OpenRbac.check_system import CheckSystem
 
         host = CheckSystem(app_name=Cli.APP_NAME, version=Cli.VERSION, console_name=Cli.CONSOLE_NAME)
         created = []
@@ -880,7 +880,7 @@ class TestAbout(unittest.TestCase):
 
     def test_cache_used_follows_shm_then_tmp_then_home(self):
         """TP-ABOUT-14: used follows /dev/shm, then /tmp, then the 2nd fallback."""
-        from PyRbac.check_system import CheckSystem
+        from OpenRbac.check_system import CheckSystem
 
         host = CheckSystem(app_name=Cli.APP_NAME, version=Cli.VERSION, console_name=Cli.CONSOLE_NAME)
         home = tempfile.mkdtemp(prefix="vs-about-home-")
@@ -987,15 +987,15 @@ class TestAbout(unittest.TestCase):
         """TP-ABOUT-08: a long about page scrolls; a one-line result still closes."""
         import curses
 
-        from PyRbac.menu_model import MenuModel
-        from PyRbac.menu_painter import MenuPainter
+        from OpenRbac.menu_model import MenuModel
+        from OpenRbac.menu_painter import MenuPainter
 
         home = tempfile.mkdtemp(prefix="vj-about-scroll-")
         self.addCleanup(shutil.rmtree, home, ignore_errors=True)
         saved_home = os.environ.get("HOME")
-        saved_lang = os.environ.get("PYRBAC_LANG")
+        saved_lang = os.environ.get("OPENRBAC_LANG")
         os.environ["HOME"] = home
-        os.environ.pop("PYRBAC_LANG", None)
+        os.environ.pop("OPENRBAC_LANG", None)
         try:
             painter = MenuPainter(home=home)
             model = MenuModel(painter=painter)
@@ -1029,9 +1029,9 @@ class TestAbout(unittest.TestCase):
             else:
                 os.environ["HOME"] = saved_home
             if saved_lang is None:
-                os.environ.pop("PYRBAC_LANG", None)
+                os.environ.pop("OPENRBAC_LANG", None)
             else:
-                os.environ["PYRBAC_LANG"] = saved_lang
+                os.environ["OPENRBAC_LANG"] = saved_lang
 
 
 

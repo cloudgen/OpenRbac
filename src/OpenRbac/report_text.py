@@ -1,6 +1,6 @@
 # =============================================================================
 # Text tables shared by the terminal and the text menu.
-# requirement-domain-pyrbac — the same rows on both surfaces.
+# requirement-domain-openrbac — the same rows on both surfaces.
 # requirement-python-oop — class ReportText.
 # =============================================================================
 from __future__ import annotations

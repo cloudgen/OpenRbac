@@ -23,7 +23,7 @@ class LocalLogin:
 
     FILE_NAME = "local-login"
     KEY_NAME = "local-login-key"
-    MAGIC = "PYRBACLOCAL1"
+    MAGIC = "OPENRBACLOCAL1"
     KEY_SIZE = 32
     NONCE_SIZE = 16
 
@@ -203,7 +203,7 @@ class LocalLogin:
     def _mac(self, key: bytes, nonce: bytes, ciphertext: bytes) -> bytes:
         return hmac.new(
             key,
-            b"pyrbac-local-login-mac" + nonce + ciphertext,
+            b"openrbac-local-login-mac" + nonce + ciphertext,
             hashlib.sha256,
         ).digest()
 
@@ -214,7 +214,7 @@ class LocalLogin:
         while filled < size:
             block = hmac.new(
                 key,
-                b"pyrbac-local-login-stream" + nonce + struct.pack(">Q", counter),
+                b"openrbac-local-login-stream" + nonce + struct.pack(">Q", counter),
                 hashlib.sha256,
             ).digest()
             parts.append(block)

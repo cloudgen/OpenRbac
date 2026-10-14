@@ -1,6 +1,6 @@
-# PyRbac review — 2026-10-11
+# OpenRbac review — 2026-10-11
 
-**Product:** PyRbac 1.0.4
+**Product:** OpenRbac 1.0.4
 **Scope:** Requirements, RBAC behavior, database isolation, web pages, text menu, local sign-in, and ChronicleLogger.
 **Result:** Pass with the limits below. `tests/run.sh` reported 47 tests OK.
 
@@ -8,7 +8,7 @@
 
 | Check | Result |
 |-------|--------|
-| Sole Active domain is `requirement-domain-pyrbac` | Pass |
+| Sole Active domain is `requirement-domain-openrbac` | Pass |
 | `requirement-domain-videojoin` is Retired | Pass |
 | Operator data scope 3 sees only `operator` | Pass in `tests/test_rbac.py` |
 | Lead data scope 4 sees admin, clerk, and lead | Pass |
@@ -26,7 +26,7 @@
 | A bad mode or a bad check does not return the password. The log does not contain it | Pass |
 | A web sign-in does not write the local login file | Pass |
 | Row 9 Exit asks. Enter logs out. n keeps the saved sign-in. Esc stays. End of input does not ask | Pass |
-| `ruoyi_db` and `ry` are not opened by the tests | Pass. mysql cases set `PYRBAC_DB_NAME=pyrbac_test` |
+| `ruoyi_db` and `ry` are not opened by the tests | Pass. mysql cases set `OPENRBAC_DB_NAME=openrbac_test` |
 
 ## Limits
 

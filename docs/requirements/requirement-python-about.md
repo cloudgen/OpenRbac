@@ -1,12 +1,12 @@
 **file**: docs/requirements/requirement-python-about.md
-**Status**: Active (Version 1.1.0)
+**Status**: Active (Version 1.1.2)
 **Area**: python
 **Key**: `requirement-python-about`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
 
 ## 1. Purpose
 
-This file is the about page for PyRbac. Menu action **about** returns one text page: the product identity lines, a host check, and a star-bordered box. This file names every line and the read that fills it.
+This file is the about page for OpenRbac. Menu action **about** returns one text page: the product identity lines, a host check, and a star-bordered box. This file names every line and the read that fills it.
 
 The screen that shows the page stays on `requirement-python-tui`. The domain sentence stays on `requirement-domain-videojoin`. The version string stays the single `__version__` on `requirement-python-packaging`. `--version` stays a one-line human string on `requirement-python-cli-interface`. This product does not claim `--json`. This file does not open the menu, join a video, or write a JSON object.
 
@@ -31,24 +31,24 @@ Pyenv and conda path reads for this page stay in this file. This product does no
 
 | Surface | What you open | What for |
 |---------|---------------|----------|
-| `py-rbac` | text menu on a terminal | Choose **8**, then **83**, or type `about` |
-| `py-rbac about` | the same page, no front-board pick | No folder prompt and no file prompt |
-| `src/PyRbac/about_page.py` | class `AboutPage` | The page text. It calls `CheckSystem` for the host check |
-| `src/PyRbac/check_system.py` | class `CheckSystem` | Host-check reads, including pyenv and conda paths |
+| `open-rbac` | text menu on a terminal | Choose **8**, then **83**, or type `about` |
+| `open-rbac about` | the same page, no front-board pick | No folder prompt and no file prompt |
+| `src/OpenRbac/about_page.py` | class `AboutPage` | The page text. It calls `CheckSystem` for the host check |
+| `src/OpenRbac/check_system.py` | class `CheckSystem` | Host-check reads, including pyenv and conda paths |
 | `tests/test_about.py` | suite | The lines and the reads |
 
 | You do… | What it means | What you type |
 |---------|---------------|---------------|
-| Open about | The menu stays in the result page. The page starts with the product name and the domain sentence, then the host check, then the star box. Up and Down scroll when the page is longer than the screen. Any other key returns to the menu. | `py-rbac`, then `8`, then `83` |
-| Read the install sentence | A checkout under `src/PyRbac` with `pyproject.toml` above it says UNINSTALLED. A copy under your home directory says LOCAL INSTALLED. A copy under `/usr`, `/opt`, or `/bin` says GLOBAL INSTALLED. | Same page |
-| Read the pyenv lines | When this login has pyenv and is not under conda, `python2 location` and `python3 location` are paths inside that root. `pyenv location` is `bin/pyenv`, not `libexec/pyenv`. | `py-rbac about` |
-| Read the conda lines | When this login has conda, `python2 location` and `python3 location` are paths inside the conda prefix. `conda location` is `bin/conda`, not `condabin/conda`. An active prefix does not borrow the base interpreter. | `py-rbac about` |
+| Open about | The menu stays in the result page. The page starts with the product name and the domain sentence, then the host check, then the star box. Up and Down scroll when the page is longer than the screen. Any other key returns to the menu. | `open-rbac`, then `8`, then `83` |
+| Read the install sentence | A checkout under `src/OpenRbac` with `pyproject.toml` above it says UNINSTALLED. A copy under your home directory says LOCAL INSTALLED. A copy under `/usr`, `/opt`, or `/bin` says GLOBAL INSTALLED. | Same page |
+| Read the pyenv lines | When this login has pyenv and is not under conda, `python2 location` and `python3 location` are paths inside that root. `pyenv location` is `bin/pyenv`, not `libexec/pyenv`. | `open-rbac about` |
+| Read the conda lines | When this login has conda, `python2 location` and `python3 location` are paths inside the conda prefix. `conda location` is `bin/conda`, not `condabin/conda`. An active prefix does not borrow the base interpreter. | `open-rbac about` |
 | Read the run lines | After `Location`, the check names this process id, the cache folder in use and its three candidates, the persistence directory, and whether stdout is a terminal. | Same page |
 
 ## 2. Core Rules (Mandatory)
 
-1. **One page.** Menu action **about** and the verb `py-rbac about` **MUST** show one result page whose body is this file. The verb **MUST NOT** ask for a folder or a file. The page **MUST** be three blocks in this order: identity, host check, star box. A blank line **MUST** separate the blocks. The page **MUST NOT** be `--version`. Without a terminal, that page **MUST** be the whole of standard output. This product does not claim `--json`. The page **MUST NOT** gain a JSON stream.
-2. **Identity block.** The first four lines **MUST** be, in order: `{APP_NAME} {version}`, `Domain: Online RBAC and centralized configuration`, `Runtime tools: sqlite3 (default file) or MariaDB or MySQL, PyMySQL`, `Entry points: py-rbac, python -m PyRbac`. `{version}` **MUST** be the package version string `__version__`. The domain sentence **MUST** stay the sentence on `requirement-domain-pyrbac`. The runtime-tools line is static. It **MUST NOT** name FFmpeg. The page **MUST NOT** name `py-tui`. It **MUST NOT** print `python -m pip install` or an author email.
+1. **One page.** Menu action **about** and the verb `open-rbac about` **MUST** show one result page whose body is this file. The verb **MUST NOT** ask for a folder or a file. The page **MUST** be three blocks in this order: identity, host check, star box. A blank line **MUST** separate the blocks. The page **MUST NOT** be `--version`. Without a terminal, that page **MUST** be the whole of standard output. This product does not claim `--json`. The page **MUST NOT** gain a JSON stream.
+2. **Identity block.** The first four lines **MUST** be, in order: `{APP_NAME} {version}`, `Domain: Online RBAC and centralized configuration`, `Runtime tools: sqlite3 (default file) or MariaDB or MySQL, PyMySQL`, `Entry points: open-rbac, python -m OpenRbac`. `{version}` **MUST** be the package version string `__version__`. The domain sentence **MUST** stay the sentence on `requirement-domain-openrbac`. The runtime-tools line is static. It **MUST NOT** name FFmpeg. The page **MUST NOT** name `py-tui`. It **MUST NOT** print `python -m pip install` or an author email.
 3. **Host-check header.** The check **MUST** start with `{local stamp} {APP_NAME}(v{version})  [CHECK SYSTEM]:` and the next line **MUST** be two spaces then `Now checking your operation system!`. The stamp **MUST** be local time `YYYY-MM-DD HH:MM:SS.ffffff` from `datetime.datetime.now()`. There are two spaces before `[CHECK SYSTEM]:`.
 4. **Host-check fields.** After the header, the page **MUST** print these labels in this order, each starting with four spaces, then the label, a colon, a space, and the value. A missing value **MUST** leave the line in place. The check **MUST NOT** spawn `python2`, `python3`, `conda`, `pyenv`, or `id`.
 
@@ -80,21 +80,21 @@ Pyenv and conda path reads for this page stay in this file. This product does no
 5. **C Library parse.** Start from `sys.version`. If it contains a newline, keep the second line. Otherwise, if it contains `[` and `]`, keep the text between the first `[` and the first `]`. If that text is exactly `GCC`, use `[GCC]`. If it contains ` (Red Hat`, cut at that phrase and append `]`. If the probe (the extracted text when it still contains `[PyPy `, otherwise the original `sys.version`) contains `[PyPy ` and `with`, the compiler text is `[` plus the text after `with `. Strip one pair of surrounding `[` `]` before display.
 6. **Architecture.** If `sys.version` contains `AMD64`, the arch is `amd64`. Else if it contains `AMD32`, the arch is `x86`. Else map `platform.machine()` ignoring case: `x86_64` and `amd64` → `amd64`; `aarch64` and `arm64` → `arm64`; `i386`, `i686`, and `x86` → `x86`. Any other machine name is kept as `platform.machine()` returned it.
 7. **Libc token.** Read `platform.libc_ver()[0]`, or `unknown` when that call fails. If `sys.version` contains `AMD64` or `AMD32` and also `MSC`, the token is `msc`. If `sys.version` contains `clang` in any letter case, the token is `clang`. If the token is still empty and `SHELL` is `/bin/ash`, the token is `muslc`.
-8. **Program path.** If `sys.argv[0]` is an existing file and its basename is the console script or `PyRbac`, use its real path. If it is an existing file in the same directory as `cli.py` and the basename is `cli.py` or `__main__.py`, use that real path. Otherwise use the real path of `cli.py`.
+8. **Program path.** If `sys.argv[0]` is an existing file and its basename is the console script or `OpenRbac`, use its real path. If it is an existing file in the same directory as `cli.py` and the basename is `cli.py` or `__main__.py`, use that real path. Otherwise use the real path of `cli.py`.
 9. **Install kind.** Classify that real path in this order. A path under `site-packages` or `dist-packages` is packaged.
-   - Not packaged, the path contains `{sep}src{sep}PyRbac{sep}`, and a parent within eight levels has `pyproject.toml`: **uninstalled**.
-   - Under the home directory, and packaged or the basename is the console script or `PyRbac`: **local**.
+   - Not packaged, the path contains `{sep}src{sep}OpenRbac{sep}`, and a parent within eight levels has `pyproject.toml`: **uninstalled**.
+   - Under the home directory, and packaged or the basename is the console script or `OpenRbac`: **local**.
    - Starts with `/usr/`, `/opt/`, or `/bin/`: **global**.
    - Packaged and not under the home directory: **global**.
    - Otherwise: **uninstalled**.
 10. **Star box sentences.** **global** **MUST** say `You are using the GLOBAL INSTALLED version, location:`. **local** **MUST** say `You are using the LOCAL INSTALLED version, location:`. **uninstalled** **MUST** say `You are using an UNINSTALLED version, location:`.
 11. **Star box lines.** Inside the border, in order: the title `{APP_NAME} ({version}) by {author} on {date}`; a blank line; the install sentence; four spaces and the program path; a blank line; `Basic Usage:`; four spaces and the usage line; a blank line; `Please visit our homepage: `; four spaces, a double quote, the homepage, and a double quote; then the trailing blanks from rule 12. `{version}` **MUST** be the package version string. **MUST NOT** split it into `MAJOR`, `MINOR`, and `PATCH` integers. Author, date, homepage, and usage are the constants in Implementation Notes.
 12. **Border.** Take the lines of rule 11. When the download URL is empty and the homepage is non-empty, print the first twelve of those source lines (through the second blank after the homepage). When both are empty, print the first eleven. When the download URL is non-empty, the source list uses `Installation command:` and `    curl -fsSL {url} | {python basename}` in place of the extra blanks, and the print stops before the final blank. Pad every printed line on the right to the longest printed line. The top and bottom borders are that width plus four asterisks. Each body row is `* `, the padded line, ` *`. One all-space body row sits under the top border and one sits above the bottom border.
-13. **No install channel on this page.** The product download URL **MUST** stay empty while no Active install requirement names a channel. The live about page **MUST NOT** contain `curl -fsSL`. The box **MAY** render that install line only when a caller passes a non-empty URL. This product’s about caller **MUST NOT** pass one. Pip install stays on rows 84–87. It is not a line of this page.
+13. **No install channel on this page.** The product download URL **MUST** stay empty while no Active install requirement names a channel. The live about page **MUST NOT** contain `curl -fsSL`. The box **MAY** render that install line only when a caller passes a non-empty URL. This product’s about caller **MUST NOT** pass one. Pip install stays on rows 64–67. It is not a line of this page.
 14. **No privilege and no network.** Building the page **MUST NOT** call `sudo`, wrap `apt` or `dnf`, create an account, open a socket, or recommend `sudo pip` or `sudo curl | sh`. Git Bash and Windows cmd **MUST NOT** invoke Termux `pkg`.
 15. **Conda paths.** Under conda means `conda_root()` is non-empty. A non-empty `CONDA_EXE` is the only candidate: its parent directory name **MUST** be `bin` or `condabin`, and `{root}/bin/conda` **MUST** exist (`lexists`, a symlink counts). Otherwise a non-empty `CONDA_PREFIX`: the prefix itself when it has `bin/conda`, otherwise `{root}` when the prefix is `{root}/envs/{name}` and that root has `bin/conda`. Otherwise the first of `~/miniconda3`, `~/anaconda3`, `~/miniforge3`, and `~/mambaforge` that has `bin/conda`. `conda location` **MUST** be `{root}/bin/conda`, not `condabin/conda`. The active prefix is `CONDA_PREFIX` when that path is the root or `{root}/envs/{name}`. Otherwise the prefix is the root. `python2` and `python3` are `{prefix}/bin/{name}` when that file exists. A missing interpreter stays empty. The active prefix **MUST NOT** borrow the base interpreter. Conda wins over pyenv for `python2`, `python3`, and `conda`.
 16. **Pyenv paths.** Under pyenv means `pyenv_root()` is non-empty and the name was not taken by rule 15. A non-empty `PYENV_ROOT` is the only candidate and **MUST** contain `bin/pyenv`. Otherwise `~/.pyenv` when that directory contains `bin/pyenv`. Otherwise not under pyenv. `pyenv location` **MUST** be `{root}/bin/pyenv`, not `libexec/pyenv`. Selected versions come from `PYENV_VERSION` when it is non-empty, split on `:`, otherwise the lines of `{root}/version`. Skip blank, `system`, `.`, `..`, and any token that contains `/` or `\`. `python2` and `python3` are `{root}/versions/{version}/bin/{name}` for the first selected version where that file exists. Otherwise `{root}/shims/{name}` when that shim exists. Otherwise empty.
-17. **Run lines.** The username segment is the `Current User` value. The pid segment is the `PID` value. `{APP_NAME}` is `PyRbac`.
+17. **Run lines.** The username segment is the `Current User` value. The pid segment is the `PID` value. `{APP_NAME}` is `OpenRbac`.
     - **Home.** Environment `HOME` when it is set and non-blank. Otherwise `os.path.expanduser("~")` when that result is an absolute path. Otherwise there is no home.
     - **Preferred leaf.** When the username is non-empty, `cache-{APP_NAME}-{username}-{pid}`. When it is empty, `cache-{APP_NAME}-{pid}`.
     - **Preferred path.** `/dev/shm/cache/` plus the preferred leaf.
@@ -105,19 +105,19 @@ Pyenv and conda path reads for this page stay in this file. This product does no
 18. **Environment booleans.** `in_venv`, `in_pyenv`, and `in_conda` **MUST** call `inVenv()`, `inPyenv()`, and `inConda()` on the one logger (`requirement-python-cli-logging`). When the logger is absent, each **MUST** return false. Those three results **MUST NOT** be printed on this page and **MUST NOT** choose a location line.
 19. Actor / role / subject / approver: **considered**. No dest machine. No approver. The table stays on `requirement-class-software-dev.md`.
 20. Dest fence conditions: **considered — none**. Do not invent one.
-21. The host-check methods named in `requirement-python-oop` **MUST** be methods of class `CheckSystem` in `src/PyRbac/check_system.py`. This file still owns the line text. Class `AboutPage` in `src/PyRbac/about_page.py` is the about composer. It **MUST** call `CheckSystem` for the check block and for `self_location`. `Cli` writes `CheckSystem(...)` and then `AboutPage(...)`. `AboutPage` **MUST NOT** construct `CheckSystem`.
+21. The host-check methods named in `requirement-python-oop` **MUST** be methods of class `CheckSystem` in `src/OpenRbac/check_system.py`. This file still owns the line text. Class `AboutPage` in `src/OpenRbac/about_page.py` is the about composer. It **MUST** call `CheckSystem` for the check block and for `self_location`. `Cli` writes `CheckSystem(...)` and then `AboutPage(...)`. `AboutPage` **MUST NOT** construct `CheckSystem`.
 
 ### 2.1 Sample shape
 
 Values in angle brackets are the live read. They are not a frozen login or home path.
 
 ```text
-PyRbac 1.0.4
+OpenRbac 1.0.5
 Domain: Online RBAC and centralized configuration
 Runtime tools: sqlite3 (default file) or MariaDB or MySQL, PyMySQL
-Entry points: py-rbac, python -m PyRbac
+Entry points: open-rbac, python -m OpenRbac
 
-2026-10-04 11:16:23.700590 PyRbac(v1.0.5)  [CHECK SYSTEM]:
+2026-10-04 11:16:23.700590 OpenRbac(v1.0.5)  [CHECK SYSTEM]:
   Now checking your operation system!
     Python: 3.12.3
     C Library: GCC 13.3.0
@@ -135,25 +135,25 @@ Entry points: py-rbac, python -m PyRbac
     Binary Type: amd64-glibc
     Location: <program path>
     PID: <pid>
-    Cache folder used: /dev/shm/cache/cache-PyRbac-<login>-<pid>
-    Cache folder (preferred): /dev/shm/cache/cache-PyRbac-<login>-<pid>
-    Cache folder (1st fallback): /tmp/cache/cache-PyRbac-<login>-<pid>
-    Cache folder (2nd fallback): <home>/.cache/cache-PyRbac-<pid>
-    Persistence storage: <home>/.local/PyRbac
+    Cache folder used: /dev/shm/cache/cache-OpenRbac-<login>-<pid>
+    Cache folder (preferred): /dev/shm/cache/cache-OpenRbac-<login>-<pid>
+    Cache folder (1st fallback): /tmp/cache/cache-OpenRbac-<login>-<pid>
+    Cache folder (2nd fallback): <home>/.cache/cache-OpenRbac-<pid>
+    Persistence storage: <home>/.local/OpenRbac
     TTY / Interactive: <yes or no>
 
 ***************************************************
 *                                                 *
-* PyRbac (1.0.5) by Wilgat Wong on 2026-10-04  *
+* OpenRbac (1.0.5) by Wilgat Wong on 2026-10-04  *
 *                                                 *
 * You are using an UNINSTALLED version, location: *
 *     <program path>                              *
 *                                                 *
 * Basic Usage:                                    *
-*     py-rbac join                             *
+*     open-rbac join                             *
 *                                                 *
 * Please visit our homepage:                      *
-*     "https://github.com/cloudgen/PyRbac"       *
+*     "https://github.com/cloudgen/OpenRbac"       *
 *                                                 *
 *                                                 *
 *                                                 *
@@ -162,29 +162,29 @@ Entry points: py-rbac, python -m PyRbac
 
 The version string in the sample is the package version at the time of writing. A later package version **MUST** appear instead. The stamp **MUST** be the clock at the moment the page is built. `<login>`, `<pid>`, `<home>`, and `<yes or no>` are the live reads. They are not a frozen login or home path. When `/dev/shm` is not a directory, `Cache folder used` is the 1st fallback or the 2nd fallback under rule 17. The sample shows the case where used equals preferred.
 
-Invocation: `py-rbac` on a terminal, then `8`, then `83`. The same page is `py-rbac about` with no terminal.
+Invocation: `open-rbac` on a terminal, then `8`, then `83`. The same page is `open-rbac about` with no terminal.
 
 ### 2.2 Implementation Notes (this project)
 
 | Item | Value |
 |------|--------|
-| **Page builder** | Class `AboutPage` in `src/PyRbac/about_page.py` (`framework_about`) |
-| **Host check** | Class `CheckSystem` in `src/PyRbac/check_system.py` |
+| **Page builder** | Class `AboutPage` in `src/OpenRbac/about_page.py` (`framework_about`) |
+| **Host check** | Class `CheckSystem` in `src/OpenRbac/check_system.py` |
 | **Pyenv paths** | Rule 16. Not a separate requirement |
 | **Conda paths** | Rule 15. Not a separate requirement |
 | **Star box** | `AboutPage.about_box_lines` calls `CheckSystem` for `self_location` and the Python executable name |
-| **Menu hook** | Row 83 and `py-rbac about` use `AboutPage.framework_about` |
-| **APP_NAME** | `PyRbac` |
-| **Console script** | `py-rbac` |
+| **Menu hook** | Row 83 and `open-rbac about` use `AboutPage.framework_about` |
+| **APP_NAME** | `OpenRbac` |
+| **Console script** | `open-rbac` |
 | **Author** | `Wilgat Wong` |
-| **Homepage** | `https://github.com/cloudgen/PyRbac` |
+| **Homepage** | `https://github.com/cloudgen/OpenRbac` |
 | **About date** | `2026-10-04` (`Cli.LAST_UPDATE`). This is the box date, not the host-check stamp |
-| **Usage line** | `py-rbac join` (`Cli.BASIC_USAGE`) |
+| **Usage line** | `open-rbac join` (`Cli.BASIC_USAGE`) |
 | **Download URL** | empty (`Cli.DOWNLOAD_URL`) |
 | **Docker marker** | `/.dockerenv` only |
 | **PID** | `os.getpid()` |
 | **Cache folders** | Preferred `/dev/shm/cache/…`, 1st `/tmp/cache/…`, 2nd `{home}/.cache/…` with no username. Used follows rule 17. The page does not create them |
-| **Persistence storage** | `{home}/.local/PyRbac` |
+| **Persistence storage** | `{home}/.local/OpenRbac` |
 | **TTY / Interactive** | `yes` or `no` from `sys.stdout.isatty()` |
 | **JSON** | Not claimed. No `--json` stream |
 | **Privilege** | normal user privilege |
@@ -255,7 +255,7 @@ On Termux, Git Bash, Windows cmd, or the same class, **admin privilege** and **d
 
 There is no TP-ABOUT-15. This product does not claim `--json`.
 
-TP-ABOUT-01 asserts the identity line, every host-check label, the star-box title, `py-rbac join`, and that the live page has no `curl -fsSL`, no `py-tui`, no `ffmpeg is on PATH`, and no `python -m pip install`. TP-ABOUT-02 asserts the stamp `YYYY-MM-DD HH:MM:SS.ffffff`, the `[CHECK SYSTEM]:` header, and the field order. TP-ABOUT-03 asserts the star box is one rectangle and that a global path uses the GLOBAL sentence. TP-ABOUT-04 asserts an explicit download URL renders the install line, and that the product URL stays empty. TP-ABOUT-05 asserts the GCC token, the PyPy token, the arch map, `msc`, `clang`, `muslc`, and `amd64-glibc`. TP-ABOUT-06 asserts checkout = uninstalled, a home copy = local, and `/usr` = global. TP-ABOUT-07 asserts the docker marker file and a missing `which` result. TP-ABOUT-08 asserts a long about page scrolls to `Basic Usage:` and a one-line result still closes on Down. TP-ABOUT-09 and TP-ABOUT-10 assert the pyenv paths in rule 16. TP-ABOUT-11 and TP-ABOUT-12 assert the conda paths in rule 15. TP-ABOUT-13 asserts `PID`, the four cache lines, persistence, and `TTY / Interactive` on the page, and that building the check does not create those directories. TP-ABOUT-14 asserts used follows `/dev/shm`, then `/tmp`, then the 2nd fallback, and that the 2nd leaf has no username. TP-ABOUT-16 asserts `in_venv`, `in_pyenv`, and `in_conda` call the logger and do not select location lines.
+TP-ABOUT-01 asserts the identity line, every host-check label, the star-box title, `open-rbac join`, and that the live page has no `curl -fsSL`, no `py-tui`, no `ffmpeg is on PATH`, and no `python -m pip install`. TP-ABOUT-02 asserts the stamp `YYYY-MM-DD HH:MM:SS.ffffff`, the `[CHECK SYSTEM]:` header, and the field order. TP-ABOUT-03 asserts the star box is one rectangle and that a global path uses the GLOBAL sentence. TP-ABOUT-04 asserts an explicit download URL renders the install line, and that the product URL stays empty. TP-ABOUT-05 asserts the GCC token, the PyPy token, the arch map, `msc`, `clang`, `muslc`, and `amd64-glibc`. TP-ABOUT-06 asserts checkout = uninstalled, a home copy = local, and `/usr` = global. TP-ABOUT-07 asserts the docker marker file and a missing `which` result. TP-ABOUT-08 asserts a long about page scrolls to `Basic Usage:` and a one-line result still closes on Down. TP-ABOUT-09 and TP-ABOUT-10 assert the pyenv paths in rule 16. TP-ABOUT-11 and TP-ABOUT-12 assert the conda paths in rule 15. TP-ABOUT-13 asserts `PID`, the four cache lines, persistence, and `TTY / Interactive` on the page, and that building the check does not create those directories. TP-ABOUT-14 asserts used follows `/dev/shm`, then `/tmp`, then the 2nd fallback, and that the 2nd leaf has no username. TP-ABOUT-16 asserts `in_venv`, `in_pyenv`, and `in_conda` call the logger and do not select location lines.
 
 **Matrix:** `docs/reviews/requirement-test-matrix.md`
 **Map:** `docs/reviews/test-plan.md`.
@@ -266,7 +266,7 @@ TP-ABOUT-01 asserts the identity line, every host-check label, the star-box titl
 |----------|------|
 | `docs/requirements/index.md` | Registry |
 | `docs/requirements/requirement-domain-videojoin.md` | Domain sentence on the identity block |
-| `docs/requirements/requirement-python-tui.md` | Result page; scroll; row 83 |
+| `docs/requirements/requirement-python-tui.md` | Result page; scroll; row 63 |
 | `docs/requirements/requirement-python-oop.md` | Class `CheckSystem` owns the host-check reads. Class `AboutPage` owns the composer |
 | `docs/requirements/requirement-python-cli-logging.md` | `in_venv`, `in_pyenv`, and `in_conda` read the one logger. They are not printed |
 | `docs/requirements/requirement-python-cli-interface.md` | `--version` stays the short human line. The verb `about` is named there |
@@ -274,8 +274,8 @@ TP-ABOUT-01 asserts the identity line, every host-check label, the star-box titl
 | `docs/requirements/requirement-python-packaging.md` | The version string in the title and the stamp |
 | `docs/requirements/requirement-runtime-prerequisites.md` | FFmpeg is required for `join`. This page does not probe it |
 | `docs/requirements/requirement-class-software-dev.md` | Approver none; no dest fence |
-| `src/PyRbac/about_page.py` | Class `AboutPage`. `framework_about` |
-| `src/PyRbac/check_system.py` | Class `CheckSystem` |
+| `src/OpenRbac/about_page.py` | Class `AboutPage`. `framework_about` |
+| `src/OpenRbac/check_system.py` | Class `CheckSystem` |
 | `pyproject.toml` | Homepage URL and the version string |
 
 ## 7. Status history
@@ -284,7 +284,9 @@ TP-ABOUT-01 asserts the identity line, every host-check label, the star-box titl
 |------|--------|------|
 | 2026-10-04 | Active 1.0.0 | About page: identity, host check, star box. Pyenv and conda reads stay here. No `--json`. Product version **1.0.5**. `./tests/run.sh` — 23 tests, OK. `TP-ABOUT-01` through `TP-ABOUT-14` and `TP-ABOUT-16` are have. There is no `TP-ABOUT-15` |
 | 2026-10-11 | Active 1.1.0 | Runtime tools name sqlite3 as the default file, then MariaDB or MySQL |
+| 2026-10-14 | Active 1.1.1 | Pip rows on the menu are 64–67. About is row 63 |
+| 2026-10-14 | Active 1.1.2 | Sample title line is OpenRbac 1.0.5 |
 
-**Last Updated**: 2026-10-11
+**Last Updated**: 2026-10-14
 **Owner**: project maintainers
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

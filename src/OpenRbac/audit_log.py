@@ -19,7 +19,7 @@ class AuditLog:
             logger.log_message("instantiated", component="AuditLog")
         self.store = store
 
-    def write_login(self, user_name, ipaddr, status, message, browser="py-rbac", os_name=""):
+    def write_login(self, user_name, ipaddr, status, message, browser="open-rbac", os_name=""):
         """General Purpose: One login attempt. status 0 succeeded. status 1 failed."""
         self.store.execute(
             """

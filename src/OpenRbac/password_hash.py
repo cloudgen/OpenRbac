@@ -1,5 +1,5 @@
 # =============================================================================
-# Password hashes for PyRbac accounts.
+# Password hashes for OpenRbac accounts.
 # requirement-rbac — stored passwords are PBKDF2, never plaintext.
 # requirement-python-oop — class PasswordHash.
 # =============================================================================

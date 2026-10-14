@@ -6,10 +6,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 README = (ROOT / "README.md").read_text(encoding="utf-8")
-IMAGE_BASE = "https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/"
+IMAGE_BASE = "https://raw.githubusercontent.com/cloudgen/OpenRbac/main/screenshots/"
 RELATED = (
-    "https://github.com/cloudgen/PyRbac",
-    "https://pypi.org/project/PyRbac/",
+    "https://github.com/cloudgen/OpenRbac",
+    "https://pypi.org/project/OpenRbac/",
     "https://github.com/Wilgat/ChronicleLogger",
     "https://github.com/cloudgen/ciao",
     "https://github.com/cloudgen/ciao-lite",
@@ -46,7 +46,7 @@ SHOTS = (
 
 def _package_version():
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    init_text = (ROOT / "src" / "PyRbac" / "__init__.py").read_text(encoding="utf-8")
+    init_text = (ROOT / "src" / "OpenRbac" / "__init__.py").read_text(encoding="utf-8")
     py_match = re.search(r'(?m)^version = "([^"]+)"', pyproject)
     init_match = re.search(r'__version__ = "([^"]+)"', init_text)
     assert py_match and init_match
@@ -59,8 +59,8 @@ class TestReadme(unittest.TestCase):
 
     def test_tp_doc_01_structure_badge_and_absolute_images(self):
         version = _package_version()
-        self.assertEqual(version, "1.0.4")
-        self.assertIn("version-1.0.4", README)
+        self.assertEqual(version, "1.0.5")
+        self.assertIn("version-1.0.5", README)
         for heading in HEADINGS:
             self.assertIn("\n## {0}\n".format(heading), "\n" + README)
         for url in RELATED:
@@ -81,6 +81,6 @@ class TestReadme(unittest.TestCase):
         self.assertIn("lead123", README)
         self.assertIn("PBKDF2", README)
         self.assertIn("sys_session", README)
-        self.assertIn("PYRBAC_ALLOW_REMOTE", README)
+        self.assertIn("OPENRBAC_ALLOW_REMOTE", README)
         self.assertNotIn("join-first.png", README)
         self.assertNotIn("vaults/", README)

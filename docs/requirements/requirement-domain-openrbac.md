@@ -1,24 +1,24 @@
-**file**: docs/requirements/requirement-domain-pyrbac.md
-**Status**: Active (Version 1.2.0)
+**file**: docs/requirements/requirement-domain-openrbac.md
+**Status**: Active (Version 1.2.1)
 **Area**: domain
-**Key**: `requirement-domain-pyrbac`
+**Key**: `requirement-domain-openrbac`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
 
 ## 1. Purpose
 
-This requirement is the domain surface for PyRbac. The product is online role-based access control and centralized configuration. The same actions are available from the text menu, from typed verbs, and from the local web pages.
+This requirement is the domain surface for OpenRbac. The product is online role-based access control and centralized configuration. The same actions are available from the text menu, from typed verbs, and from the local web pages.
 
-PyRbac owns users, roles, menus, departments, posts, dictionaries, parameters, notices, and audit records.
+OpenRbac owns users, roles, menus, departments, posts, dictionaries, parameters, notices, and audit records.
 
 This file is the sole Active `requirement-domain-*`.
 
 ### 1.1 Human-facing
 
-**In one sentence:** PyRbac lets an administrator manage accounts and settings from a menu, a command, or a page on this computer, and each surface enforces the same permissions.
+**In one sentence:** OpenRbac lets an administrator manage accounts and settings from a menu, a command, or a page on this computer, and each surface enforces the same permissions.
 
 | Box | Meaning | Example |
 |-----|---------|---------|
-| You / this login | The operator | `py-rbac login --user-name admin` |
+| You / this login | The operator | `open-rbac login --user-name admin` |
 | The other role | A signed-in account limited by its roles | An operator sees only that operator's department |
 | Not this file | The rounded menu frame, the SQL tables, and the HTTP headers | TUI, database, and web requirements |
 
@@ -30,8 +30,8 @@ This file is the sole Active `requirement-domain-*`.
 
 | Surface | What you open | What for |
 |---------|---------------|----------|
-| Text menu | `py-rbac` on a terminal | Sign in, then rows 2, 5, 6, and 7 |
-| Typed verb | `py-rbac user-list` | The same list the menu shows |
+| Text menu | `open-rbac` on a terminal | Sign in, then row 1 rbac and row 2 server |
+| Typed verb | `open-rbac user-list` | The same list the menu shows |
 | Web page | the URL printed by `serve` | The same list, with a cookie |
 
 ## 2. Normative rules
@@ -62,12 +62,13 @@ This file is the sole Active `requirement-domain-*`.
 
 | Date | Status | Note |
 |------|--------|------|
-| 2026-10-11 | Active 1.0.0 | PyRbac domain. Welcome-line domain retired |
+| 2026-10-11 | Active 1.0.0 | OpenRbac domain. Welcome-line domain retired |
 | 2026-10-11 | Active 1.1.0 | Sign-in before the menu. No session row |
 | 2026-10-11 | Active 1.2.0 | This product does not depend on another admin framework |
+| 2026-10-14 | Active 1.2.1 | The text menu opens rbac on row 1 and server on row 2 |
 
 ---
 
-**Last Updated**: 2026-10-11
+**Last Updated**: 2026-10-14
 **Owner**: project maintainers
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

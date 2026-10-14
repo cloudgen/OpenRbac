@@ -17,7 +17,7 @@ from .settings import SettingsError
 class WebApp:
     """Small HTTP site. Every mutating page calls Access or Catalog."""
 
-    COOKIE = "pyrbac_session"
+    COOKIE = "openrbac_session"
 
     def __init__(self, settings, access, catalog, report, logger=None, prepare=None):
         self.logger = logger
@@ -330,7 +330,7 @@ class WebApp:
         if not allow_remote and not self._loopback(handler):
             raise SettingsError(
                 "The database engine can be changed from this computer.",
-                "open the site on 127.0.0.1, or run py-rbac db-engine",
+                "open the site on 127.0.0.1, or run open-rbac db-engine",
                 logger=self.logger,
             )
         self.settings.apply_choice(wanted)
@@ -492,8 +492,8 @@ class WebApp:
         """The two engine choices. sqlite3 names the file, including the default file."""
         current = self.settings.engine()
         path = self.settings.sqlite_path()
-        mark = " (default file)" if self.settings.get("PYRBAC_SQLITE_FILE") == "" else ""
-        name = self.settings.get("PYRBAC_DB_NAME")
+        mark = " (default file)" if self.settings.get("OPENRBAC_SQLITE_FILE") == "" else ""
+        name = self.settings.get("OPENRBAC_DB_NAME")
 
         def radio(value, label):
             checked = " checked" if current == value else ""
@@ -519,7 +519,7 @@ class WebApp:
             "Change them after the first sign-in. This site listens on this computer only "
             "unless remote bind was explicitly allowed. "
             "sqlite3 and the default file are already selected. "
-            "Change that only when you want mysql. mysql needs PYRBAC_DB_PASSWORD.</p>"
+            "Change that only when you want mysql. mysql needs OPENRBAC_DB_PASSWORD.</p>"
         ).format(error=self._error_line(error), engine=self.engine_fields())
         return self.page(None, "Sign in", body)
 

@@ -1,5 +1,5 @@
 # =============================================================================
-# Tables and the first seed for PyRbac.
+# Tables and the first seed for OpenRbac.
 # requirement-database — the same columns on sqlite3 and on MySQL.
 # requirement-rbac — seed accounts, roles, menus, and permission strings.
 # requirement-python-oop — class Schema.
@@ -518,7 +518,7 @@ class Schema:
                 INSERT INTO sys_notice
                   (notice_id, notice_title, notice_type, notice_content, status,
                    create_by, create_time)
-                VALUES (1, 'Welcome', '2', 'PyRbac is ready.', '0', 'schema', %s)
+                VALUES (1, 'Welcome', '2', 'OpenRbac is ready.', '0', 'schema', %s)
                 """,
                 (now,),
             )

@@ -15,9 +15,10 @@ class MenuModel:
 
     boards, when set, replaces the rows for this session. Omit boards and
     the painter supplies the live rows, so a language save repaints them.
-    Front rows are access, system-log, language, setup, audit,
-    serve, self-management, and Exit. There is no session row.
-    System-log is under 3. Language is under 4.
+    Front rows are rbac, server, system-log, self-management, language,
+    and Exit. There is no session row. Numbers 4, 5, and 8 are not rows.
+    Rbac is under 1. Server is under 2 and holds setup, audit, and serve.
+    System-log is under 3. Self-management is under 6. Language is under 7.
     """
 
     def __init__(self, boards: dict | None = None, logger=None, painter=None) -> None:
@@ -244,6 +245,10 @@ class MenuModel:
             self.layer = "front"
             self.index = 0
             return None
+        if kind == "back-server":
+            self.layer = "server"
+            self.index = 0
+            return None
         if kind == "self-management":
             self.layer = "self"
             self.index = 0
@@ -265,7 +270,7 @@ class MenuModel:
             self.buffer = ""
             self.cursor = 0
             return None
-        if kind in ("access", "setup", "audit"):
+        if kind in ("rbac", "server", "setup", "audit"):
             self.layer = kind
             self.index = 0
             self.focus = "list"

@@ -30,22 +30,22 @@ Bind names, cookie flags, and `CREATE TABLE` text stay on their peer files. This
 
 | Surface | What you open | What for |
 |---------|---------------|----------|
-| Text menu | `py-rbac` on a terminal | The same user, role, and setup actions |
-| Typed verb | `py-rbac user-list` | That list without opening the menu |
+| Text menu | `open-rbac` on a terminal | The same user, role, and setup actions |
+| Typed verb | `open-rbac user-list` | That list without opening the menu |
 | Web page | the URL printed by `serve` | That list, with the session cookie |
 
 ### 1.2 System map
 
 The text menu, the typed commands, and the local web pages call one service, `Desk`. `Desk` builds the settings, the terminal session file, the database store, the audit log, the password hash, `Access`, and `Catalog`. `WebApp` is created only when serve is chosen. `WebApp` calls the same `Access` and `Catalog` methods. It does not keep a second permission list.
 
-The terminal token is the mode-0600 file `session` under the application home (`~/.local/PyRbac` unless `PYRBAC_HOME` is set). The web token is the cookie `pyrbac_session`. Both tokens are rows in `sys_session`. A file that is not mode `0600` is treated as signed out. The path and the bind rules are `requirement-environment`. The cookie flags are `requirement-web-interface`.
+The terminal token is the mode-0600 file `session` under the application home (`~/.local/OpenRbac` unless `OPENRBAC_HOME` is set). The web token is the cookie `openrbac_session`. Both tokens are rows in `sys_session`. A file that is not mode `0600` is treated as signed out. The path and the bind rules are `requirement-environment`. The cookie flags are `requirement-web-interface`.
 
 `ChronicleLogger` writes the status file. It is not `sys_oper_log`, and it does not store a password. The construct is `requirement-python-cli-logging`.
 
 ```mermaid
 flowchart TB
   subgraph surfaces [Surfaces]
-    CLI["CLI<br/>py-rbac verbs"]
+    CLI["CLI<br/>open-rbac verbs"]
     TUI["Text menu<br/>Tui / MenuModel"]
     WEB["Web pages<br/>WebApp on 127.0.0.1:8765"]
   end
@@ -55,7 +55,7 @@ flowchart TB
   WEB --> DESK
 
   subgraph desk [Desk]
-    SET["Settings<br/>PYRBAC_DB_* and bind"]
+    SET["Settings<br/>OPENRBAC_DB_* and bind"]
     SESS["SessionFile<br/>session file mode 0600"]
     ACC["Access<br/>users, roles, menus, depts, posts"]
     CAT["Catalog<br/>parameters, dictionaries, notices"]
@@ -75,14 +75,14 @@ flowchart TB
   CAT --> ACC
 
   SESS -->|"terminal token"| AUD
-  WEB -->|"cookie pyrbac_session"| AUD
+  WEB -->|"cookie openrbac_session"| AUD
 
   ACC --> STORE
   CAT --> STORE
   AUD --> STORE
   SCH --> STORE
 
-  STORE["Store<br/>PyMySQL, one connection per call"] --> DB[("MariaDB / MySQL<br/>database pyrbac")]
+  STORE["Store<br/>PyMySQL, one connection per call"] --> DB[("MariaDB / MySQL<br/>database openrbac")]
 
   LOG["ChronicleLogger<br/>status file, no passwords"] -.-> DESK
 ```

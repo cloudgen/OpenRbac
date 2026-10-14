@@ -8,20 +8,20 @@
 
 `def main` instantiates ChronicleLogger. The instantiation is the statement `ChronicleLogger(...)` written in that function, before the argument parser and before any product object. A missing import **MUST** exit 1 with `ChronicleLogger is required. Next step: python -m pip install "ChronicleLogger>=1.3.1"`. The log **MUST NOT** contain a password or the process argument list.
 
-PyRbac records system status through that one ChronicleLogger instance: process start, debug identity, menu steps, join steps, temp write, publish, discard of an unfinished temp, and failures. User-visible failure sentences stay on `requirement-python-error-handling`. The text menu stays on `requirement-python-tui`. Class homes stay on `requirement-python-oop`. The pip name and the version floor stay on `requirement-python-packaging` and `requirement-runtime-prerequisites`. Concat order and `shutil.move` stay on `requirement-video-ffmpeg-pipeline` and `requirement-python-coding-style`.
+OpenRbac records system status through that one ChronicleLogger instance: process start, debug identity, menu steps, join steps, temp write, publish, discard of an unfinished temp, and failures. User-visible failure sentences stay on `requirement-python-error-handling`. The text menu stays on `requirement-python-tui`. Class homes stay on `requirement-python-oop`. The pip name and the version floor stay on `requirement-python-packaging` and `requirement-runtime-prerequisites`. Concat order and `shutil.move` stay on `requirement-video-ffmpeg-pipeline` and `requirement-python-coding-style`.
 
 This product creates no threads. This file does not name a thread-wait timeout. Control-C stop, an exit code for that stop, and the decision not to publish are not confirmed law in this file. Row 9 Exit returns 0 with no confirm question (`requirement-python-tui`).
 
-The running `src/PyRbac/cli.py` writes `ChronicleLogger(...)` in `def main`. The allowed end state is this file.
+The running `src/OpenRbac/cli.py` writes `ChronicleLogger(...)` in `def main`. The allowed end state is this file.
 
 ### 1.1 Human-facing
 
-**In one sentence:** `def main` writes `ChronicleLogger(...)`, PyRbac keeps a dated status file through that object, and those lines stay off the text menu.
+**In one sentence:** `def main` writes `ChronicleLogger(...)`, OpenRbac keeps a dated status file through that object, and those lines stay off the text menu.
 
 | Box | Meaning | Example |
 |-----|---------|---------|
-| You / this login | Person running `py-rbac` | A failed join is still explained on the console, and the same fact is in the log file |
-| The other role | The logger library | `ChronicleLogger(logname="PyRbac")` resolves the folder and the line shape |
+| You / this login | Person running `open-rbac` | A failed join is still explained on the console, and the same fact is in the log file |
+| The other role | The logger library | `ChronicleLogger(logname="OpenRbac")` resolves the folder and the line shape |
 | Not this file | How the menu is drawn, and how FFmpeg concatenates the two files | `requirement-python-tui`, `requirement-video-ffmpeg-pipeline` |
 
 | Includes | Excludes |
@@ -32,15 +32,15 @@ The running `src/PyRbac/cli.py` writes `ChronicleLogger(...)` in `def main`. The
 
 | Surface | What you open | What for |
 |---------|---------------|----------|
-| `src/PyRbac/cli.py` | `def main` | Writes `ChronicleLogger(...)`, then passes that one instance |
-| `py-rbac` | console script | Writes status while it runs |
+| `src/OpenRbac/cli.py` | `def main` | Writes `ChronicleLogger(...)`, then passes that one instance |
+| `open-rbac` | console script | Writes status while it runs |
 | Resolved `logDir()` | daily `.log` file | History after the process exits |
 
 | You do… | What it means | What you type |
 |---------|---------------|---------------|
-| Start the program | `def main` writes one `ChronicleLogger(...)` with logname `PyRbac`, reads the resolved name and folders back, and logs status with a component tag. | `py-rbac version` |
-| Ask for the debug lines | Set `DEBUG` before the process starts. On a run that does not open the text screen, `main` displays the resolved name, the package version, `ChronicleLogger.class_version()`, and a line that says `debug mode`, before the argument parser. The text screen keeps that mirror off the console. The daily file still receives the lines. When debug mode is off, those lines stay off. | `DEBUG=1 py-rbac version` |
-| Open the menu | The constructor is quiet, so log lines do not paint over the frame. The menu is still the text screen. | `py-rbac` |
+| Start the program | `def main` writes one `ChronicleLogger(...)` with logname `OpenRbac`, reads the resolved name and folders back, and logs status with a component tag. | `open-rbac version` |
+| Ask for the debug lines | Set `DEBUG` before the process starts. On a run that does not open the text screen, `main` displays the resolved name, the package version, `ChronicleLogger.class_version()`, and a line that says `debug mode`, before the argument parser. The text screen keeps that mirror off the console. The daily file still receives the lines. When debug mode is off, those lines stay off. | `DEBUG=1 open-rbac version` |
+| Open the menu | The constructor is quiet, so log lines do not paint over the frame. The menu is still the text screen. | `open-rbac` |
 
 ## 2. Core Rules (Mandatory)
 
@@ -55,10 +55,10 @@ The running `src/PyRbac/cli.py` writes `ChronicleLogger(...)` in `def main`. The
 ### 2.1 One logger
 
 4. **MUST** import `ChronicleLogger` from `ChronicleLogger` at the use site inside `def main`. **MUST NOT** import `_Suroot`. A test that freezes the clock **MUST** define its own `TimeProvider` subclass in the test module. **MUST NOT** import `FakeTimeProvider` from the package.
-5. **MUST** construct **one** instance per process by writing `ChronicleLogger(...)` inside `def main`, with `logname` set to the product name `PyRbac`. That statement is the construct. **MUST NOT** put the construct in a function or a method. **MUST NOT** call `Cli.__new__` in order to build the logger. Helpers receive that instance. **MUST NOT** construct a second logger.
-6. **MUST** read `logName()`, `baseDir()`, and `logDir()` immediately after construct, and again after any path setter, before the first `log_message`. The constructor string is not the resolved name. `PyRbac` resolves to `py-rbac`.
-7. **MUST NOT** re-export `ChronicleLogger` from the `PyRbac` package. Public exports stay `__version__` and `main` (`requirement-python-packaging`).
-8. If the import fails, **MUST** fail closed on the console with the pip next step for the floor named by `requirement-python-packaging`, and **MUST** return non-zero. That line cannot go through `log_message`. Importing the `PyRbac` package **MUST** still succeed when ChronicleLogger is absent, because the construct is not at import time.
+5. **MUST** construct **one** instance per process by writing `ChronicleLogger(...)` inside `def main`, with `logname` set to the product name `OpenRbac`. That statement is the construct. **MUST NOT** put the construct in a function or a method. **MUST NOT** call `Cli.__new__` in order to build the logger. Helpers receive that instance. **MUST NOT** construct a second logger.
+6. **MUST** read `logName()`, `baseDir()`, and `logDir()` immediately after construct, and again after any path setter, before the first `log_message`. The constructor string is not the resolved name. `OpenRbac` resolves to `open-rbac`.
+7. **MUST NOT** re-export `ChronicleLogger` from the `OpenRbac` package. Public exports stay `__version__` and `main` (`requirement-python-packaging`).
+8. If the import fails, **MUST** fail closed on the console with the pip next step for the floor named by `requirement-python-packaging`, and **MUST** return non-zero. That line cannot go through `log_message`. Importing the `OpenRbac` package **MUST** still succeed when ChronicleLogger is absent, because the construct is not at import time.
 
 ### 2.2 Debug
 
@@ -66,7 +66,7 @@ The running `src/PyRbac/cli.py` writes `ChronicleLogger(...)` in `def main`. The
 10. `isDebug()` remembers the first answer. `DEBUG` or `debug` **MUST** already be `1`, `true`, or `show` (any letter case) **before** `ChronicleLogger(...)`.
 11. The startup identity lines **MUST** run only inside `if logger.isDebug():`, and `main` **MUST** run that block before the argument parser. The block is four `log_message` calls, each with `component="main"`: the resolved app name, the package version, and this file’s path; `Using` plus `ChronicleLogger.class_version()`; the `baseDir()` value; a line whose message is `debug mode`. **MUST NOT** type the library version by hand. When `isDebug()` is false, those lines **MUST NOT** be displayed.
 11a. **Console mirror.** When this run will open the text screen, and that fact is known before construct, `main` **MUST** pass `is_quiet=True` into `ChronicleLogger(...)`. The runs that open the text screen are: empty argv on a terminal; `join`, `list-videos`, or `about` on a terminal. A small argv peek may decide `is_quiet` before the constructor. `ArgumentParser.parse_args` runs after the constructor and after the debug block. The library stores that flag before it resolves the name and the folders and before it creates the log directory. That constructor can print `Created directory:`. A call to `quiet(True)` after the constructor returns **MUST NOT** be the only quiet for those runs. A run that does not open the text screen **MUST** leave `is_quiet` false, so the operator sees `debug mode` on the console. The text screen **MUST** keep that mirror off the console. The same lines still go to the daily file. This product does not claim `--json`. `logger.quiet(True)` remains the setter when a screen opens later and was not known at construct.
-11b. **Version string.** The identity line and the `version` verb read the same package version: the single string `__version__` in `src/PyRbac/__init__.py`, which matches `pyproject.toml` (`requirement-python-packaging`). The current string is `1.0.5`. **MUST NOT** add `MAJOR` / `MINOR` / `PATCH` integers. **MUST NOT** keep a second version literal for display. A suite assertion may compare the displayed string with `__version__` and with `pyproject.toml`. `main` **MUST NOT** raise because those strings differ.
+11b. **Version string.** The identity line and the `version` verb read the same package version: the single string `__version__` in `src/OpenRbac/__init__.py`, which matches `pyproject.toml` (`requirement-python-packaging`). The current string is `1.0.5`. **MUST NOT** add `MAJOR` / `MINOR` / `PATCH` integers. **MUST NOT** keep a second version literal for display. A suite assertion may compare the displayed string with `__version__` and with `pyproject.toml`. `main` **MUST NOT** raise because those strings differ.
 11c. **Environment checks.** `CheckSystem.in_venv`, `in_pyenv`, and `in_conda` **MUST** call `inVenv()`, `inPyenv()`, and `inConda()` on the one logger. When the logger is absent, each method **MUST** return false. Those three results **MUST NOT** be printed on the about page and **MUST NOT** choose `python2 location`, `python3 location`, `conda location`, or `pyenv location`. The path reads stay on `requirement-python-about`. The proof is `TP-ABOUT-16`.
 
 ### 2.3 `log_message` level and component
@@ -120,9 +120,9 @@ The class-name components are `Cli`, `Tui`, `MenuPainter`, `MenuModel`, `MenuSes
 
 ### 2.5 Folder and line
 
-21. **MUST** use the folders from `baseDir()` and `logDir()`. **MUST NOT** copy the library’s environment ladder into this program. **MUST NOT** hard-code `~/.app/PyRbac`, `/var/PyRbac`, or `/var/log/PyRbac`.
-22. When the process is root and it is not under conda, pyenv, or a virtualenv, the library’s `baseDir()` is `/var/py-rbac` and `logDir()` is `/var/py-rbac/log`. It is not `/var/log/py-rbac`. Product code reads those values. It does not assemble them. This sentence does not require PyRbac to install conda, pyenv, or a virtualenv.
-23. The daily file basename **MUST** stay the library’s `{kebab-app}-{YYYYMMDD}.log` under `logDir()`. For this product the kebab name is `py-rbac`.
+21. **MUST** use the folders from `baseDir()` and `logDir()`. **MUST NOT** copy the library’s environment ladder into this program. **MUST NOT** hard-code `~/.app/OpenRbac`, `/var/OpenRbac`, or `/var/log/OpenRbac`.
+22. When the process is root and it is not under conda, pyenv, or a virtualenv, the library’s `baseDir()` is `/var/open-rbac` and `logDir()` is `/var/open-rbac/log`. It is not `/var/log/open-rbac`. Product code reads those values. It does not assemble them. This sentence does not require OpenRbac to install conda, pyenv, or a virtualenv.
+23. The daily file basename **MUST** stay the library’s `{kebab-app}-{YYYYMMDD}.log` under `logDir()`. For this product the kebab name is `open-rbac`.
 24. A file line has this shape (the library writes it; this product does not format it by hand):
 
 ```text
@@ -137,9 +137,9 @@ The class-name components are `Cli`, `Tui`, `MenuPainter`, `MenuModel`, `MenuSes
 |-------|--------|
 | **Library** | ChronicleLogger |
 | **Floor** | Required `ChronicleLogger>=1.3.1`, owned by `requirement-python-packaging` and `requirement-runtime-prerequisites`. The live `pyproject.toml` declares that floor. |
-| **Construct site** | `def main` in `src/PyRbac/cli.py` writes `ChronicleLogger(...)`. |
-| **logname** | `PyRbac` (product name, not a path, not the console-script name) |
-| **Resolved name** | `py-rbac` from `logName()` |
+| **Construct site** | `def main` in `src/OpenRbac/cli.py` writes `ChronicleLogger(...)`. |
+| **logname** | `OpenRbac` (product name, not a path, not the console-script name) |
+| **Resolved name** | `open-rbac` from `logName()` |
 | **Call order** | Inside `def main`: peek argv for the text screen, write `ChronicleLogger(...)` with `logname` and `is_quiet` when that screen is already known, read `logName()`, `baseDir()`, and `logDir()`, run the `isDebug()` block including `debug mode`, then parse arguments, then `Cli(logger)`. |
 | **Quiet** | `is_quiet=True` for empty argv on a terminal and for `join`, `list-videos`, or `about` on a terminal. Other runs leave it false. `quiet(True)` after return does not hide `Created directory:`. |
 | **Version** | Identity and `version` use `__version__` (`1.0.5`). No second integer triple. `cli.py` reads `__version__` and does not keep a second literal. |
@@ -163,11 +163,11 @@ def main(argv=None, basedir="", logdir=""):
         )
         return 1
 
-    from PyRbac import __version__
+    from OpenRbac import __version__
 
     screen = opens_text_screen(argv)
     logger = ChronicleLogger(
-        logname="PyRbac",
+        logname="OpenRbac",
         is_quiet=screen,
         basedir=basedir,
         logdir=logdir,
@@ -231,8 +231,8 @@ On Termux, Git Bash, Windows cmd, or the same class, status files stay in the fo
 **Future AI assistants or maintainers MUST NOT:**
 
 1. Construct ChronicleLogger outside `def main`, or construct a second logger.
-2. Re-export ChronicleLogger from the PyRbac package.
-3. Hard-code `~/.app/PyRbac`, `/var/PyRbac`, or `/var/log/PyRbac`, or copy the library folder ladder into product code.
+2. Re-export ChronicleLogger from the OpenRbac package.
+3. Hard-code `~/.app/OpenRbac`, `/var/OpenRbac`, or `/var/log/OpenRbac`, or copy the library folder ladder into product code.
 4. Treat `quiet(True)` after the constructor returns as a substitute for `is_quiet=True` on a text-screen run.
 5. Put the identity lines outside `logger.isDebug()`, or add a `--debug` flag.
 6. Add a second version literal, or raise at import or in `main` because version strings differ.
@@ -274,7 +274,7 @@ On Termux, Git Bash, Windows cmd, or the same class, status files stay in the fo
 
 | TP family / ID | Suite | Status | Note |
 |----------------|-------|--------|------|
-| **TP-LOG-01** | `tests/test_logging.py` | todo | One construct in `main`. `logName` / `baseDir` / `logDir` read back. Resolved name is `py-rbac` |
+| **TP-LOG-01** | `tests/test_logging.py` | todo | One construct in `main`. `logName` / `baseDir` / `logDir` read back. Resolved name is `open-rbac` |
 | **TP-LOG-02** | `tests/test_logging.py` | todo | `DEBUG` already on shows identity lines and `debug mode` on a non-screen run. Unset shows neither. A text-screen run does not mirror those lines. The daily file still receives them |
 | **TP-LOG-03** | `tests/test_logging.py` | todo | The product creates no threads. A later thread logs create, start, join, wait, lock, and pool before the blocking call, and does not call `log_message` under a work lock |
 | **TP-LOG-04** | `tests/test_logging.py` | todo | Each class `__init__` logs `instantiated` at INFO, component the class name, outside `isDebug()` |
@@ -288,7 +288,7 @@ On Termux, Git Bash, Windows cmd, or the same class, status files stay in the fo
 
 | Date | Status | Note |
 |------|--------|------|
-| 2026-10-04 | Active 1.0.0 | ChronicleLogger construct for PyRbac. Ship unit does not construct it yet. Floor target `ChronicleLogger>=1.3.1`. Live manifest remains `ChronicleLogger>=1.2.3` |
+| 2026-10-04 | Active 1.0.0 | ChronicleLogger construct for OpenRbac. Ship unit does not construct it yet. Floor target `ChronicleLogger>=1.3.1`. Live manifest remains `ChronicleLogger>=1.2.3` |
 | 2026-10-04 | Active 1.0.1 | Product version **1.0.4**. Manifest floor is `ChronicleLogger>=1.3.1`. `cli.py` reads `__version__` only |
 | 2026-10-04 | Active 1.0.2 | Rule 11c: environment checks read the one logger. Current version string is **1.0.5**. `TP-LOG-*` stay todo. `TP-ABOUT-16` is have. Primary owner is `requirement-python-about` |
 

@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-python-oop.md
-**Status**: Active (Version 1.1.2)
+**Status**: Active (Version 1.1.3)
 **Area**: python
 **Key**: `requirement-python-oop`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -14,7 +14,7 @@ Each module defines one class. An error type may sit beside the class that raise
 
 | Box | Meaning | Example |
 |-----|---------|---------|
-| You / this login | A reader of `src/PyRbac` | `Desk` calls `Access` |
+| You / this login | A reader of `src/OpenRbac` | `Desk` calls `Access` |
 | The other role | The logger | Passed into `__init__` |
 | Not this file | The permission table | `requirement-rbac` |
 
@@ -49,7 +49,7 @@ Each module defines one class. An error type may sit beside the class that raise
 
 1. **Logger.** A class that accepts `logger` **MUST** log `instantiated` from `__init__` when the logger is present.
 2. **Nested handler.** `WebApp.make_server` **MAY** define the standard-library request handler as a nested class because `ThreadingHTTPServer` constructs it. That handler **MUST** call `WebApp`. No other module **MAY** add a second product class.
-3. **Version.** `__version__` in `__init__.py` is the only version string. It is `1.0.4`.
+3. **Version.** `__version__` in `__init__.py` is the only version string. It is `1.0.5`.
 4. **No hello.** There is no `Tui.hello_text`.
 
 ## Terminologies
@@ -67,9 +67,10 @@ Each module defines one class. An error type may sit beside the class that raise
 | 2026-10-11 | Active 1.1.0 | Desk, RBAC, and web classes |
 | 2026-10-11 | Active 1.1.1 | Version string 1.0.2. Store still one class for both engines |
 | 2026-10-11 | Active 1.1.2 | Version string 1.0.4. Class `LocalLogin` |
+| 2026-10-14 | Active 1.1.3 | Version string 1.0.5 |
 
 ---
 
-**Last Updated**: 2026-10-11
+**Last Updated**: 2026-10-14
 **Owner**: project maintainers
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

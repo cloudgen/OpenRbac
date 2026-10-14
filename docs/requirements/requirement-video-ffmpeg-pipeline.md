@@ -6,7 +6,7 @@
 
 ## 1. Purpose
 
-This requirement is retired. PyRbac does not call FFmpeg, does not concatenate media, and does not publish a media file.
+This requirement is retired. OpenRbac does not call FFmpeg, does not concatenate media, and does not publish a media file.
 
 The welcome line is `requirement-domain-videojoin`. Do not treat the historical concat procedure as law.
 
@@ -23,7 +23,7 @@ The welcome line is `requirement-domain-videojoin`. Do not treat the historical 
 
 1. **MUST NOT** invoke `ffmpeg` or any other encoder from this product.
 2. **MUST NOT** write a concat list, a media intermediate, or a joined output file.
-3. **MUST NOT** restore `src/PyRbac/join.py` without an explicit user order and a new Active revision of `requirement-domain-videojoin`.
+3. **MUST NOT** restore `src/OpenRbac/join.py` without an explicit user order and a new Active revision of `requirement-domain-videojoin`.
 4. A missing `ffmpeg` binary is not an error. The front board and `hello` do not check for it.
 
 ## 4. Protection Rule (Sacred)

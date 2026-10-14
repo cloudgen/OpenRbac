@@ -1,21 +1,21 @@
 **file**: docs/requirements/requirement-python-cli-interface.md
-**Status**: Active (Version 1.5.0)
+**Status**: Active (Version 1.5.1)
 **Area**: python
 **Key**: `requirement-python-cli-interface`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
 
 ## 1. Purpose
 
-`py-rbac` is the console script. With no arguments on a terminal it uses the sqlite3 default file, prepares a missing database, opens the text menu when a saved sign-in still matches, and otherwise asks for an account and a password. With no arguments and no terminal it prints help and returns 0. A product verb runs that verb and does not open the menu.
+`open-rbac` is the console script. With no arguments on a terminal it uses the sqlite3 default file, prepares a missing database, opens the text menu when a saved sign-in still matches, and otherwise asks for an account and a password. With no arguments and no terminal it prints help and returns 0. A product verb runs that verb and does not open the menu.
 
 ### 1.1 Human-facing
 
-**In one sentence:** Type a verb when you already know the action, or run `py-rbac` with no arguments to sign in and then open the menu.
+**In one sentence:** Type a verb when you already know the action, or run `open-rbac` with no arguments to sign in and then open the menu.
 
 | Box | Meaning | Example |
 |-----|---------|---------|
-| You / this login | The operator | `py-rbac user-list` |
-| The other role | Help | `py-rbac help` |
+| You / this login | The operator | `open-rbac user-list` |
+| The other role | Help | `open-rbac help` |
 | Not this file | The row numbers | `requirement-python-tui` |
 
 ## 2. Verbs
@@ -35,8 +35,8 @@ Domain: `login`, `logout`, `whoami`, `serve`, `db-init`, `user-list`, `user-add`
 3. **Uninstall.** `--force` **MUST** be accepted only with `self-uninstall`.
 4. **Errors.** A failure **MUST** print `ERROR:` and `Next:` on stderr and return 1. The next step **MUST** tell the operator what to run.
 5. **Password flag.** `--password` is allowed for a non-interactive test. Help **MUST** say that the process list can show it. The sign-in question and every later password question **MUST** ask one field at a time and mask the password.
-6. **Serve.** The verb `serve` **MUST** print the URL and block. Menu row 7 **MUST** use the background listener.
-7. **Identity.** The program name is `PyRbac`. The console script is `py-rbac`. The basic usage line is `py-rbac login --user-name admin`.
+6. **Serve.** The verb `serve` **MUST** print the URL and block. Server row 23 **MUST** use the background listener.
+7. **Identity.** The program name is `OpenRbac`. The console script is `open-rbac`. The basic usage line is `open-rbac login --user-name admin`.
 
 ## 4. Acceptance checks
 
@@ -65,9 +65,10 @@ Domain: `login`, `logout`, `whoami`, `serve`, `db-init`, `user-list`, `user-add`
 | 2026-10-11 | Active 1.3.0 | `db-engine` chooses sqlite3 or mysql and does not open the database |
 | 2026-10-11 | Active 1.4.0 | Empty argv uses the sqlite3 default file. Enter on `db-engine` selects it |
 | 2026-10-11 | Active 1.5.0 | A matching saved sign-in opens the menu without a question |
+| 2026-10-14 | Active 1.5.1 | The background listener is server row 23 |
 
 ---
 
-**Last Updated**: 2026-10-11
+**Last Updated**: 2026-10-14
 **Owner**: project maintainers
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

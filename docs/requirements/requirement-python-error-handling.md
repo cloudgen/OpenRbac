@@ -6,13 +6,13 @@
 
 ## 1. Purpose
 
-Define how PyRbac detects, reports, and recovers from errors during the text menu, the `join` verb, and FFmpeg processing without destroying the user’s source media.
+Define how OpenRbac detects, reports, and recovers from errors during the text menu, the `join` verb, and FFmpeg processing without destroying the user’s source media.
 
 Console sentences in this file stay required. Durable status, once the logger exists, is `requirement-python-cli-logging`. ChronicleLogger is required. It is not optional.
 
 ### 1.1 Human-facing
 
-**In one sentence:** When a join cannot finish, PyRbac tells you why on the screen and leaves both source videos where they are.
+**In one sentence:** When a join cannot finish, OpenRbac tells you why on the screen and leaves both source videos where they are.
 
 | Box | Meaning | Example |
 |-----|---------|---------|
@@ -29,14 +29,14 @@ Console sentences in this file stay required. Durable status, once the logger ex
 | Surface | What you open | What for |
 |---------|---------------|----------|
 | Join questions | Menu region above the box | The reason, without leaving the front board when the board is already open |
-| `py-rbac join` with one video | Message, non-zero exit | Nothing is concatenated |
+| `open-rbac join` with one video | Message, non-zero exit | Nothing is concatenated |
 | Console before the logger exists | Missing ChronicleLogger | The pip next step |
 
 | You do… | What it means | What you type |
 |---------|---------------|---------------|
 | Pick a number that is not in the list | The question stays. FFmpeg does not run. | A bad index, then a real one |
-| Join with fewer than two videos | You see why, and the sources stay. | `py-rbac join` |
-| Run without the logger library | The console names the pip next step and the program returns non-zero. | `py-rbac` |
+| Join with fewer than two videos | You see why, and the sources stay. | `open-rbac join` |
+| Run without the logger library | The console names the pip next step and the program returns non-zero. | `open-rbac` |
 
 ## 2. Core Rules (Mandatory)
 
@@ -97,7 +97,7 @@ Console sentences in this file stay required. Durable status, once the logger ex
 
 ## Under command line for normal user only
 
-On Termux, Git Bash, Windows cmd, or the same class, failure sentences are for the normal user who started `py-rbac`. **This requirement:** do not use administrator privilege, `sudo`, `apt`, or a dedicated system user to report an error or to clean a temp. Do not pipe a downloaded script into a shell. Type 1 and Type 2 are unused on Termux, Git Bash, and Windows cmd. Git Bash and Windows cmd do not call Termux `pkg`.
+On Termux, Git Bash, Windows cmd, or the same class, failure sentences are for the normal user who started `open-rbac`. **This requirement:** do not use administrator privilege, `sudo`, `apt`, or a dedicated system user to report an error or to clean a temp. Do not pipe a downloaded script into a shell. Type 1 and Type 2 are unused on Termux, Git Bash, and Windows cmd. Git Bash and Windows cmd do not call Termux `pkg`.
 
 ## 3. Design Principles (CIAO / CIAO-Lite)
 
@@ -161,7 +161,7 @@ On Termux, Git Bash, Windows cmd, or the same class, failure sentences are for t
 
 | Date | Status | Note |
 |------|--------|------|
-| 2026-08-09 | Active 1.0.0 | Initial error-handling law for PyRbac |
+| 2026-08-09 | Active 1.0.0 | Initial error-handling law for OpenRbac |
 | 2026-08-09 | Active 1.1.0 | Fail-closed fallback and unique temp cleanup notes |
 | 2026-10-04 | Active 1.2.0 | ChronicleLogger is required for durable status. Console sentences stay. Missing library is a console line. Empty argv off a terminal is help, return 0 |
 

@@ -1,12 +1,12 @@
 **file**: docs/requirements/requirement-python-build-script.md
-**Status**: Active (Version 1.0.0)
+**Status**: Active (Version 1.0.1)
 **Area**: python
 **Key**: `requirement-python-build-script`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
 
 ## 1. Purpose
 
-`./build.sh` is the maintainer build script for this Python package. It is not `py-rbac`. It reads the package version through `python3`, and it runs pip, the `build` package, and twine through `python3`. The command set below is closed. The product CLI still runs when this script is absent.
+`./build.sh` is the maintainer build script for this Python package. It is not `open-rbac`. It reads the package version through `python3`, and it runs pip, the `build` package, and twine through `python3`. The command set below is closed. The product CLI still runs when this script is absent.
 
 ### 1.1 Human-facing
 
@@ -16,11 +16,11 @@
 |-----|---------|---------|
 | You / this login | The maintainer at the repository root | `./build.sh test-install` |
 | The other role | This checkout's `python3` | `python3 -m pip`, `python3 -m build`, `python3 -m twine` |
-| Not this file | The operator menu | `py-rbac` with no verb |
+| Not this file | The operator menu | `open-rbac` with no verb |
 
 | Includes | Excludes |
 |----------|----------|
-| `help`, `version`, `setup`, `clean`, `build`, `upload`, `git`, `tag`, `release`, `all`, `test`, `test-install` | `py-rbac` verbs, the text menu, `db-init`, a database password, `sudo` |
+| `help`, `version`, `setup`, `clean`, `build`, `upload`, `git`, `tag`, `release`, `all`, `test`, `test-install` | `open-rbac` verbs, the text menu, `db-init`, a database password, `sudo` |
 
 | Surface | What you open | What for |
 |---------|---------------|----------|
@@ -31,15 +31,15 @@
 | You do… | What it means | What you type |
 |---------|---------------|---------------|
 | See the list | No command, `help`, `-h`, and `--help` print the same list, then `Done.` | `./build.sh` |
-| Install this checkout | Remove an existing `PyRbac` install for this `python3`, then install this directory. Later edits under `src/` stay out of that copy until you run it again. | `./build.sh test-install` |
+| Install this checkout | Remove an existing `OpenRbac` install for this `python3`, then install this directory. Later edits under `src/` stay out of that copy until you run it again. | `./build.sh test-install` |
 | Pack | Write an sdist and a wheel into `dist/`. This does not upload and does not tag. | `./build.sh build` |
 | Send the cartons | Upload whatever is already in `dist/`. This does not build first. | `./build.sh upload` |
 | Release | Clean, then build, then upload, then tag. `all` is the same chain. | `./build.sh release` |
 
 ## 2. Core Rules / Requirements (Mandatory)
 
-1. **Entry.** The script lives at the repository root and is named `build.sh`. It **MUST** `cd` to its own directory before any command. It **MUST NOT** accept `py-rbac` flags.
-2. **Banner.** Before the command, print `PyRbac build tool (v` plus `__version__` plus `)` when `src/PyRbac/__init__.py` imports. When that read fails, print `PyRbac build tool (version unread)`. Then print a line of forty `=` characters.
+1. **Entry.** The script lives at the repository root and is named `build.sh`. It **MUST** `cd` to its own directory before any command. It **MUST NOT** accept `open-rbac` flags.
+2. **Banner.** Before the command, print `OpenRbac build tool (v` plus `__version__` plus `)` when `src/OpenRbac/__init__.py` imports. When that read fails, print `OpenRbac build tool (version unread)`. Then print a line of forty `=` characters.
 3. **Closed set.** The only commands are `help`, `version`, `setup`, `clean`, `build`, `upload`, `git`, `tag`, `test`, `test-install`, `release`, and `all`. No command, `-h`, and `--help` are `help`. An unknown token prints `ERROR: Unknown command: ` plus the token on stderr, prints the help list, and exits `1` without printing `Done.`
 4. **Extra tokens.** `test` and `test-install` reject any extra token and exit `1`. Every other command ignores trailing tokens.
 5. **Done.** A command that exits `0` prints `Done.` as its last line. A command that exits non-zero does not print `Done.`
@@ -51,11 +51,11 @@
 | Command | Behavior |
 |---------|----------|
 | `help` | Print the usage list in §2.2. Exit `0`. |
-| `version` | If `__version__` was unread, exit `1` with `ERROR: Cannot read the package version from src/PyRbac.` and `   Next: set __version__ in src/PyRbac/__init__.py to match pyproject.toml, then ./build.sh version`. Otherwise print `PyRbac build tool (v` plus that version plus `)` again. |
+| `version` | If `__version__` was unread, exit `1` with `ERROR: Cannot read the package version from src/OpenRbac.` and `   Next: set __version__ in src/OpenRbac/__init__.py to match pyproject.toml, then ./build.sh version`. Otherwise print `OpenRbac build tool (v` plus that version plus `)` again. |
 | `setup` | `python3 -m pip install --upgrade build twine`. |
 | `clean` | Remove `build/`, `dist/`, `.eggs/`, `.pytest_cache/`, `*.egg-info` in the root and under `src/`, every `__pycache__` directory, and every file named `._*`. Print `Clean complete`. Do not remove the source tree, `reviews/`, or `screenshots/`. |
 | `build` | `python3 -m build --sdist --wheel --outdir dist/`. On failure exit `1` with `ERROR: Package build failed.` and `   Next: ./build.sh setup`. On success print `Build complete -> dist/` and a long listing of `dist/`. Do not clean first. Do not upload. Do not tag. |
-| `upload` | `python3 -m twine upload dist/*`. Do not build first. On failure exit `1` with `ERROR: Upload failed.` and `   Next: ./build.sh build`. On success print `Upload finished for PyRbac v` plus the version string read at startup (empty when that read failed). Do not print index credentials. |
+| `upload` | `python3 -m twine upload dist/*`. Do not build first. On failure exit `1` with `ERROR: Upload failed.` and `   Next: ./build.sh build`. On success print `Upload finished for OpenRbac v` plus the version string read at startup (empty when that read failed). Do not print index credentials. |
 | `git` | When stdin is a terminal, print `Enter commit message:` and read one line. Otherwise read one line from stdin. An empty line exits `1` with `ERROR: Commit message is empty.` and `   Next: ./build.sh git`. Otherwise run `git add .`, `git commit -m` with that one line, then `git push` with no flags. The push uses the current branch's configured remote. Do not pass `--force`. |
 | `tag` | Require a readable version, as `version` does. The tag name is `v` plus that version. Print `Creating and pushing tag: ` plus the name. Create an annotated tag with message `Release ` plus the tag name, then `git push origin` plus that tag. |
 | `test` | No extra arguments. If `tests/run.sh` is missing, exit `1` with `ERROR: tests/run.sh is not in this checkout.` and `   Next: add the suite runner, then ./build.sh test`. Otherwise run `./tests/run.sh`. |
@@ -87,15 +87,15 @@ The examples **MUST** include `./build.sh version`, `./build.sh build`, `./build
 | Field | Value |
 |-------|-------|
 | Script | `./build.sh` |
-| Package | `PyRbac` |
-| Version read | `src/PyRbac/__init__.py` → `__version__` (`1.0.4`) |
-| Pip name | `[project].name` in `pyproject.toml` (`PyRbac`) |
+| Package | `OpenRbac` |
+| Version read | `src/OpenRbac/__init__.py` → `__version__` (`1.0.5`) |
+| Pip name | `[project].name` in `pyproject.toml` (`OpenRbac`) |
 | `test-install` target | The repository directory that contains `build.sh` |
 | `test` target | `tests/run.sh` |
 | Tag remote | `origin` |
 | `git` remote | Whatever `git push` uses for the current branch |
 | Index credentials | Not stored in this script or in this requirement |
-| Product CLI | Unchanged. `py-rbac` does not gain these commands |
+| Product CLI | Unchanged. `open-rbac` does not gain these commands |
 
 `tomllib` is in the Python standard library from 3.11. `test-install` therefore needs that interpreter even though the package declares `requires-python` `>=3.9`. The other commands do not import `tomllib`.
 
@@ -122,7 +122,7 @@ On Termux, Git Bash, Windows cmd, or the same class, the maintainer runs `./buil
 
 **Future AI assistants or maintainers MUST NOT**:
 
-1. Add a `py-rbac` verb to this script, or route `login`, `serve`, or `db-init` through it.
+1. Add a `open-rbac` verb to this script, or route `login`, `serve`, or `db-init` through it.
 2. Drop, rename, or merge a command in §2.1. `all` stays an alias of `release`.
 3. Make `upload` build first, or make `build` upload or tag.
 4. Make `release` skip `clean`.
@@ -148,8 +148,8 @@ On Termux, Git Bash, Windows cmd, or the same class, the maintainer runs `./buil
 |----------------|-------|--------|------|
 | TP-BUILD-01 | `tests/` | todo | `help` with no arguments lists every command in §2.1 |
 | TP-BUILD-02 | `tests/` | todo | `test` and `test-install` reject an extra token |
-| TP-BUILD-03 | `tests/` | todo | `version` prints the same `__version__` as `src/PyRbac/__init__.py` |
-| TP-BUILD-04 | `tests/` | todo | `clean` removes `dist/` and does not remove `src/PyRbac` |
+| TP-BUILD-03 | `tests/` | todo | `version` prints the same `__version__` as `src/OpenRbac/__init__.py` |
+| TP-BUILD-04 | `tests/` | todo | `clean` removes `dist/` and does not remove `src/OpenRbac` |
 
 The suite does not invoke `./build.sh` yet. Those rows stay todo until a test runs the script.
 
@@ -180,9 +180,10 @@ On this product, `./build.sh upload` sends `dist/*` and does not perform those t
 | Date | Status | Notes |
 |------|--------|-------|
 | 2026-10-11 | Active 1.0.0 | Command set taken from the live `./build.sh` |
+| 2026-10-14 | Active 1.0.1 | Version read cell is 1.0.5 |
 
 ---
 
-**Last Updated**: 2026-10-11
+**Last Updated**: 2026-10-14
 **Owner**: project maintainers
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

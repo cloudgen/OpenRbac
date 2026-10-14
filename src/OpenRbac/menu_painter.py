@@ -1,7 +1,7 @@
 # =============================================================================
 # Text-menu frame.
 # requirement-python-tui — menu region and the bottom input box.
-# requirement-python-cli-language — row 4 and the path word.
+# requirement-python-cli-language — row 7 and the path word.
 # requirement-python-oop — class MenuPainter owns the frame and MENU_ROWS.
 # =============================================================================
 from __future__ import annotations
@@ -95,56 +95,60 @@ class MenuPainter:
     MIN_HEIGHT = MIN_MENU_ABOVE + CHROME_ROWS
     MIN_PLACEABLE = 2 + len(" " + INPUT_MARK) + 1
     MENU_ROWS = (
-        (2, "access", "users, roles, menus, departments, and posts", "access"),
+        (1, "rbac", "users, roles, menus, departments, and posts", "rbac"),
+        (2, "server", "setup, audit, and the web listener", "server"),
         (3, "system-log", "view, clear, and the log folder", "system-log"),
-        (4, "language", "display language for this menu", "language"),
-        (5, "setup", "parameters, dictionaries, and notices", "setup"),
-        (6, "audit", "operation log, login log, and online users", "audit"),
-        (7, "serve", "start the web interface on this computer", "serve"),
-        (8, "self-management", "version, about, and pip lifecycle", "self-management"),
+        (6, "self-management", "version, about, and pip lifecycle", "self-management"),
+        (7, "language", "display language for this menu", "language"),
         (9, "Exit", "leave", "exit"),
     )
-    ACCESS_ROWS = (
-        (21, "user-list", "accounts you are allowed to see", "user-list"),
-        (22, "user-add", "add an account", "user-add"),
-        (23, "user-edit", "change a name, department, or status", "user-edit"),
-        (24, "user-remove", "mark an account deleted", "user-remove"),
-        (25, "user-reset-password", "set a new password", "user-reset-password"),
-        (26, "role-list", "roles and data scope", "role-list"),
-        (27, "role-grant", "menus and data scope for one role", "role-grant"),
-        (28, "menu-list", "menu and permission strings", "menu-list"),
-        (29, "menu-add", "add a directory, page, or button", "menu-add"),
-        (30, "dept-list", "departments", "dept-list"),
-        (31, "dept-add", "add a department", "dept-add"),
-        (32, "post-list", "posts", "post-list"),
-        (33, "post-add", "add a post", "post-add"),
+    RBAC_ROWS = (
+        (11, "user-list", "accounts you are allowed to see", "user-list"),
+        (12, "user-add", "add an account", "user-add"),
+        (13, "user-edit", "change a name, department, or status", "user-edit"),
+        (14, "user-remove", "mark an account deleted", "user-remove"),
+        (15, "user-reset-password", "set a new password", "user-reset-password"),
+        (16, "role-list", "roles and data scope", "role-list"),
+        (17, "role-grant", "menus and data scope for one role", "role-grant"),
+        (18, "menu-list", "menu and permission strings", "menu-list"),
+        (19, "menu-add", "add a directory, page, or button", "menu-add"),
+        (110, "dept-list", "departments", "dept-list"),
+        (111, "dept-add", "add a department", "dept-add"),
+        (112, "post-list", "posts", "post-list"),
+        (113, "post-add", "add a post", "post-add"),
+        (0, "Back", "return to the main menu", "back"),
+    )
+    SERVER_ROWS = (
+        (21, "setup", "parameters, dictionaries, and notices", "setup"),
+        (22, "audit", "operation log, login log, and online users", "audit"),
+        (23, "serve", "start the web interface on this computer", "serve"),
         (0, "Back", "return to the main menu", "back"),
     )
     SETUP_ROWS = (
-        (71, "config-list", "parameters", "config-list"),
-        (72, "config-set", "change one parameter", "config-set"),
-        (73, "config-add", "add a parameter", "config-add"),
-        (74, "dict-list", "dictionary values", "dict-list"),
-        (75, "dict-add", "add a dictionary value", "dict-add"),
-        (76, "notice-list", "notices", "notice-list"),
-        (77, "notice-add", "add a notice", "notice-add"),
-        (78, "db-engine", "sqlite3 file or mysql", "db-engine"),
-        (0, "Back", "return to the main menu", "back"),
+        (211, "config-list", "parameters", "config-list"),
+        (212, "config-set", "change one parameter", "config-set"),
+        (213, "config-add", "add a parameter", "config-add"),
+        (214, "dict-list", "dictionary values", "dict-list"),
+        (215, "dict-add", "add a dictionary value", "dict-add"),
+        (216, "notice-list", "notices", "notice-list"),
+        (217, "notice-add", "add a notice", "notice-add"),
+        (218, "db-engine", "sqlite3 file or mysql", "db-engine"),
+        (0, "Back", "return to the server menu", "back-server"),
     )
     AUDIT_ROWS = (
-        (61, "oper-log", "operation log", "oper-log"),
-        (62, "login-log", "login log", "login-log"),
-        (63, "online-list", "sessions that are signed in", "online-list"),
-        (64, "online-logout", "close one online session", "online-logout"),
-        (0, "Back", "return to the main menu", "back"),
+        (221, "oper-log", "operation log", "oper-log"),
+        (222, "login-log", "login log", "login-log"),
+        (223, "online-list", "sessions that are signed in", "online-list"),
+        (224, "online-logout", "close one online session", "online-logout"),
+        (0, "Back", "return to the server menu", "back-server"),
     )
     SELF_ROWS = (
-        (82, "version", "show the installed version", "version"),
-        (83, "about", "version and this computer", "about"),
-        (84, "version-check", "compare this install with pip", "version-check"),
-        (85, "self-update", "upgrade this package with pip", "self-update"),
-        (86, "self-uninstall", "remove this package with pip", "self-uninstall"),
-        (87, "self-install", "install this package with pip", "self-install"),
+        (62, "version", "show the installed version", "version"),
+        (63, "about", "version and this computer", "about"),
+        (64, "version-check", "compare this install with pip", "version-check"),
+        (65, "self-update", "upgrade this package with pip", "self-update"),
+        (66, "self-uninstall", "remove this package with pip", "self-uninstall"),
+        (67, "self-install", "install this package with pip", "self-install"),
         (0, "Back", "return to the main menu", "back"),
     )
     LOG_ROWS = (
@@ -166,7 +170,9 @@ class MenuPainter:
         "view-log": "view-log",
         "clear-log": "clear-log",
         "log-folder": "log-folder",
-        "access": "access",
+        "rbac": "rbac",
+        "access": "rbac",
+        "server": "server",
         "setup": "setup",
         "audit": "audit",
         "serve": "serve",
@@ -205,8 +211,10 @@ class MenuPainter:
             return self.SELF_ROWS
         if layer == "log":
             return self.LOG_ROWS
-        if layer == "access":
-            return self.ACCESS_ROWS
+        if layer == "rbac":
+            return self.RBAC_ROWS
+        if layer == "server":
+            return self.SERVER_ROWS
         if layer == "setup":
             return self.SETUP_ROWS
         if layer == "audit":
@@ -286,8 +294,10 @@ class MenuPainter:
             return language.text("title_log")
         if layer == "lang":
             return language.text("title_language")
-        if layer == "access":
-            return language.text("title_access")
+        if layer == "rbac":
+            return language.text("title_rbac")
+        if layer == "server":
+            return language.text("title_server")
         if layer == "setup":
             return language.text("title_setup")
         if layer == "audit":

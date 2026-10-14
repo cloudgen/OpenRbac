@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # =============================================================================
-# PyRbac CLI — text menu and typed verbs.
+# OpenRbac CLI — text menu and typed verbs.
 # Law keys: requirement-python-cli-interface, requirement-python-cli-logging,
 #           requirement-python-tui, requirement-python-oop,
-#           requirement-python-about, requirement-domain-pyrbac,
+#           requirement-python-about, requirement-domain-openrbac,
 #           requirement-python-error-handling, requirement-python-coding-style,
 #           requirement-runtime-prerequisites
 # Video join, FFmpeg, and file listing are not part of this program.
@@ -32,8 +32,8 @@ class Cli:
 
     from . import __version__ as VERSION
 
-    APP_NAME = "PyRbac"
-    CONSOLE_NAME = "py-rbac"
+    APP_NAME = "OpenRbac"
+    CONSOLE_NAME = "open-rbac"
     PRODUCT_VERBS = (
         "help",
         "version",
@@ -112,10 +112,10 @@ class Cli:
     )
     AUTHOR_NAME = "Wong Chun Fai"
     AUTHOR_EMAIL = "cloudgen.wong@gmail.com"
-    HOMEPAGE = "https://github.com/cloudgen/PyRbac"
+    HOMEPAGE = "https://github.com/cloudgen/OpenRbac"
     LAST_UPDATE = "2026-10-11"
     DOWNLOAD_URL = ""
-    BASIC_USAGE = "py-rbac login --user-name admin"
+    BASIC_USAGE = "open-rbac login --user-name admin"
 
     def __init__(self, logger=None):
         self.logger = logger
@@ -235,7 +235,7 @@ class Cli:
             nargs="?",
             default=None,
             metavar="verb",
-            help="Product verb. py-rbac help lists them.",
+            help="Product verb. open-rbac help lists them.",
         )
         parser.add_argument(
             "--version",
@@ -399,7 +399,7 @@ class Cli:
             web = self.desk.web()
             web.make_server()
         except (SettingsError, StoreError, OSError) as exc:
-            nxt = getattr(exc, "nxt", "keep PYRBAC_BIND=127.0.0.1")
+            nxt = getattr(exc, "nxt", "keep OPENRBAC_BIND=127.0.0.1")
             return self.report_error(str(exc), nxt)
         print(web.url())
         try:
@@ -424,7 +424,7 @@ def main(argv=None, basedir="", logdir=""):
         )
         return 1
 
-    from PyRbac import __version__
+    from OpenRbac import __version__
 
     screen = Cli.opens_text_screen(argv)
     logger = ChronicleLogger(

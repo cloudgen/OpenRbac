@@ -1,5 +1,5 @@
 # =============================================================================
-# Text menu session for PyRbac.
+# Text menu session for OpenRbac.
 # requirement-python-tui — menu region and the bottom input box.
 # requirement-python-about — the about result page is framework_about.
 # requirement-python-oop — this module defines class Tui and MenuScreenError.
@@ -30,12 +30,13 @@ class Tui:
     """Text menu session. The front board and the result pages stay on this screen.
 
     MenuModel, MenuSession, and MenuPainter live in their own modules.
-    The rows are access, system-log, language, setup, audit, serve,
-    self-management, and Exit. There is no session row. Empty arguments ask
-    for an account and a password before that board. Domain rows call Desk.
+    The rows are rbac, server, system-log, self-management, language,
+    and Exit. Server holds setup, audit, and serve. There is no session row.
+    Empty arguments ask for an account and a password before that board.
+    Domain rows call Desk.
     """
 
-    def __init__(self, app=None, app_name="PyRbac", version=None, logger=None):
+    def __init__(self, app=None, app_name="OpenRbac", version=None, logger=None):
         self.logger = logger
         if logger is not None:
             logger.log_message("instantiated", component="Tui")
@@ -65,7 +66,7 @@ class Tui:
         )
 
     def self_lines(self):
-        """General Purpose: Path line and the self-management board under 8."""
+        """General Purpose: Path line and the self-management board under 6."""
         return [self.painter.path_line()] + self.painter.format_rows(
             self.painter.display_rows("self")
         )
@@ -77,7 +78,7 @@ class Tui:
         )
 
     def language_lines(self):
-        """General Purpose: Path line and the language board under 4."""
+        """General Purpose: Path line and the language board under 7."""
         return [self.painter.path_line()] + self.painter.format_rows(
             self.painter.display_rows("lang")
         )
@@ -85,7 +86,7 @@ class Tui:
     def help_on_screen(self):
         """
         General Purpose: Help text when help is typed on the open menu.
-        The typed py-rbac help verb does not call this and does not draw the screen.
+        The typed open-rbac help verb does not call this and does not draw the screen.
         """
         name = self._name()
         verbs = ", ".join(self.app.PRODUCT_VERBS) if self.app is not None else "help, version, about"
@@ -95,7 +96,8 @@ class Tui:
             "version shows the installed version and does not call pip.\n"
             "about shows the about page.\n"
             "Sign in before this menu. login, logout, and whoami are typed verbs.\n"
-            "access, setup, and audit repeat the web pages. serve starts the site.\n"
+            "rbac, setup, and audit repeat the web pages. serve starts the site.\n"
+            "setup, audit, and serve are on the server board.\n"
             "This program does not join media or list files in this folder.\n"
             "version-check runs: python -m pip index versions {0}\n"
             "self-update runs: python -m pip install --upgrade {0}\n"
@@ -396,7 +398,7 @@ class Tui:
             try:
                 return self.app.desk.settings.apply_choice(text.strip())
             except Exception as exc:
-                nxt = getattr(exc, "nxt", "py-rbac db-engine")
+                nxt = getattr(exc, "nxt", "open-rbac db-engine")
                 self.notice(
                     screen,
                     model,
@@ -490,7 +492,7 @@ class Tui:
             return self._screen_error(False)
         if "exc" in error_box:
             exc = error_box["exc"]
-            nxt = getattr(exc, "nxt", "py-rbac db-init")
+            nxt = getattr(exc, "nxt", "open-rbac db-init")
             self.app.report_error(str(exc), nxt)
             return "missing"
         return None
@@ -714,7 +716,7 @@ class Tui:
     def _domain(self, kind, screen, model):
         """General Purpose: The same Desk verb the command line runs."""
         if self.app is None or getattr(self.app, "desk", None) is None:
-            return "ERROR: This menu has no command desk.\nNext: py-rbac help"
+            return "ERROR: This menu has no command desk.\nNext: open-rbac help"
         if kind == "db-engine":
             return self._menu_engine(screen, model)
         options = SimpleNamespace()
@@ -730,5 +732,5 @@ class Tui:
                 return self.app.desk.serve_background()
             return self.app.desk.execute(kind, options)
         except Exception as exc:
-            nxt = getattr(exc, "nxt", "py-rbac help")
+            nxt = getattr(exc, "nxt", "open-rbac help")
             return "ERROR: {0}\nNext: {1}".format(exc, nxt)

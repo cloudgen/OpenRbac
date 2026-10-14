@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-python-tui.md
-**Status**: Active (Version 1.5.0)
+**Status**: Active (Version 1.6.0)
 **Area**: python
 **Key**: `requirement-python-tui`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -12,11 +12,11 @@ Empty arguments on a terminal use sqlite3 and the default file, then try a saved
 
 ### 1.1 Human-facing
 
-**In one sentence:** On a terminal, `py-rbac` uses the sqlite3 default file, opens the menu when a saved sign-in still matches, and otherwise asks for an account and a password. The menu has no session row. Exit asks before it leaves.
+**In one sentence:** On a terminal, `open-rbac` uses the sqlite3 default file, opens the menu when a saved sign-in still matches, and otherwise asks for an account and a password. The menu has no session row. Exit asks before it leaves.
 
 | Box | Meaning | Example |
 |-----|---------|---------|
-| You / this login | The person at the keyboard | `py-rbac`, then the account name and the password |
+| You / this login | The person at the keyboard | `open-rbac`, then the account name and the password |
 | The other role | The path label | `Path` until a language pick says otherwise |
 | Not this file | Permission checks | `requirement-rbac` |
 
@@ -24,14 +24,14 @@ Empty arguments on a terminal use sqlite3 and the default file, then try a saved
 
 | Number | Kind | Role |
 |--------|------|------|
-| 2 | access | users, roles, menus, departments, posts, numbers 21–33, Back 0 |
+| 1 | rbac | users, roles, menus, departments, posts. Children 11–19 and 110–113. Back 0 returns to the front board |
+| 2 | server | setup 21, audit 22, serve 23. Back 0 returns to the front board |
 | 3 | system-log | view-log 31, clear-log 32, log-folder 33, Back 0 |
-| 4 | language | codes 41–53 and Back 0 |
-| 5 | setup | parameters, dictionaries, notices, the database engine, numbers 71–78, Back 0 |
-| 6 | audit | oper-log 61, login-log 62, online-list 63, online-logout 64, Back 0 |
-| 7 | serve | start the web listener and show the URL |
-| 8 | self-management | 82 version, 83 about, 84 version-check, 85 self-update, 86 self-uninstall, 87 self-install, Back 0 |
+| 6 | self-management | 62 version, 63 about, 64 version-check, 65 self-update, 66 self-uninstall, 67 self-install, Back 0 |
+| 7 | language | codes 71–83 and Back 0 |
 | 9 | Exit | ask, then log out or keep the saved sign-in |
+
+Setup is server row 21. Its children are 211–218. Number 218 is `db-engine`. Back 0 returns to the server board. Audit is server row 22. Its children are 221–224. Back 0 returns to the server board. Serve is server row 23. It starts the web listener and shows the URL. It is not its own board. Numbers 4, 5, and 8 are not rows.
 
 `help` is a word on the open menu. It is not a numbered row. `language` is not an argv verb.
 
@@ -40,13 +40,13 @@ Empty arguments on a terminal use sqlite3 and the default file, then try a saved
 1. **Path and clock.** The path line **MUST** be the path label, a colon, the absolute working directory, and `HH:MM:SS` when both fit. The label comes from the language requirement. `LANG` **MUST NOT** select it. The directory and the clock are not translated.
 2. **Columns.** Wide and Fullwidth characters count as two columns. Ambiguous characters, including the box glyphs and the block caret, count as one. A wide character that does not fit is dropped whole.
 3. **Frame.** The input box uses `╭`, `╮`, `╰`, `╯`, `─`, and `│`. The caret is `█`. The hint is `Up/Down  •  Enter`.
-4. **Clock layers.** The one-second clock refresh applies on front, access, setup, audit, system-log, language, and self-management. It does not apply on a result page, the sign-in question, or another question.
+4. **Clock layers.** The one-second clock refresh applies on front, rbac, server, setup, audit, system-log, language, and self-management. It does not apply on a result page, the sign-in question, or another question.
 5. **Password.** A password question **MUST** mask the input with asterisks. Esc on a board question **MUST** cancel that question and stay on the board. Esc on the sign-in question **MUST** leave without opening the menu.
 6. **Result.** A string returned by a row **MUST** be a result page. Up and Down scroll it when it overflows. Another key returns to the front board.
-7. **Pip.** Rows 84–87 and the matching verbs use `python -m pip`. Empty arguments **MUST NOT** run them. `self-uninstall` on the command line **MUST** require `--force`.
-8. **Inherited numbers.** System-log stays 3 and 31–33. Language stays 4 and 41–53. Self-management stays 8 and 82–87. Exit stays 9. Access stays 2. The front board **MUST NOT** include a session row, and number 1 **MUST NOT** be a row.
+7. **Pip.** Rows 64–67 and the matching verbs use `python -m pip`. Empty arguments **MUST NOT** run them. `self-uninstall` on the command line **MUST** require `--force`.
+8. **Numbers.** Rbac is front row 1. Its children are 11–19 and 110–113. Server is front row 2 and holds setup 21, audit 22, and serve 23. System-log stays 3 and 31–33. Self-management is front row 6 and 62–67. Language is front row 7 and 71–83. Exit stays 9. Numbers 4, 5, and 8 **MUST NOT** be rows. The front board **MUST NOT** include a session row. Back on setup and on audit **MUST** return to the server board. Back on rbac, server, system-log, language, and self-management **MUST** return to the front board. Esc on a nested board **MUST** return to the front board.
 9. **Sign-in first.** Empty arguments on a terminal **MUST** use sqlite3 and the default file, then prepare the database (`requirement-database`), then try the saved local sign-in (`requirement-local-login`). When that sign-in still matches, the front board **MUST** open without a question. Otherwise they **MUST** ask for `user_name` and a masked password, one field at a time. They **MUST NOT** ask for the engine or the file path. The sign-in text **MUST** name that file. A wrong password **MUST** show the error and ask again. A match **MUST** open the front board. The menu **MUST NOT** appear before that match. Esc on the sign-in question **MUST** leave without the menu.
-10. **Setup row.** Number 78 **MUST** be `db-engine` with the explain `sqlite3 file or mysql`. It **MUST** offer choice 1 sqlite3, including the default file, and choice 2 mysql. Enter **MUST** select sqlite3 and the default file. Esc **MUST** stay on the setup board.
+10. **Setup row.** Number 218 **MUST** be `db-engine` with the explain `sqlite3 file or mysql`. It **MUST** offer choice 1 sqlite3, including the default file, and choice 2 mysql. Enter **MUST** select sqlite3 and the default file. Esc **MUST** stay on the setup board.
 11. **Exit.** Row 9 Exit **MUST** ask before it leaves, as `requirement-local-login` specifies. Enter or `y` **MUST** log out and leave. `n` **MUST** leave and keep the saved sign-in. Esc **MUST** stay on the front board. End of input **MUST** leave without the question.
 
 ## 4. Acceptance checks
@@ -54,7 +54,7 @@ Empty arguments on a terminal use sqlite3 and the default file, then try a saved
 | ID | Check |
 |----|-------|
 | AC-1 | Missing language file keeps the label `Path` while `LANG` is Traditional Chinese |
-| AC-2 | Front numbers are 2 through 9, row 4 is language, and no row is session |
+| AC-2 | Front numbers are 1, 2, 3, 6, 7, and 9. Row 1 is rbac. Row 7 is language. No row is session |
 | AC-3 | Wide columns do not share a cell |
 
 ## Terminologies
@@ -76,9 +76,10 @@ Empty arguments on a terminal use sqlite3 and the default file, then try a saved
 | 2026-10-11 | Active 1.3.0 | Engine choice before sign-in. Setup row 78 is db-engine |
 | 2026-10-11 | Active 1.4.0 | Sign-in uses the sqlite3 default file. Row 78 still offers the choice |
 | 2026-10-11 | Active 1.5.0 | A matching saved sign-in skips the question. Row 9 Exit asks |
+| 2026-10-14 | Active 1.6.0 | Row 1 is rbac. Row 2 server holds setup, audit, and serve. Self-management is 6. Language is 7 |
 
 ---
 
-**Last Updated**: 2026-10-11
+**Last Updated**: 2026-10-14
 **Owner**: project maintainers
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

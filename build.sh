@@ -1,12 +1,12 @@
 #!/bin/sh
 # requirement-python-packaging
-# Maintainer verbs only. py-rbac flags are not accepted here.
+# Maintainer verbs only. open-rbac flags are not accepted here.
 set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
 cd "$ROOT"
 
-PROJECT="PyRbac"
+PROJECT="OpenRbac"
 
 out_err() {
     printf '%s\n' "$1" >&2

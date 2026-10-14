@@ -1,7 +1,7 @@
 # Package public surface — requirement-python-packaging / requirement-python-coding-style
 # Do not re-export undefined symbols from .cli.
 
-__version__ = "1.0.4"
+__version__ = "1.0.5"
 
 from .cli import main
 

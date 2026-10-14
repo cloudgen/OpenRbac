@@ -68,7 +68,7 @@ class Desk:
         if actor is None:
             raise AccessError(
                 "Not signed in.",
-                "py-rbac login --user-name NAME",
+                "open-rbac login --user-name NAME",
                 logger=self.logger,
             )
         return actor
@@ -112,7 +112,7 @@ class Desk:
 
     def login(self, user_name, password) -> str:
         """General Purpose: Check the password, store the token, and save the local sign-in."""
-        user = self.access.login(user_name, password, ipaddr="127.0.0.1", surface="cli", user_agent="py-rbac")
+        user = self.access.login(user_name, password, ipaddr="127.0.0.1", surface="cli", user_agent="open-rbac")
         self.sessions.write(user["token"])
         self.local_login.save(user["user_name"], password)
         return "Signed in as {0}.".format(user["user_name"])
@@ -126,7 +126,7 @@ class Desk:
         try:
             token = self.sessions.read()
             if not token:
-                raise AccessError("Not signed in.", "py-rbac login --user-name NAME", logger=self.logger)
+                raise AccessError("Not signed in.", "open-rbac login --user-name NAME", logger=self.logger)
             self.access.logout(token)
             self.sessions.clear()
             return "Signed out."
@@ -183,8 +183,8 @@ class Desk:
         self.ensure_database()
         if verb == "login":
             return self.login(
-                self._need(options, "user_name", "py-rbac login --user-name NAME"),
-                self._need(options, "password", "py-rbac login --user-name NAME"),
+                self._need(options, "user_name", "open-rbac login --user-name NAME"),
+                self._need(options, "password", "open-rbac login --user-name NAME"),
             )
         if verb == "logout":
             return self.logout()
@@ -198,7 +198,7 @@ class Desk:
         if verb == "user-add":
             row = self.access.user_add(
                 actor,
-                self._need(options, "user_name", "py-rbac user-add --user-name NAME --nick-name NAME --dept-id N --role-id N"),
+                self._need(options, "user_name", "open-rbac user-add --user-name NAME --nick-name NAME --dept-id N --role-id N"),
                 self._need(options, "nick_name", "set --nick-name"),
                 self._int(self._need(options, "dept_id", "set --dept-id"), "dept-id"),
                 self._int(self._need(options, "role_id", "set --role-id"), "role-id"),
@@ -212,7 +212,7 @@ class Desk:
             if nick is None and dept is None and status is None:
                 raise AccessError(
                     "user-edit needs a name, a department, or a status.",
-                    "py-rbac user-edit --user-id N --nick-name NAME",
+                    "open-rbac user-edit --user-id N --nick-name NAME",
                     logger=self.logger,
                 )
             row = self.access.user_edit(
@@ -325,12 +325,12 @@ class Desk:
         if verb == "online-logout":
             count = self.catalog.online_logout(
                 actor,
-                self._need(options, "token", "py-rbac online-list"),
+                self._need(options, "token", "open-rbac online-list"),
             )
             return "Closed {0} session.".format(count)
         raise AccessError(
             "Unknown verb '{0}'.".format(verb),
-            "py-rbac help",
+            "open-rbac help",
             logger=self.logger,
         )
 

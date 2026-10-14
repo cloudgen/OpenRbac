@@ -1,5 +1,5 @@
 # =============================================================================
-# Process settings for PyRbac.
+# Process settings for OpenRbac.
 # requirement-environment — names, defaults, and the mode-0600 password file.
 # requirement-python-oop — class Settings and SettingsError.
 # =============================================================================
@@ -26,17 +26,17 @@ class Settings:
     environment value is missing. Defaults never include a password.
     """
 
-    APP_DIR = "PyRbac"
+    APP_DIR = "OpenRbac"
     FILE_NAME = "database"
-    SQLITE_NAME = "pyrbac.sqlite3"
+    SQLITE_NAME = "openrbac.sqlite3"
     ENGINES = ("sqlite3", "mysql")
     DEFAULTS = {
-        "PYRBAC_DB_HOST": "127.0.0.1",
-        "PYRBAC_DB_PORT": "3306",
-        "PYRBAC_DB_USER": "pyrbac",
-        "PYRBAC_DB_NAME": "pyrbac",
-        "PYRBAC_BIND": "127.0.0.1",
-        "PYRBAC_PORT": "8765",
+        "OPENRBAC_DB_HOST": "127.0.0.1",
+        "OPENRBAC_DB_PORT": "3306",
+        "OPENRBAC_DB_USER": "openrbac",
+        "OPENRBAC_DB_NAME": "openrbac",
+        "OPENRBAC_BIND": "127.0.0.1",
+        "OPENRBAC_PORT": "8765",
     }
     LOOPBACK = ("127.0.0.1", "localhost", "::1")
 
@@ -54,7 +54,7 @@ class Settings:
 
     def app_home(self) -> str:
         """General Purpose: The folder for the language leaf, the session, the database file, and the local sign-in."""
-        override = self.environ.get("PYRBAC_HOME", "")
+        override = self.environ.get("OPENRBAC_HOME", "")
         if override:
             return override
         if not self.home:
@@ -102,27 +102,27 @@ class Settings:
 
     def engine(self) -> str:
         """General Purpose: sqlite3 or mysql. An empty setting is the sqlite3 file."""
-        value = self.get("PYRBAC_DB_ENGINE").strip().lower()
+        value = self.get("OPENRBAC_DB_ENGINE").strip().lower()
         if value == "":
             return "sqlite3"
         if value not in self.ENGINES:
             raise SettingsError(
-                "PYRBAC_DB_ENGINE must be sqlite3 or mysql.",
-                "unset PYRBAC_DB_ENGINE, or set sqlite3 or mysql",
+                "OPENRBAC_DB_ENGINE must be sqlite3 or mysql.",
+                "unset OPENRBAC_DB_ENGINE, or set sqlite3 or mysql",
                 logger=self.logger,
             )
         return value
 
     def sqlite_path(self) -> str:
-        """General Purpose: The sqlite3 file. The default is pyrbac.sqlite3 in the home folder."""
-        override = self.get("PYRBAC_SQLITE_FILE")
+        """General Purpose: The sqlite3 file. The default is openrbac.sqlite3 in the home folder."""
+        override = self.get("OPENRBAC_SQLITE_FILE")
         if override:
             return override
         folder = self.app_home()
         if not folder:
             raise SettingsError(
                 "The home folder is not set.",
-                "export HOME or PYRBAC_HOME",
+                "export HOME or OPENRBAC_HOME",
                 logger=self.logger,
             )
         return os.path.join(folder, self.SQLITE_NAME)
@@ -131,18 +131,18 @@ class Settings:
         """General Purpose: The sqlite3 path, or the MySQL database name."""
         if self.engine() == "sqlite3":
             return self.sqlite_path()
-        return self.get("PYRBAC_DB_NAME")
+        return self.get("OPENRBAC_DB_NAME")
 
     def choice_lines(self) -> list:
         """General Purpose: The two engine choices, including the default sqlite3 file."""
         path = self.sqlite_path()
         mark = ""
-        if self.get("PYRBAC_SQLITE_FILE") == "":
+        if self.get("OPENRBAC_SQLITE_FILE") == "":
             mark = " (default file)"
         return [
             "Database engine. Enter uses sqlite3 and the default file.",
             "1 sqlite3  {0}{1}".format(path, mark),
-            "2 mysql    {0}".format(self.get("PYRBAC_DB_NAME")),
+            "2 mysql    {0}".format(self.get("OPENRBAC_DB_NAME")),
             "Current: {0}".format(self.engine()),
         ]
 
@@ -150,10 +150,10 @@ class Settings:
         """General Purpose: One sentence naming the engine that the next connection uses."""
         if self.engine() == "sqlite3":
             mark = ""
-            if self.get("PYRBAC_SQLITE_FILE") == "":
+            if self.get("OPENRBAC_SQLITE_FILE") == "":
                 mark = " (default file)"
             return "Database engine: sqlite3 {0}{1}.".format(self.sqlite_path(), mark)
-        return "Database engine: mysql {0}.".format(self.get("PYRBAC_DB_NAME"))
+        return "Database engine: mysql {0}.".format(self.get("OPENRBAC_DB_NAME"))
 
     def apply_choice(self, token: str) -> str:
         """General Purpose: Store sqlite3 or mysql. Enter selects sqlite3 and the default file.
@@ -172,20 +172,20 @@ class Settings:
                 "choose 1 for the sqlite3 file or 2 for mysql",
                 logger=self.logger,
             )
-        env = self.environ.get("PYRBAC_DB_ENGINE", "").strip().lower()
+        env = self.environ.get("OPENRBAC_DB_ENGINE", "").strip().lower()
         if env:
             if env not in self.ENGINES:
                 raise SettingsError(
-                    "PYRBAC_DB_ENGINE must be sqlite3 or mysql.",
-                    "unset PYRBAC_DB_ENGINE, or set sqlite3 or mysql",
+                    "OPENRBAC_DB_ENGINE must be sqlite3 or mysql.",
+                    "unset OPENRBAC_DB_ENGINE, or set sqlite3 or mysql",
                     logger=self.logger,
                 )
             if env != engine:
                 if raw == "":
                     return self.engine_sentence() + " The environment wins."
                 raise SettingsError(
-                    "PYRBAC_DB_ENGINE is set in the environment.",
-                    "unset PYRBAC_DB_ENGINE to store the choice in the database file",
+                    "OPENRBAC_DB_ENGINE is set in the environment.",
+                    "unset OPENRBAC_DB_ENGINE to store the choice in the database file",
                     logger=self.logger,
                 )
             return self.engine_sentence()
@@ -205,7 +205,7 @@ class Settings:
         if not folder:
             raise SettingsError(
                 "The home folder is not set.",
-                "export HOME or PYRBAC_HOME",
+                "export HOME or OPENRBAC_HOME",
                 logger=self.logger,
             )
         os.makedirs(folder, mode=0o700, exist_ok=True)
@@ -233,13 +233,13 @@ class Settings:
         rewritten = []
         for line in lines:
             key = line.split("=", 1)[0].strip() if "=" in line else ""
-            if key == "PYRBAC_DB_ENGINE":
-                rewritten.append("PYRBAC_DB_ENGINE={0}".format(engine))
+            if key == "OPENRBAC_DB_ENGINE":
+                rewritten.append("OPENRBAC_DB_ENGINE={0}".format(engine))
                 found = True
             else:
                 rewritten.append(line)
         if not found:
-            rewritten.append("PYRBAC_DB_ENGINE={0}".format(engine))
+            rewritten.append("OPENRBAC_DB_ENGINE={0}".format(engine))
         payload = ("\n".join(rewritten).rstrip("\n") + "\n").encode("utf-8")
         temporary = path + ".tmp"
         descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
@@ -254,7 +254,7 @@ class Settings:
 
     def password(self) -> str:
         """General Purpose: The database password. Empty when neither source has it."""
-        return self.get("PYRBAC_DB_PASSWORD")
+        return self.get("OPENRBAC_DB_PASSWORD")
 
     def require_password(self) -> str:
         value = self.password()
@@ -262,54 +262,54 @@ class Settings:
             return value
         raise SettingsError(
             "The database password is not set.",
-            "export PYRBAC_DB_PASSWORD and run py-rbac db-init",
+            "export OPENRBAC_DB_PASSWORD and run open-rbac db-init",
             logger=self.logger,
         )
 
     def database(self) -> dict:
         """General Purpose: The MySQL connection values. The password is required."""
-        name = self.get("PYRBAC_DB_NAME")
+        name = self.get("OPENRBAC_DB_NAME")
         if not name or not all(ch.isalnum() or ch == "_" for ch in name):
             raise SettingsError(
-                "PYRBAC_DB_NAME must be letters, digits, and underscores.",
-                "export PYRBAC_DB_NAME=pyrbac",
+                "OPENRBAC_DB_NAME must be letters, digits, and underscores.",
+                "export OPENRBAC_DB_NAME=openrbac",
                 logger=self.logger,
             )
         try:
-            port = int(self.get("PYRBAC_DB_PORT"))
+            port = int(self.get("OPENRBAC_DB_PORT"))
         except ValueError:
             port = 0
         if port < 1 or port > 65535:
             raise SettingsError(
-                "PYRBAC_DB_PORT must be a port number.",
-                "export PYRBAC_DB_PORT=3306",
+                "OPENRBAC_DB_PORT must be a port number.",
+                "export OPENRBAC_DB_PORT=3306",
                 logger=self.logger,
             )
         return {
-            "host": self.get("PYRBAC_DB_HOST"),
+            "host": self.get("OPENRBAC_DB_HOST"),
             "port": port,
-            "user": self.get("PYRBAC_DB_USER"),
+            "user": self.get("OPENRBAC_DB_USER"),
             "password": self.require_password(),
             "database": name,
         }
 
     def bind(self) -> tuple:
         """General Purpose: Web bind address and port. Non-loopback needs an explicit allow."""
-        host = self.get("PYRBAC_BIND")
+        host = self.get("OPENRBAC_BIND")
         try:
-            port = int(self.get("PYRBAC_PORT"))
+            port = int(self.get("OPENRBAC_PORT"))
         except ValueError:
             port = -1
         if port < 0 or port > 65535:
             raise SettingsError(
-                "PYRBAC_PORT must be a port number. 0 asks the system for a free port.",
-                "export PYRBAC_PORT=8765",
+                "OPENRBAC_PORT must be a port number. 0 asks the system for a free port.",
+                "export OPENRBAC_PORT=8765",
                 logger=self.logger,
             )
-        if host not in self.LOOPBACK and self.environ.get("PYRBAC_ALLOW_REMOTE", "") != "yes":
+        if host not in self.LOOPBACK and self.environ.get("OPENRBAC_ALLOW_REMOTE", "") != "yes":
             raise SettingsError(
                 "Refusing to listen on {0}.".format(host),
-                "keep PYRBAC_BIND=127.0.0.1, or export PYRBAC_ALLOW_REMOTE=yes",
+                "keep OPENRBAC_BIND=127.0.0.1, or export OPENRBAC_ALLOW_REMOTE=yes",
                 logger=self.logger,
             )
         return host, port

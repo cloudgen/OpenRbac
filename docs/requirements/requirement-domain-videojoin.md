@@ -6,9 +6,9 @@
 
 ## 1. Purpose
 
-This domain file is retired. PyRbac does not show a welcome line and does not join media.
+This domain file is retired. OpenRbac does not show a welcome line and does not join media.
 
-The Active domain file is `requirement-domain-pyrbac`. Do not treat a welcome sentence, `hello`, `join`, or `list-videos` as product law.
+The Active domain file is `requirement-domain-openrbac`. Do not treat a welcome sentence, `hello`, `join`, or `list-videos` as product law.
 
 ### 1.1 Human-facing
 
@@ -16,7 +16,7 @@ The Active domain file is `requirement-domain-pyrbac`. Do not treat a welcome se
 
 | Box | Meaning | Example |
 |-----|---------|---------|
-| You / this login | A reader of an older VideoJoin note | Open `requirement-domain-pyrbac` |
+| You / this login | A reader of an older VideoJoin note | Open `requirement-domain-openrbac` |
 | The other role | The retired welcome sentence | It is not a verb |
 | Not this file | Users, roles, and the web page | `requirement-rbac`, `requirement-web-interface` |
 
@@ -26,7 +26,7 @@ The Active domain file is `requirement-domain-pyrbac`. Do not treat a welcome se
 
 ## 2. Normative rules
 
-1. **MUST NOT** be the Active domain while `requirement-domain-pyrbac` is Active.
+1. **MUST NOT** be the Active domain while `requirement-domain-openrbac` is Active.
 2. **MUST NOT** restore `hello`, `join`, or `list-videos` without an explicit user order and a new Active domain revision.
 
 ## Terminologies
@@ -34,7 +34,7 @@ The Active domain file is `requirement-domain-pyrbac`. Do not treat a welcome se
 | Term | Meaning in this file |
 |------|----------------------|
 | Retired domain | This file. It does not choose a menu row. |
-| Active domain | `requirement-domain-pyrbac` |
+| Active domain | `requirement-domain-openrbac` |
 
 ## 7. Status history
 
@@ -42,7 +42,7 @@ The Active domain file is `requirement-domain-pyrbac`. Do not treat a welcome se
 |------|--------|------|
 | 2026-08-09 | Active 1.0.0 | Domain SSOT for a two-file join |
 | 2026-10-05 | Active 1.2.0 | The domain became a welcome line |
-| 2026-10-11 | Retired 1.3.0 | PyRbac domain replaces this file |
+| 2026-10-11 | Retired 1.3.0 | OpenRbac domain replaces this file |
 
 ---
 

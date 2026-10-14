@@ -1,12 +1,12 @@
 **file**: docs/requirements/requirement-database.md
-**Status**: Active (Version 1.5.0)
+**Status**: Active (Version 1.5.1)
 **Area**: domain
 **Key**: `requirement-database`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
 
 ## 1. Purpose
 
-PyRbac stores its RBAC tables in sqlite3 or in MariaDB or MySQL. The default is the sqlite3 file `pyrbac.sqlite3` in the home folder. mysql uses the database named by `PYRBAC_DB_NAME`. The product mysql database is `pyrbac`. mysql tests use `pyrbac_test`. Existing databases, including `ruoyi_db` and `ry`, are not this product's schema and **MUST NOT** be written.
+OpenRbac stores its RBAC tables in sqlite3 or in MariaDB or MySQL. The default is the sqlite3 file `openrbac.sqlite3` in the home folder. mysql uses the database named by `OPENRBAC_DB_NAME`. The product mysql database is `openrbac`. mysql tests use `openrbac_test`. Existing databases, including `ruoyi_db` and `ry`, are not this product's schema and **MUST NOT** be written.
 
 `user_name` is the login, and there is no password salt column. The password column is `VARCHAR(255)` because this product stores PBKDF2. Online sessions are `sys_session`. This product does not use Redis.
 
@@ -14,12 +14,12 @@ This file is the structure. Who may see a department, and which menu string allo
 
 ### 1.1 Human-facing
 
-**In one sentence:** A run that needs the database creates these tables when they are missing and fills them only when no user exists yet. The default store is the sqlite3 file. `py-rbac db-init` does the same and prints the result.
+**In one sentence:** A run that needs the database creates these tables when they are missing and fills them only when no user exists yet. The default store is the sqlite3 file. `open-rbac db-init` does the same and prints the result.
 
 | Box | Meaning | Example |
 |-----|---------|---------|
-| You / this login | The operator with a database password | `py-rbac` on a terminal, or `py-rbac db-init` |
-| The other role | The database account `pyrbac`@localhost | It can use only `pyrbac` and `pyrbac_test` |
+| You / this login | The operator with a database password | `open-rbac` on a terminal, or `open-rbac db-init` |
+| The other role | The database account `openrbac`@localhost | It can use only `openrbac` and `openrbac_test` |
 | Not this file | Which departments a user may see | `requirement-rbac` |
 
 | Includes | Excludes |
@@ -292,14 +292,14 @@ Each link table is only the two ids. The pair is the primary key.
 
 ## 2. Normative rules
 
-1. **Engine.** The engine **MUST** be `sqlite3` or `mysql`. An empty `PYRBAC_DB_ENGINE` **MUST** mean sqlite3. The sqlite3 file **MUST** default to `pyrbac.sqlite3` in the home folder from `requirement-environment`. `PYRBAC_SQLITE_FILE` **MUST** replace that path when it is set. mysql **MUST** use the database named by `PYRBAC_DB_NAME`. The default name is `pyrbac`. mysql tests **MUST** set `pyrbac_test`. The product **MUST NOT** open `ruoyi_db` or `ry` as its working database.
-2. **Privilege.** The mysql account **MUST** be limited to `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `CREATE`, `DROP`, `INDEX`, and `ALTER` on `pyrbac` and `pyrbac_test`. The sqlite3 file **MUST** be mode `0600`. A password **MUST** be required for mysql and **MUST NOT** be required for sqlite3.
+1. **Engine.** The engine **MUST** be `sqlite3` or `mysql`. An empty `OPENRBAC_DB_ENGINE` **MUST** mean sqlite3. The sqlite3 file **MUST** default to `openrbac.sqlite3` in the home folder from `requirement-environment`. `OPENRBAC_SQLITE_FILE` **MUST** replace that path when it is set. mysql **MUST** use the database named by `OPENRBAC_DB_NAME`. The default name is `openrbac`. mysql tests **MUST** set `openrbac_test`. The product **MUST NOT** open `ruoyi_db` or `ry` as its working database.
+2. **Privilege.** The mysql account **MUST** be limited to `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `CREATE`, `DROP`, `INDEX`, and `ALTER` on `openrbac` and `openrbac_test`. The sqlite3 file **MUST** be mode `0600`. A password **MUST** be required for mysql and **MUST NOT** be required for sqlite3.
 3. **Statements.** Every value **MUST** be a parameter. An error returned to the operator **MUST NOT** include the SQL text or the password.
 4. **Tables.** `db-init` **MUST** create `sys_dept`, `sys_user`, `sys_post`, `sys_role`, `sys_menu`, `sys_user_role`, `sys_role_menu`, `sys_role_dept`, `sys_user_post`, `sys_oper_log`, `sys_dict_type`, `sys_dict_data`, `sys_config`, `sys_logininfor`, `sys_notice`, and `sys_session` when they are missing.
 5. **Shape.** A mysql table created by `db-init` **MUST** use InnoDB and `utf8mb4` and **MUST** have the columns and keys in section 1.2. A sqlite3 table **MUST** have those columns and keys, with `INTEGER PRIMARY KEY AUTOINCREMENT` where section 1.2 says `AUTO_INCREMENT`, and **MUST NOT** declare an engine or a charset. `db-init` **MUST NOT** declare a foreign key. `db-init` **MUST NOT** change a table that already exists.
 6. **Seed once.** When `sys_user` has any row, `db-init` **MUST** return `present` and **MUST NOT** insert another admin. The first empty run **MUST** return `seeded`.
 7. **Automatic init.** The text menu, `serve`, and every domain verb **MUST** call the same init as `db-init` when the tables are missing or `sys_user` is empty. On the text menu that call **MUST** happen before the sign-in question and before a restored local sign-in. The menu **MUST** use sqlite3 and the default file for that call unless an engine is already stored. On a domain verb it **MUST** happen before the verb body. A later call **MUST** return `present` and **MUST NOT** insert another administrator. `help`, `version`, `about`, `db-engine`, and the pip verbs **MUST NOT** open the database. A connection failure **MUST** still name the settings to check. `db-init` **MUST** remain and **MUST** print `seeded` or `present`.
-8. **Choice.** The command `db-engine`, setup row 78, the web sign-in page, and the signed-in Database page **MUST** each offer choice 1 sqlite3, including the default file path, and choice 2 mysql. An empty choice **MUST** select sqlite3 and the default file. When the environment sets an engine, an empty choice **MUST** keep that engine. The text menu before sign-in **MUST NOT** ask for this choice. The environment **MUST** win over the mode-0600 file. A web sign-in from a non-loopback address **MUST NOT** switch the engine. The web sign-in page **MUST** have sqlite3 selected when that is the current engine.
+8. **Choice.** The command `db-engine`, setup row 218, the web sign-in page, and the signed-in Database page **MUST** each offer choice 1 sqlite3, including the default file path, and choice 2 mysql. An empty choice **MUST** select sqlite3 and the default file. When the environment sets an engine, an empty choice **MUST** keep that engine. The text menu before sign-in **MUST NOT** ask for this choice. The environment **MUST** win over the mode-0600 file. A web sign-in from a non-loopback address **MUST NOT** switch the engine. The web sign-in page **MUST** have sqlite3 selected when that is the current engine.
 
 ## 3. Acceptance checks
 
@@ -316,9 +316,9 @@ Each link table is only the two ids. The pair is the primary key.
 
 | Term | Meaning in this file |
 |------|----------------------|
-| Product database | sqlite3 file `pyrbac.sqlite3`, or the mysql schema named `pyrbac` unless `PYRBAC_DB_NAME` says otherwise |
-| Default file | `pyrbac.sqlite3` in the home folder when `PYRBAC_SQLITE_FILE` is empty |
-| Test database | A temporary sqlite3 file, or mysql `pyrbac_test` when that engine is under test |
+| Product database | sqlite3 file `openrbac.sqlite3`, or the mysql schema named `openrbac` unless `OPENRBAC_DB_NAME` says otherwise |
+| Default file | `openrbac.sqlite3` in the home folder when `OPENRBAC_SQLITE_FILE` is empty |
+| Test database | A temporary sqlite3 file, or mysql `openrbac_test` when that engine is under test |
 | Seed | The first English rows inserted only into an empty `sys_user` |
 | Link table | A two-column table whose pair of ids is the primary key |
 | Structure | The columns, keys, engine, and charset in section 1.2 |
@@ -333,9 +333,10 @@ Each link table is only the two ids. The pair is the primary key.
 | 2026-10-11 | Active 1.3.0 | sqlite3 default file and mysql. The same choice on the command, the menu, and the web page. The table text names this product only |
 | 2026-10-11 | Active 1.4.0 | Sign-in uses the sqlite3 default file. Enter on `db-engine` selects it |
 | 2026-10-11 | Active 1.5.0 | Init still happens before a restored local sign-in |
+| 2026-10-14 | Active 1.5.1 | The menu engine choice is setup row 218 |
 
 ---
 
-**Last Updated**: 2026-10-11
+**Last Updated**: 2026-10-14
 **Owner**: project maintainers
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

@@ -1,5 +1,5 @@
 # RBAC, database, environment, web, and ChronicleLogger.
-# Uses the pyrbac_test schema. Does not write ruoyi_db or ry.
+# Uses the openrbac_test schema. Does not write ruoyi_db or ry.
 import http.client
 import os
 import re
@@ -13,11 +13,11 @@ _SRC = Path(__file__).resolve().parents[1] / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from PyRbac.cli import Cli, main
-from PyRbac.desk import Desk
-from PyRbac.password_hash import PasswordHash
-from PyRbac.schema import Schema
-from PyRbac.settings import Settings, SettingsError
+from OpenRbac.cli import Cli, main
+from OpenRbac.desk import Desk
+from OpenRbac.password_hash import PasswordHash
+from OpenRbac.schema import Schema
+from OpenRbac.settings import Settings, SettingsError
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -42,13 +42,15 @@ TABLES = (
 
 
 def _password_from_file():
-    path = Path.home() / ".local" / "PyRbac" / "database"
+    path = Path.home() / ".local" / "OpenRbac" / "database"
+    if not path.is_file():
+        raise unittest.SkipTest("database file is absent")
     mode = path.stat().st_mode & 0o777
     if mode != 0o600:
         raise unittest.SkipTest("database file is not mode 0600")
     found = ""
     for line in path.read_text(encoding="utf-8").splitlines():
-        if line.startswith("PYRBAC_DB_PASSWORD="):
+        if line.startswith("OPENRBAC_DB_PASSWORD="):
             found = line.split("=", 1)[1]
     if not found:
         raise unittest.SkipTest("database file has no password")
@@ -70,29 +72,29 @@ def _names(text):
 
 
 class TestEnvironment(unittest.TestCase):
-    """PYRBAC_* defaults, the 0600 file, and the loopback bind."""
+    """OPENRBAC_* defaults, the 0600 file, and the loopback bind."""
 
     def test_password_file_mode_and_remote_refusal(self):
-        home = tempfile.mkdtemp(prefix="pyrbac_env_", dir="/tmp")
+        home = tempfile.mkdtemp(prefix="openrbac_env_", dir="/tmp")
         path = Path(home) / "database"
-        path.write_text("PYRBAC_DB_PASSWORD=from-file\n", encoding="utf-8")
+        path.write_text("OPENRBAC_DB_PASSWORD=from-file\n", encoding="utf-8")
         os.chmod(path, 0o644)
         loose = {
-            "PYRBAC_HOME": home,
+            "OPENRBAC_HOME": home,
             "HOME": home,
-            "PYRBAC_DB_PASSWORD": "",
+            "OPENRBAC_DB_PASSWORD": "",
         }
         self.assertEqual(Settings(environ=loose).password(), "")
         os.chmod(path, 0o600)
         self.assertEqual(Settings(environ=loose).password(), "from-file")
         env_wins = dict(loose)
-        env_wins["PYRBAC_DB_PASSWORD"] = "from-env"
+        env_wins["OPENRBAC_DB_PASSWORD"] = "from-env"
         self.assertEqual(Settings(environ=env_wins).password(), "from-env")
-        remote = {"PYRBAC_BIND": "0.0.0.0", "PYRBAC_PORT": "8765"}
+        remote = {"OPENRBAC_BIND": "0.0.0.0", "OPENRBAC_PORT": "8765"}
         with self.assertRaises(SettingsError) as caught:
             Settings(environ=remote).bind()
         self.assertIn("Refusing to listen", str(caught.exception))
-        remote["PYRBAC_ALLOW_REMOTE"] = "yes"
+        remote["OPENRBAC_ALLOW_REMOTE"] = "yes"
         self.assertEqual(Settings(environ=remote).bind()[0], "0.0.0.0")
         self.assertEqual(Settings(environ={}).bind(), ("127.0.0.1", 8765))
 
@@ -112,28 +114,28 @@ class TestRbacDatabase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.home = tempfile.mkdtemp(prefix="pyrbac_home_", dir="/tmp")
-        cls.sqlite_file = os.path.join(cls.home, "pyrbac.sqlite3")
+        cls.home = tempfile.mkdtemp(prefix="openrbac_home_", dir="/tmp")
+        cls.sqlite_file = os.path.join(cls.home, "openrbac.sqlite3")
         cls._saved = {
             name: os.environ.get(name)
             for name in (
-                "PYRBAC_HOME",
-                "PYRBAC_DB_ENGINE",
-                "PYRBAC_SQLITE_FILE",
-                "PYRBAC_DB_NAME",
-                "PYRBAC_DB_PASSWORD",
-                "PYRBAC_BIND",
-                "PYRBAC_PORT",
-                "PYRBAC_ALLOW_REMOTE",
+                "OPENRBAC_HOME",
+                "OPENRBAC_DB_ENGINE",
+                "OPENRBAC_SQLITE_FILE",
+                "OPENRBAC_DB_NAME",
+                "OPENRBAC_DB_PASSWORD",
+                "OPENRBAC_BIND",
+                "OPENRBAC_PORT",
+                "OPENRBAC_ALLOW_REMOTE",
             )
         }
-        os.environ["PYRBAC_HOME"] = cls.home
-        os.environ["PYRBAC_DB_ENGINE"] = "sqlite3"
-        os.environ["PYRBAC_SQLITE_FILE"] = cls.sqlite_file
-        os.environ.pop("PYRBAC_DB_PASSWORD", None)
-        os.environ["PYRBAC_BIND"] = "127.0.0.1"
-        os.environ["PYRBAC_PORT"] = "0"
-        os.environ.pop("PYRBAC_ALLOW_REMOTE", None)
+        os.environ["OPENRBAC_HOME"] = cls.home
+        os.environ["OPENRBAC_DB_ENGINE"] = "sqlite3"
+        os.environ["OPENRBAC_SQLITE_FILE"] = cls.sqlite_file
+        os.environ.pop("OPENRBAC_DB_PASSWORD", None)
+        os.environ["OPENRBAC_BIND"] = "127.0.0.1"
+        os.environ["OPENRBAC_PORT"] = "0"
+        os.environ.pop("OPENRBAC_ALLOW_REMOTE", None)
         cls.desk = Desk()
         _drop_tables(cls.desk.store)
         cls.assert_seed = cls.desk.db_init()
@@ -195,8 +197,8 @@ class TestRbacDatabase(unittest.TestCase):
             self.desk.db_init()
 
     def test_seed_once_and_scopes(self):
-        self.assertIn("pyrbac.sqlite3: seeded", self.assert_seed)
-        self.assertNotIn("pyrbac_test", self.assert_seed)
+        self.assertIn("openrbac.sqlite3: seeded", self.assert_seed)
+        self.assertNotIn("openrbac_test", self.assert_seed)
         self.assertNotIn("ruoyi_db", self.assert_seed)
         again = self.desk.db_init()
         self.assertIn("present", again)
@@ -323,8 +325,8 @@ class TestRbacDatabase(unittest.TestCase):
         cookie = response.getheader("Set-Cookie") or ""
         connection.close()
         self.assertIn(response.status, (302, 303), raw.decode("utf-8", "replace"))
-        self.assertIn("pyrbac_session=", cookie)
-        token = cookie.split("pyrbac_session=", 1)[1].split(";", 1)[0]
+        self.assertIn("openrbac_session=", cookie)
+        token = cookie.split("openrbac_session=", 1)[1].split(";", 1)[0]
         self.assertNotIn(password, cookie)
         return token
 
@@ -333,7 +335,7 @@ class TestRbacDatabase(unittest.TestCase):
         connection = self._connection(url)
         headers = {}
         if token:
-            headers["Cookie"] = "pyrbac_session={0}".format(token)
+            headers["Cookie"] = "openrbac_session={0}".format(token)
         connection.request("GET", parsed.path or "/", headers=headers)
         response = connection.getresponse()
         page = _Page(response.status, response.read().decode("utf-8"), response.headers)
@@ -349,7 +351,7 @@ class TestRbacDatabase(unittest.TestCase):
             parsed.path or "/",
             data,
             {
-                "Cookie": "pyrbac_session={0}".format(token),
+                "Cookie": "openrbac_session={0}".format(token),
                 "Content-Type": "application/x-www-form-urlencoded",
             },
         )
@@ -370,28 +372,28 @@ class TestChronicle(unittest.TestCase):
     """def main constructs ChronicleLogger and does not record a password."""
 
     def test_construct_and_secret_stay_out_of_the_log(self):
-        source = (ROOT / "src" / "PyRbac" / "cli.py").read_text(encoding="utf-8")
+        source = (ROOT / "src" / "OpenRbac" / "cli.py").read_text(encoding="utf-8")
         self.assertIn("ChronicleLogger(", source)
         self.assertIn(
             'ChronicleLogger is required. Next step: python -m pip install "ChronicleLogger>=1.3.1"',
             source,
         )
-        logdir = tempfile.mkdtemp(prefix="pyrbac_log_", dir="/tmp")
-        home = tempfile.mkdtemp(prefix="pyrbac_loghome_", dir="/tmp")
+        logdir = tempfile.mkdtemp(prefix="openrbac_log_", dir="/tmp")
+        home = tempfile.mkdtemp(prefix="openrbac_loghome_", dir="/tmp")
         saved = {
             name: os.environ.get(name)
             for name in (
-                "PYRBAC_HOME",
-                "PYRBAC_DB_ENGINE",
-                "PYRBAC_SQLITE_FILE",
-                "PYRBAC_DB_NAME",
-                "PYRBAC_DB_PASSWORD",
+                "OPENRBAC_HOME",
+                "OPENRBAC_DB_ENGINE",
+                "OPENRBAC_SQLITE_FILE",
+                "OPENRBAC_DB_NAME",
+                "OPENRBAC_DB_PASSWORD",
             )
         }
-        os.environ["PYRBAC_HOME"] = home
-        os.environ["PYRBAC_DB_ENGINE"] = "sqlite3"
-        os.environ["PYRBAC_SQLITE_FILE"] = os.path.join(home, "pyrbac.sqlite3")
-        os.environ.pop("PYRBAC_DB_PASSWORD", None)
+        os.environ["OPENRBAC_HOME"] = home
+        os.environ["OPENRBAC_DB_ENGINE"] = "sqlite3"
+        os.environ["OPENRBAC_SQLITE_FILE"] = os.path.join(home, "openrbac.sqlite3")
+        os.environ.pop("OPENRBAC_DB_PASSWORD", None)
         secret = "s3cret-value-not-for-logs"
         try:
             Desk().db_init()
@@ -418,10 +420,10 @@ class TestEngineChoice(unittest.TestCase):
     """sqlite3 is the default file. mysql is the other choice. Every interface offers both."""
 
     def _home(self):
-        return tempfile.mkdtemp(prefix="pyrbac_engine_", dir="/tmp")
+        return tempfile.mkdtemp(prefix="openrbac_engine_", dir="/tmp")
 
     def _settings(self, home, **extra):
-        environ = {"PYRBAC_HOME": home, "HOME": home}
+        environ = {"OPENRBAC_HOME": home, "HOME": home}
         environ.update(extra)
         return Settings(environ=environ, home=home)
 
@@ -429,25 +431,25 @@ class TestEngineChoice(unittest.TestCase):
         home = self._home()
         settings = self._settings(home)
         self.assertEqual(settings.engine(), "sqlite3")
-        self.assertTrue(settings.sqlite_path().endswith(os.path.join("PyRbac", "pyrbac.sqlite3")) or settings.sqlite_path().endswith("pyrbac.sqlite3"))
-        self.assertIn("pyrbac.sqlite3", settings.sqlite_path())
+        self.assertTrue(settings.sqlite_path().endswith(os.path.join("OpenRbac", "openrbac.sqlite3")) or settings.sqlite_path().endswith("openrbac.sqlite3"))
+        self.assertIn("openrbac.sqlite3", settings.sqlite_path())
         lines = settings.choice_lines()
         self.assertIn("Enter uses sqlite3", lines[0])
         self.assertIn("default file", lines[0])
         self.assertIn("1 sqlite3", lines[1])
-        self.assertIn("pyrbac.sqlite3", lines[1])
+        self.assertIn("openrbac.sqlite3", lines[1])
         self.assertIn("(default file)", lines[1])
         self.assertIn("2 mysql", lines[2])
         blank = settings.apply_choice("")
         self.assertIn("sqlite3", blank)
         self.assertIn("(default file)", blank)
-        self.assertIn("PYRBAC_DB_ENGINE=sqlite3", (Path(home) / "database").read_text(encoding="utf-8"))
+        self.assertIn("OPENRBAC_DB_ENGINE=sqlite3", (Path(home) / "database").read_text(encoding="utf-8"))
         sentence = settings.apply_choice("1")
         self.assertIn("sqlite3", sentence)
         path = Path(home) / "database"
         self.assertEqual(path.stat().st_mode & 0o777, 0o600)
-        self.assertIn("PYRBAC_DB_ENGINE=sqlite3", path.read_text(encoding="utf-8"))
-        self.assertFalse((Path(home) / "pyrbac.sqlite3").exists())
+        self.assertIn("OPENRBAC_DB_ENGINE=sqlite3", path.read_text(encoding="utf-8"))
+        self.assertFalse((Path(home) / "openrbac.sqlite3").exists())
 
     def test_mysql_choice_and_environment_wins(self):
         home = self._home()
@@ -455,12 +457,12 @@ class TestEngineChoice(unittest.TestCase):
         sentence = settings.apply_choice("mysql")
         self.assertIn("mysql", sentence)
         self.assertEqual(settings.engine(), "mysql")
-        locked = self._settings(home, PYRBAC_DB_ENGINE="sqlite3")
+        locked = self._settings(home, OPENRBAC_DB_ENGINE="sqlite3")
         with self.assertRaises(SettingsError) as caught:
             locked.apply_choice("2")
         self.assertIn("environment", str(caught.exception))
         self.assertEqual(locked.apply_choice(""), locked.engine_sentence())
-        mysql_env = self._settings(home, PYRBAC_DB_ENGINE="mysql")
+        mysql_env = self._settings(home, OPENRBAC_DB_ENGINE="mysql")
         kept = mysql_env.apply_choice("")
         self.assertIn("mysql", kept)
         self.assertIn("environment", kept)
@@ -472,12 +474,12 @@ class TestEngineChoice(unittest.TestCase):
         home = self._home()
         saved = {
             name: os.environ.get(name)
-            for name in ("PYRBAC_HOME", "PYRBAC_DB_ENGINE", "PYRBAC_SQLITE_FILE", "HOME")
+            for name in ("OPENRBAC_HOME", "OPENRBAC_DB_ENGINE", "OPENRBAC_SQLITE_FILE", "HOME")
         }
-        os.environ["PYRBAC_HOME"] = home
+        os.environ["OPENRBAC_HOME"] = home
         os.environ["HOME"] = home
-        os.environ.pop("PYRBAC_DB_ENGINE", None)
-        os.environ.pop("PYRBAC_SQLITE_FILE", None)
+        os.environ.pop("OPENRBAC_DB_ENGINE", None)
+        os.environ.pop("OPENRBAC_SQLITE_FILE", None)
         try:
             from io import StringIO
             from contextlib import redirect_stderr, redirect_stdout
@@ -489,9 +491,9 @@ class TestEngineChoice(unittest.TestCase):
             self.assertEqual(code, 0, err.getvalue())
             text = out.getvalue()
             self.assertIn("1 sqlite3", text)
-            self.assertIn("pyrbac.sqlite3", text)
+            self.assertIn("openrbac.sqlite3", text)
             self.assertIn("2 mysql", text)
-            self.assertFalse((Path(home) / "pyrbac.sqlite3").exists())
+            self.assertFalse((Path(home) / "openrbac.sqlite3").exists())
             out = StringIO()
             err = StringIO()
             with redirect_stdout(out), redirect_stderr(err):
@@ -499,8 +501,8 @@ class TestEngineChoice(unittest.TestCase):
             self.assertEqual(code, 0, err.getvalue())
             self.assertIn("mysql", out.getvalue())
             stored = (Path(home) / "database").read_text(encoding="utf-8")
-            self.assertIn("PYRBAC_DB_ENGINE=mysql", stored)
-            self.assertFalse((Path(home) / "pyrbac.sqlite3").exists())
+            self.assertIn("OPENRBAC_DB_ENGINE=mysql", stored)
+            self.assertFalse((Path(home) / "openrbac.sqlite3").exists())
             err = StringIO()
             with redirect_stdout(StringIO()), redirect_stderr(err):
                 code = app.run(["db-engine", "--engine", "oracle"])
@@ -516,14 +518,14 @@ class TestEngineChoice(unittest.TestCase):
 
     def test_sqlite_seed_file_mode_and_web_choices(self):
         home = self._home()
-        data = os.path.join(home, "pyrbac.sqlite3")
+        data = os.path.join(home, "openrbac.sqlite3")
         desk = Desk(environ={
-            "PYRBAC_HOME": home,
+            "OPENRBAC_HOME": home,
             "HOME": home,
-            "PYRBAC_DB_ENGINE": "sqlite3",
-            "PYRBAC_SQLITE_FILE": data,
-            "PYRBAC_BIND": "127.0.0.1",
-            "PYRBAC_PORT": "0",
+            "OPENRBAC_DB_ENGINE": "sqlite3",
+            "OPENRBAC_SQLITE_FILE": data,
+            "OPENRBAC_BIND": "127.0.0.1",
+            "OPENRBAC_PORT": "0",
         })
         first = desk.db_init()
         self.assertIn("seeded", first)
@@ -533,19 +535,19 @@ class TestEngineChoice(unittest.TestCase):
         self.assertEqual(os.stat(data).st_mode & 0o777, 0o600)
         page = desk.web().login_page("")
         self.assertIn("sqlite3", page)
-        self.assertIn("pyrbac.sqlite3", page)
+        self.assertIn("openrbac.sqlite3", page)
         self.assertIn("mysql", page)
         self.assertIn('name="engine"', page)
         self.assertIn("already selected", page)
         plain = Desk(environ={
-            "PYRBAC_HOME": home,
+            "OPENRBAC_HOME": home,
             "HOME": home,
-            "PYRBAC_BIND": "127.0.0.1",
-            "PYRBAC_PORT": "0",
+            "OPENRBAC_BIND": "127.0.0.1",
+            "OPENRBAC_PORT": "0",
         })
         plain_page = plain.web().login_page("")
         self.assertIn("(default file)", plain_page)
-        self.assertIn("pyrbac.sqlite3", plain_page)
+        self.assertIn("openrbac.sqlite3", plain_page)
         signed = desk.access.login(
             "admin",
             Schema.INITIAL_ADMIN_PASSWORD,
@@ -567,18 +569,18 @@ class TestEngineChoice(unittest.TestCase):
         class Local:
             client_address = ("127.0.0.1", 9)
 
-        open_choice = Desk(environ={"PYRBAC_HOME": home, "HOME": home})
+        open_choice = Desk(environ={"OPENRBAC_HOME": home, "HOME": home})
         open_choice.web()._apply_posted_engine(Local(), {"engine": ["mysql"]})
         self.assertEqual(open_choice.settings.engine(), "mysql")
         self.assertIn(
-            "PYRBAC_DB_ENGINE=mysql",
+            "OPENRBAC_DB_ENGINE=mysql",
             (Path(home) / "database").read_text(encoding="utf-8"),
         )
 
     def test_menu_row_offers_the_engine(self):
-        from PyRbac.menu_painter import MenuPainter
+        from OpenRbac.menu_painter import MenuPainter
         rows = MenuPainter().rows_for("setup")
-        self.assertIn((78, "db-engine", "sqlite3 file or mysql", "db-engine"), rows)
+        self.assertIn((218, "db-engine", "sqlite3 file or mysql", "db-engine"), rows)
         self.assertIn("db-engine", Cli.PRODUCT_VERBS)
         self.assertNotIn("db-engine", Cli.DOMAIN_VERBS)
 
@@ -589,14 +591,14 @@ class TestEngineChoice(unittest.TestCase):
             raise
         home = self._home()
         desk = Desk(environ={
-            "PYRBAC_HOME": home,
+            "OPENRBAC_HOME": home,
             "HOME": home,
-            "PYRBAC_DB_ENGINE": "mysql",
-            "PYRBAC_DB_NAME": "pyrbac_test",
-            "PYRBAC_DB_USER": "pyrbac",
-            "PYRBAC_DB_HOST": "127.0.0.1",
-            "PYRBAC_DB_PORT": "3306",
-            "PYRBAC_DB_PASSWORD": password,
+            "OPENRBAC_DB_ENGINE": "mysql",
+            "OPENRBAC_DB_NAME": "openrbac_test",
+            "OPENRBAC_DB_USER": "openrbac",
+            "OPENRBAC_DB_HOST": "127.0.0.1",
+            "OPENRBAC_DB_PORT": "3306",
+            "OPENRBAC_DB_PASSWORD": password,
         })
         try:
             desk.store.query_one("SELECT 1 AS n")
@@ -605,7 +607,7 @@ class TestEngineChoice(unittest.TestCase):
         _drop_tables(desk.store)
         first = desk.db_init()
         self.assertIn("seeded", first)
-        self.assertIn("pyrbac_test", first)
+        self.assertIn("openrbac_test", first)
         second = desk.db_init()
         self.assertIn("present", second)
         self.assertNotIn("ruoyi_db", first)

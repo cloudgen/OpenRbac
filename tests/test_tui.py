@@ -12,8 +12,8 @@ _SRC = Path(__file__).resolve().parents[1] / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from PyRbac.menu_painter import MenuPainter
-from PyRbac.tui import Tui
+from OpenRbac.menu_painter import MenuPainter
+from OpenRbac.tui import Tui
 
 
 class TestPathLabel(unittest.TestCase):
@@ -29,7 +29,7 @@ class TestPathLabel(unittest.TestCase):
         saved = {
             name: os.environ.get(name)
             for name in (
-                "LANG", "LANGUAGE", "LC_ALL", "LC_MESSAGES", "HOME", "PYRBAC_LANG",
+                "LANG", "LANGUAGE", "LC_ALL", "LC_MESSAGES", "HOME", "OPENRBAC_LANG",
             )
         }
         os.environ["LANG"] = "zh_TW.UTF-8"
@@ -37,7 +37,7 @@ class TestPathLabel(unittest.TestCase):
         os.environ["LC_ALL"] = "zh_TW.UTF-8"
         os.environ["LC_MESSAGES"] = "zh_TW.UTF-8"
         os.environ["HOME"] = home
-        os.environ.pop("PYRBAC_LANG", None)
+        os.environ.pop("OPENRBAC_LANG", None)
         os.chdir(folder)
         try:
             painter = MenuPainter(home=home)
@@ -73,7 +73,7 @@ class TestPathLabel(unittest.TestCase):
                 ):
                     self.assertEqual(line, "Path: " + current + "  " + clock)
                     self.assertFalse(line.startswith("路徑"))
-                    self.assertNotIn("PyRbac", line.split("  ")[0])
+                    self.assertNotIn("OpenRbac", line.split("  ")[0])
             finally:
                 session.painter.clock_text = original
         finally:
@@ -92,9 +92,9 @@ class TestWideColumns(unittest.TestCase):
         """TP-TUI-10: the colon starts after the display width of a wide short."""
         import unicodedata
 
-        from PyRbac.cli import Cli
-        from PyRbac.menu_model import MenuModel
-        from PyRbac.menu_painter import MenuPainter
+        from OpenRbac.cli import Cli
+        from OpenRbac.menu_model import MenuModel
+        from OpenRbac.menu_painter import MenuPainter
 
         class ColumnScreen:
             """Records each addstr with its column."""
@@ -147,10 +147,10 @@ class TestWideColumns(unittest.TestCase):
         previous = os.getcwd()
         saved = {
             name: os.environ.get(name)
-            for name in ("HOME", "PYRBAC_LANG", "LANG", "LC_ALL")
+            for name in ("HOME", "OPENRBAC_LANG", "LANG", "LC_ALL")
         }
         os.environ["HOME"] = home
-        os.environ.pop("PYRBAC_LANG", None)
+        os.environ.pop("OPENRBAC_LANG", None)
         os.chdir(folder)
         clock = "14:05:09"
         try:
@@ -174,7 +174,7 @@ class TestWideColumns(unittest.TestCase):
                 ("パス", "パ"),
                 ("경로", "경"),
             ):
-                os.environ["PYRBAC_LANG"] = {
+                os.environ["OPENRBAC_LANG"] = {
                     "路径": "zh-Hans",
                     "路徑": "zh-Hant",
                     "パス": "ja",
@@ -195,43 +195,35 @@ class TestWideColumns(unittest.TestCase):
 
             expected = {
                 "zh-Hans": [
-                    "2. access  : users, roles, menus, departments, and posts",
+                    "1. rbac    : users, roles, menus, departments, and posts",
+                    "2. server  : setup, audit, and the web listener",
                     "3. 系统日志: 查看、清空，以及日志文件夹",
-                    "4. 语言    : 此菜单的显示语言",
-                    "5. setup   : parameters, dictionaries, and notices",
-                    "6. audit   : operation log, login log, and online users",
-                    "7. serve   : start the web interface on this computer",
-                    "8. 自我管理: 版本、关于，以及 pip 生命周期",
+                    "6. 自我管理: 版本、关于，以及 pip 生命周期",
+                    "7. 语言    : 此菜单的显示语言",
                     "9. 离开    : 离开",
                 ],
                 "zh-Hant": [
-                    "2. access  : users, roles, menus, departments, and posts",
+                    "1. rbac    : users, roles, menus, departments, and posts",
+                    "2. server  : setup, audit, and the web listener",
                     "3. 系統日誌: 查看、清空，以及日誌資料夾",
-                    "4. 語言    : 這個選單的顯示語言",
-                    "5. setup   : parameters, dictionaries, and notices",
-                    "6. audit   : operation log, login log, and online users",
-                    "7. serve   : start the web interface on this computer",
-                    "8. 自我管理: 版本、關於，以及 pip 生命週期",
+                    "6. 自我管理: 版本、關於，以及 pip 生命週期",
+                    "7. 語言    : 這個選單的顯示語言",
                     "9. 離開    : 離開",
                 ],
                 "ko": [
-                    "2. access     : users, roles, menus, departments, and posts",
+                    "1. rbac       : users, roles, menus, departments, and posts",
+                    "2. server     : setup, audit, and the web listener",
                     "3. 시스템 로그: 보기, 비우기, 로그 폴더",
-                    "4. 언어       : 이 메뉴의 표시 언어",
-                    "5. setup      : parameters, dictionaries, and notices",
-                    "6. audit      : operation log, login log, and online users",
-                    "7. serve      : start the web interface on this computer",
-                    "8. 자기관리   : 버전, 정보, pip 수명 주기",
+                    "6. 자기관리   : 버전, 정보, pip 수명 주기",
+                    "7. 언어       : 이 메뉴의 표시 언어",
                     "9. 종료       : 종료",
                 ],
                 "ja": [
-                    "2. access      : users, roles, menus, departments, and posts",
+                    "1. rbac        : users, roles, menus, departments, and posts",
+                    "2. server      : setup, audit, and the web listener",
                     "3. システムログ: 表示、消去、ログフォルダ",
-                    "4. 言語        : このメニューの表示言語",
-                    "5. setup       : parameters, dictionaries, and notices",
-                    "6. audit       : operation log, login log, and online users",
-                    "7. serve       : start the web interface on this computer",
-                    "8. 自己管理    : バージョン、概要、pip のライフサイクル",
+                    "6. 自己管理    : バージョン、概要、pip のライフサイクル",
+                    "7. 言語        : このメニューの表示言語",
                     "9. 終了        : 終了",
                 ],
             }
@@ -242,7 +234,7 @@ class TestWideColumns(unittest.TestCase):
                 "ja": ("言語", "システムログ", "自己管理", "終了"),
             }
             for code, words in shorts.items():
-                os.environ["PYRBAC_LANG"] = code
+                os.environ["OPENRBAC_LANG"] = code
                 board_painter = MenuPainter(home=home)
                 board_painter.clock_text = lambda: clock
                 self.assertEqual(board_painter.language.code(), code)
@@ -277,7 +269,7 @@ class TestWideColumns(unittest.TestCase):
                     self.assertEqual(colon, [(y, colon_x, "{0}: ".format(verb_pad))], short)
                     self.assertNotEqual(colon_x, x + len(short), short)
 
-            os.environ.pop("PYRBAC_LANG", None)
+            os.environ.pop("OPENRBAC_LANG", None)
             english_painter = MenuPainter(home=home)
             english_painter.clock_text = lambda: clock
             self.assertEqual(english_painter.language.code(), "en")

@@ -1,12 +1,12 @@
 **file**: docs/requirements/requirement-web-interface.md
-**Status**: Active (Version 1.2.0)
+**Status**: Active (Version 1.2.1)
 **Area**: domain
 **Key**: `requirement-web-interface`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
 
 ## 1. Purpose
 
-The web interface is a small standard-library HTTP site. It has no JavaScript. Every list and every form calls the same Access or Catalog method as the text menu. The typed verb `serve` listens in the foreground. Menu row 7 starts the listener in the background and prints the URL.
+The web interface is a small standard-library HTTP site. It has no JavaScript. Every list and every form calls the same Access or Catalog method as the text menu. The typed verb `serve` listens in the foreground. Server row 23 starts the listener in the background and prints the URL.
 
 ### 1.1 Human-facing
 
@@ -15,7 +15,7 @@ The web interface is a small standard-library HTTP site. It has no JavaScript. E
 | Box | Meaning | Example |
 |-----|---------|---------|
 | You / this login | The browser on this computer | `http://127.0.0.1:8765/` |
-| The other role | The cookie `pyrbac_session` | HttpOnly, SameSite=Lax |
+| The other role | The cookie `openrbac_session` | HttpOnly, SameSite=Lax |
 | Not this file | The permission strings | `requirement-rbac` |
 
 | Includes | Excludes |
@@ -27,7 +27,7 @@ The web interface is a small standard-library HTTP site. It has no JavaScript. E
 ## 2. Normative rules
 
 1. **Bind.** The listener **MUST** use `requirement-environment`. The default is `127.0.0.1:8765`.
-2. **Cookie.** A successful login **MUST** set `pyrbac_session` with `HttpOnly`, `SameSite=Lax`, and `Path=/`, then redirect to `/`. The login page **MUST NOT** print the seed passwords.
+2. **Cookie.** A successful login **MUST** set `openrbac_session` with `HttpOnly`, `SameSite=Lax`, and `Path=/`, then redirect to `/`. The login page **MUST NOT** print the seed passwords.
 3. **CSRF.** A POST other than login **MUST** include a hidden `csrf` field equal to the session row. A mismatch **MUST** be status 400.
 4. **Auth.** A page other than `/login` without a session **MUST** redirect to `/login`. A missing permission **MUST** be status 403. Another access error **MUST** be status 400.
 5. **Headers.** Each HTML response **MUST** send `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, and `Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; form-action 'self'`.
@@ -52,10 +52,10 @@ The web interface is a small standard-library HTTP site. It has no JavaScript. E
 
 | Term | Meaning in this file |
 |------|----------------------|
-| Session cookie | `pyrbac_session`, the token stored in `sys_session` |
+| Session cookie | `openrbac_session`, the token stored in `sys_session` |
 | CSRF field | The hidden form value that must match the session row |
-| Foreground serve | `py-rbac serve`, which blocks until interrupted |
-| Background serve | Menu row 7, which lives until the process exits |
+| Foreground serve | `open-rbac serve`, which blocks until interrupted |
+| Background serve | Server row 23, which lives until the process exits |
 
 ## 7. Status history
 
@@ -64,9 +64,10 @@ The web interface is a small standard-library HTTP site. It has no JavaScript. E
 | 2026-10-11 | Active 1.0.0 | Loopback HTML site, cookie, and CSRF |
 | 2026-10-11 | Active 1.1.0 | Sign-in and Database pages choose sqlite3 or mysql |
 | 2026-10-11 | Active 1.2.0 | A web sign-in does not write the local login files |
+| 2026-10-14 | Active 1.2.1 | Background serve is server row 23 |
 
 ---
 
-**Last Updated**: 2026-10-11
+**Last Updated**: 2026-10-14
 **Owner**: project maintainers
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

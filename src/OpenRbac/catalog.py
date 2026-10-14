@@ -1,6 +1,6 @@
 # =============================================================================
 # Centralized parameters, dictionaries, and notices.
-# requirement-domain-pyrbac — setup surface.
+# requirement-domain-openrbac — setup surface.
 # requirement-python-oop — class Catalog.
 # =============================================================================
 from __future__ import annotations
@@ -42,7 +42,7 @@ class Catalog:
             (config_key,),
         )
         if row is None:
-            self._fail("Unknown parameter {0}.".format(config_key), "py-rbac config-list")
+            self._fail("Unknown parameter {0}.".format(config_key), "open-rbac config-list")
         value = "" if config_value is None else str(config_value)
         if len(value) > 500:
             self._fail("config_value must be 500 characters or fewer.", "shorten the value")
@@ -67,7 +67,7 @@ class Catalog:
             (key,),
         )
         if existing:
-            self._fail("That parameter already exists.", "py-rbac config-set --config-key {0}".format(key))
+            self._fail("That parameter already exists.", "open-rbac config-set --config-key {0}".format(key))
         self.store.execute(
             """
             INSERT INTO sys_config
@@ -96,7 +96,7 @@ class Catalog:
             (dict_type,),
         )
         if kind is None:
-            self._fail("Unknown dictionary type {0}.".format(dict_type), "py-rbac dict-list")
+            self._fail("Unknown dictionary type {0}.".format(dict_type), "open-rbac dict-list")
         label = (dict_label or "").strip()
         value = (dict_value or "").strip()
         if not label or not value:
@@ -156,9 +156,9 @@ class Catalog:
     def online_logout(self, actor, token):
         self.access.require(actor, "monitor:online:forceLogout")
         if not token:
-            self._fail("A session token is required.", "py-rbac online-list")
+            self._fail("A session token is required.", "open-rbac online-list")
         count = self.audit.drop_session(token)
         if count == 0:
-            self._fail("That session is not online.", "py-rbac online-list")
+            self._fail("That session is not online.", "open-rbac online-list")
         self.audit.write_oper(actor, "Online", 3, "online_logout", param=token[:8])
         return count

@@ -1,28 +1,28 @@
-# PyRbac review — sqlite3 and mysql — 2026-10-11
+# OpenRbac review — sqlite3 and mysql — 2026-10-11
 
-**Product:** PyRbac 1.0.2
-**Scope:** Database engine choice on the command, the text menu, and the local web site. Default data file `pyrbac.sqlite3`. mysql remains available.
+**Product:** OpenRbac 1.0.2
+**Scope:** Database engine choice on the command, the text menu, and the local web site. Default data file `openrbac.sqlite3`. mysql remains available.
 **Result:** Pass with the limits below.
-**Suite:** `./tests/run.sh` on 2026-10-11 ran 38 tests in 18.687s and finished OK. The mysql seed case connected to `pyrbac_test` and passed.
+**Suite:** `./tests/run.sh` on 2026-10-11 ran 38 tests in 18.687s and finished OK. The mysql seed case connected to `openrbac_test` and passed.
 **Checklists:** `CL-IMPLEMENTATION-CIAO`, `CL-CODE-REVIEW`, and `CL-SECURITY-REVIEW` were filled for this date.
 
 ## What was checked
 
 | Check | Result |
 |-------|--------|
-| Empty `PYRBAC_DB_ENGINE` is sqlite3. The file is `pyrbac.sqlite3` under the app home | Pass. `TestEngineChoice.test_default_is_the_sqlite_file` |
-| Choice `1` or `sqlite3` stores `PYRBAC_DB_ENGINE=sqlite3` at mode 0600 and does not create the data file | Pass |
-| Choice `2` or `mysql` stores mysql. A set environment value wins. A conflict names `unset PYRBAC_DB_ENGINE to store the choice in the database file` | Pass |
-| `py-rbac db-engine` with no `--engine` and no terminal prints both choices, returns 0, and does not create the data file | Pass |
+| Empty `OPENRBAC_DB_ENGINE` is sqlite3. The file is `openrbac.sqlite3` under the app home | Pass. `TestEngineChoice.test_default_is_the_sqlite_file` |
+| Choice `1` or `sqlite3` stores `OPENRBAC_DB_ENGINE=sqlite3` at mode 0600 and does not create the data file | Pass |
+| Choice `2` or `mysql` stores mysql. A set environment value wins. A conflict names `unset OPENRBAC_DB_ENGINE to store the choice in the database file` | Pass |
+| `open-rbac db-engine` with no `--engine` and no terminal prints both choices, returns 0, and does not create the data file | Pass |
 | `--engine oracle` returns 1 with `ERROR:` and `Next:` | Pass |
 | First `db-init` on sqlite reports `seeded`. The second reports `present`. The file is mode 0600 | Pass |
-| `TestRbacDatabase` uses a temporary sqlite file and does not need `PYRBAC_DB_PASSWORD` | Pass. Seed line contains `pyrbac.sqlite3: seeded` |
+| `TestRbacDatabase` uses a temporary sqlite file and does not need `OPENRBAC_DB_PASSWORD` | Pass. Seed line contains `openrbac.sqlite3: seeded` |
 | Scope behavior, including department ancestors, passes on sqlite | Pass. `test_seed_once_and_scopes` |
-| Login page offers sqlite3 and mysql. `(default file)` appears when `PYRBAC_SQLITE_FILE` is empty | Pass |
+| Login page offers sqlite3 and mysql. `(default file)` appears when `OPENRBAC_SQLITE_FILE` is empty | Pass |
 | A non-loopback sign-in cannot switch engines | Pass |
 | Setup row 78 is `db-engine` / `sqlite3 file or mysql`. Front rows 2–9 are unchanged | Pass |
 | `db-engine` is a product verb and is not a domain verb, so the command does not open the database | Pass |
-| mysql `pyrbac_test` seeds once and the output does not contain `ruoyi_db` or `ry` | Pass on this host |
+| mysql `openrbac_test` seeds once and the output does not contain `ruoyi_db` or `ry` | Pass on this host |
 | Version string `1.0.2` in the package, the badge, and the docs test | Pass. `tests/test_docs.py` |
 | About line names sqlite3 as the default file, or MariaDB or MySQL, and PyMySQL | Pass |
 

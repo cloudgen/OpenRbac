@@ -63,7 +63,7 @@ class MenuSession:
         show_clock = (
             self.model.phase != "result"
             and self.model.layer in (
-                "front", "self", "log", "lang", "access", "setup", "audit",
+                "front", "self", "log", "lang", "rbac", "server", "setup", "audit",
             )
         )
         if arm is not None:

@@ -12,15 +12,15 @@ _SRC = Path(__file__).resolve().parents[1] / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from PyRbac.access import AccessError
-from PyRbac.desk import Desk
-from PyRbac.local_login import LocalLogin
-from PyRbac.menu_model import MenuModel
-from PyRbac.menu_painter import MenuPainter
-from PyRbac.menu_session import MenuSession
-from PyRbac.password_hash import PasswordHash
-from PyRbac.schema import Schema
-from PyRbac.tui import Tui
+from OpenRbac.access import AccessError
+from OpenRbac.desk import Desk
+from OpenRbac.local_login import LocalLogin
+from OpenRbac.menu_model import MenuModel
+from OpenRbac.menu_painter import MenuPainter
+from OpenRbac.menu_session import MenuSession
+from OpenRbac.password_hash import PasswordHash
+from OpenRbac.schema import Schema
+from OpenRbac.tui import Tui
 
 
 class Capture:
@@ -41,12 +41,12 @@ class Home:
 
 def _env(home):
     return {
-        "PYRBAC_HOME": home,
+        "OPENRBAC_HOME": home,
         "HOME": home,
-        "PYRBAC_DB_ENGINE": "sqlite3",
-        "PYRBAC_SQLITE_FILE": os.path.join(home, "pyrbac.sqlite3"),
-        "PYRBAC_BIND": "127.0.0.1",
-        "PYRBAC_PORT": "0",
+        "OPENRBAC_DB_ENGINE": "sqlite3",
+        "OPENRBAC_SQLITE_FILE": os.path.join(home, "openrbac.sqlite3"),
+        "OPENRBAC_BIND": "127.0.0.1",
+        "OPENRBAC_PORT": "0",
     }
 
 
@@ -54,7 +54,7 @@ class TestLocalCipher(unittest.TestCase):
     """The login file is ciphertext. A bad file does not return the password."""
 
     def test_round_trip_mode_and_tamper(self):
-        home = tempfile.mkdtemp(prefix="pyrbac_local_", dir="/tmp")
+        home = tempfile.mkdtemp(prefix="openrbac_local_", dir="/tmp")
         logger = Capture()
         local = LocalLogin(Home(home), logger=logger)
         local.save("admin", "admin123")
@@ -65,7 +65,7 @@ class TestLocalCipher(unittest.TestCase):
         self.assertEqual(os.stat(home).st_mode & 0o777, 0o700)
         body = Path(login_path).read_bytes()
         self.assertNotIn(b"admin123", body)
-        self.assertTrue(body.startswith(b"PYRBACLOCAL1\n"))
+        self.assertTrue(body.startswith(b"OPENRBACLOCAL1\n"))
         self.assertEqual(local.load(), ("admin", "admin123"))
         self.assertEqual(len(Path(key_path).read_bytes()), 32)
         joined = "\n".join(logger.messages)
@@ -98,7 +98,7 @@ class TestLocalCipher(unittest.TestCase):
         self.assertIsNone(local.load())
         with self.assertRaises(OSError):
             local.save("admin", "admin123")
-        home = tempfile.mkdtemp(prefix="pyrbac_local_", dir="/tmp")
+        home = tempfile.mkdtemp(prefix="openrbac_local_", dir="/tmp")
         local = LocalLogin(Home(home))
         with self.assertRaises(OSError) as caught:
             local.save("admin", "x" * 65536)
@@ -115,7 +115,7 @@ class TestSavedSignIn(unittest.TestCase):
         return desk
 
     def test_restore_logout_and_failed_password(self):
-        home = tempfile.mkdtemp(prefix="pyrbac_local_", dir="/tmp")
+        home = tempfile.mkdtemp(prefix="openrbac_local_", dir="/tmp")
         logger = Capture()
         desk = self._desk(home, logger)
         secret = Schema.INITIAL_ADMIN_PASSWORD
@@ -154,7 +154,7 @@ class TestSavedSignIn(unittest.TestCase):
         self.assertNotIn("other-secret-value", joined)
 
     def test_live_token_skips_a_broken_file(self):
-        home = tempfile.mkdtemp(prefix="pyrbac_local_", dir="/tmp")
+        home = tempfile.mkdtemp(prefix="openrbac_local_", dir="/tmp")
         desk = self._desk(home)
         desk.login("admin", Schema.INITIAL_ADMIN_PASSWORD)
         path = os.path.join(home, "local-login")
@@ -166,7 +166,7 @@ class TestSavedSignIn(unittest.TestCase):
         self.assertIn("user_name=admin", other.whoami())
 
     def test_web_sign_in_does_not_write_the_file(self):
-        home = tempfile.mkdtemp(prefix="pyrbac_local_", dir="/tmp")
+        home = tempfile.mkdtemp(prefix="openrbac_local_", dir="/tmp")
         desk = self._desk(home)
         url = desk.web().start_background()
         try:
@@ -219,13 +219,13 @@ class TestSavedSignIn(unittest.TestCase):
         tui.read_key = read_key
         preface = [
             "Sign in before the menu.",
-            "Database engine: sqlite3 /tmp/PyRbac/pyrbac.sqlite3 (default file).",
+            "Database engine: sqlite3 /tmp/OpenRbac/openrbac.sqlite3 (default file).",
         ]
         picked = tui._ask_fields(None, Box(), "login", Tui.ASKS["login"], preface=preface)
         self.assertEqual(picked, {"user_name": "admin", "password": "secret"})
         self.assertEqual(seen[0][0], "login")
         self.assertIn("Sign in before the menu.", seen[0][1])
-        self.assertIn("pyrbac.sqlite3", seen[0][1][1])
+        self.assertIn("openrbac.sqlite3", seen[0][1][1])
         self.assertEqual(seen[0][1][-1], "user_name")
         self.assertEqual(seen[1][1][-1], "password")
         self.assertIn("(default file).", seen[1][1][1])
@@ -235,11 +235,11 @@ class TestExitQuestion(unittest.TestCase):
     """Row 9 asks. End of input does not."""
 
     def test_exit_callback_and_end_of_input(self):
-        home = tempfile.mkdtemp(prefix="pyrbac_exit_", dir="/tmp")
+        home = tempfile.mkdtemp(prefix="openrbac_exit_", dir="/tmp")
         painter = MenuPainter(home=home)
         model = MenuModel(painter=painter)
         self.assertEqual(model.apply_key(-1), "exit-now")
-        model.layer = "access"
+        model.layer = "rbac"
         self.assertIsNone(model.apply_key(-1))
         self.assertEqual(model.layer, "front")
         self.assertEqual(model._activate(9, "exit"), "exit")
@@ -251,9 +251,9 @@ class TestExitQuestion(unittest.TestCase):
             return "stay"
 
         session = MenuSession(
-            "PyRbac",
+            "OpenRbac",
             "1.0.4",
-            on_version=lambda: "PyRbac 1.0.4",
+            on_version=lambda: "OpenRbac 1.0.4",
             on_about=lambda: "about",
             painter=painter,
             on_exit=on_exit,
@@ -356,9 +356,9 @@ class TestExitQuestion(unittest.TestCase):
         self.assertEqual(asked, [])
 
         tui = Tui(app=type("App", (), {"desk": DeskBox(False)})())
-        self.assertFalse(tui.sign_in_or_restore(ask, state="seeded", database_name="pyrbac_test"))
+        self.assertFalse(tui.sign_in_or_restore(ask, state="seeded", database_name="openrbac_test"))
         self.assertIn("The saved sign-in did not match.", asked[0])
-        self.assertIn("Database pyrbac_test: seeded.", asked[0])
+        self.assertIn("Database openrbac_test: seeded.", asked[0])
 
 
 if __name__ == "__main__":

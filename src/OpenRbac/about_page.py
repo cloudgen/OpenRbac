@@ -2,7 +2,7 @@
 # About page composer.
 # requirement-python-oop — class AboutPage.
 # requirement-python-about — identity lines, host check, and the star box.
-# requirement-domain-pyrbac — the domain sentence on the identity block.
+# requirement-domain-openrbac — the domain sentence on the identity block.
 # =============================================================================
 from __future__ import print_function, unicode_literals
 
@@ -47,7 +47,7 @@ class AboutPage:
 
     def _is_source_checkout(self, path):
         """True when path is this package inside a source tree that has pyproject.toml."""
-        marker = "{}src{}PyRbac{}".format(os.sep, os.sep, os.sep)
+        marker = "{}src{}OpenRbac{}".format(os.sep, os.sep, os.sep)
         if marker not in path:
             return False
         cursor = os.path.dirname(path)

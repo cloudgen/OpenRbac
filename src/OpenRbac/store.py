@@ -1,5 +1,5 @@
 # =============================================================================
-# Database access for PyRbac.
+# Database access for OpenRbac.
 # requirement-database — sqlite3 or MySQL, one connection per call, parameters only.
 # requirement-python-oop — class Store and StoreError.
 # =============================================================================
@@ -39,7 +39,7 @@ class Store:
         try:
             engine = self.settings.engine()
         except Exception as exc:
-            nxt = getattr(exc, "nxt", "py-rbac db-engine")
+            nxt = getattr(exc, "nxt", "open-rbac db-engine")
             raise StoreError(str(exc), nxt, logger=self.logger)
         if engine == "sqlite3":
             return self._connect_sqlite()
@@ -49,7 +49,7 @@ class Store:
         try:
             path = self.settings.sqlite_path()
         except Exception as exc:
-            nxt = getattr(exc, "nxt", "export PYRBAC_HOME")
+            nxt = getattr(exc, "nxt", "export OPENRBAC_HOME")
             raise StoreError(str(exc), nxt, logger=self.logger)
         folder = os.path.dirname(path)
         try:
@@ -73,7 +73,7 @@ class Store:
                 )
             raise StoreError(
                 "Cannot open the sqlite3 file {0}.".format(path),
-                "check that the folder is writable, or set PYRBAC_SQLITE_FILE, then py-rbac db-init",
+                "check that the folder is writable, or set OPENRBAC_SQLITE_FILE, then open-rbac db-init",
                 logger=self.logger,
             ) from exc
         return connection
@@ -91,7 +91,7 @@ class Store:
         try:
             cfg = self.settings.database()
         except Exception as exc:
-            nxt = getattr(exc, "nxt", "check PYRBAC_DB_PASSWORD")
+            nxt = getattr(exc, "nxt", "check OPENRBAC_DB_PASSWORD")
             raise StoreError(str(exc), nxt, logger=self.logger)
         try:
             return pymysql.connect(
@@ -113,7 +113,7 @@ class Store:
                 )
             raise StoreError(
                 "Cannot open the MySQL database {0}.".format(cfg["database"]),
-                "check PYRBAC_DB_HOST, PYRBAC_DB_USER, and PYRBAC_DB_PASSWORD, then py-rbac db-init",
+                "check OPENRBAC_DB_HOST, OPENRBAC_DB_USER, and OPENRBAC_DB_PASSWORD, then open-rbac db-init",
                 logger=self.logger,
             ) from exc
 
@@ -174,7 +174,7 @@ class Store:
                 )
             raise StoreError(
                 "The database statement failed.",
-                "py-rbac db-init",
+                "open-rbac db-init",
                 logger=self.logger,
             ) from exc
         finally:
@@ -225,7 +225,7 @@ class Store:
                 )
             raise StoreError(
                 "The database transaction failed.",
-                "py-rbac db-init",
+                "open-rbac db-init",
                 logger=self.logger,
             ) from exc
         finally:

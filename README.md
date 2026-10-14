@@ -1,11 +1,11 @@
-# PyRbac
+# OpenRbac
 
-![Version 1.0.4](https://img.shields.io/badge/version-1.0.4-blue)
+![Version 1.0.5](https://img.shields.io/badge/version-1.0.5-blue)
 ![License MIT](https://img.shields.io/badge/license-MIT-green)
 [![CIAO](https://img.shields.io/badge/CIAO-cloudgen-black)](https://github.com/cloudgen/ciao)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
 
-PyRbac is online role-based access control and centralized configuration. The text menu, the typed commands, and the local web pages call the same service.
+OpenRbac is online role-based access control and centralized configuration. The text menu, the typed commands, and the local web pages call the same service.
 
 It is specialized from the HelloTui menu. The web pages are plain HTML. There is no JavaScript bundle.
 
@@ -14,26 +14,26 @@ It is specialized from the HelloTui menu. The web pages are plain HTML. There is
 ## Features
 
 - A terminal with no arguments uses the sqlite3 default file. When a saved sign-in still matches, it opens the menu without asking again. Otherwise it asks for an account and a password.
-- Front board rows: access, system-log, language, setup, audit, serve, self-management, and Exit. There is no session row. Exit asks before it leaves. Enter or y logs out. n keeps the saved sign-in. Esc stays.
+- Front board rows: 1 rbac, 2 server, 3 system-log, 6 self-management, 7 language, and 9 Exit. Server holds setup, audit, and serve. There is no session row. Exit asks before it leaves. Enter or y logs out. n keeps the saved sign-in. Esc stays.
 - The same user, role, menu, department, post, parameter, dictionary, notice, and audit actions on the menu, on the command line, and on the web page.
 - Data scope 1 all, 2 custom departments, 3 this department, 4 this department and children. Any other scope shows no rows.
-- sqlite3 or MariaDB or MySQL. The default is the sqlite3 file `~/.local/PyRbac/pyrbac.sqlite3`. mysql uses the database `pyrbac`.
+- sqlite3 or MariaDB or MySQL. The default is the sqlite3 file `~/.local/OpenRbac/openrbac.sqlite3`. mysql uses the database `openrbac`.
 - ChronicleLogger for the status file. Passwords are not written there.
-- The site listens on `127.0.0.1` unless you set `PYRBAC_ALLOW_REMOTE=yes`.
+- The site listens on `127.0.0.1` unless you set `OPENRBAC_ALLOW_REMOTE=yes`.
 
 ## Advantages
 
 - One permission check for every surface. A button that your role cannot use is not shown.
 - The menu keeps the path line, the local clock, and the rounded input box.
-- Menu language is row 4, codes 41–53. `PYRBAC_LANG` overrides it and does not write the language file.
-- `py-rbac` with no arguments on a terminal signs in, then opens the menu, and does not run pip. A missing database is created before that question.
+- Menu language is row 7, codes 71–83. `OPENRBAC_LANG` overrides it and does not write the language file.
+- `open-rbac` with no arguments on a terminal signs in, then opens the menu, and does not run pip. A missing database is created before that question.
 
 ## Quick Installation
 
 The default database is a sqlite3 file. You do not install a database server for that choice. mysql is optional: you provide MariaDB or MySQL yourself. pip installs this package, ChronicleLogger, and PyMySQL. pip does not install a database server, and this program does not call sudo.
 
 ```bash
-python -m pip install PyRbac
+python -m pip install OpenRbac
 ```
 
 From a checkout:
@@ -42,32 +42,32 @@ From a checkout:
 python -m pip install -e .
 ```
 
-The default engine is sqlite3. `py-rbac db-init` creates `~/.local/PyRbac/pyrbac.sqlite3` when that file is missing. A password is not required for sqlite3.
+The default engine is sqlite3. `open-rbac db-init` creates `~/.local/OpenRbac/openrbac.sqlite3` when that file is missing. A password is not required for sqlite3.
 
 ```bash
-py-rbac db-init
+open-rbac db-init
 ```
 
 The first init prints `seeded`. A later init prints `present` and does not add another administrator.
 
-`py-rbac` uses sqlite3 and `~/.local/PyRbac/pyrbac.sqlite3` without asking for a path. `py-rbac db-engine` still offers choice 1 sqlite3 and choice 2 mysql. Enter selects sqlite3 and that default file. `py-rbac db-engine` does not open the database.
+`open-rbac` uses sqlite3 and `~/.local/OpenRbac/openrbac.sqlite3` without asking for a path. `open-rbac db-engine` still offers choice 1 sqlite3 and choice 2 mysql. Enter selects sqlite3 and that default file. `open-rbac db-engine` does not open the database.
 
 ```bash
-py-rbac db-engine --engine sqlite3
-py-rbac db-engine --engine mysql
+open-rbac db-engine --engine sqlite3
+open-rbac db-engine --engine mysql
 ```
 
-mysql reads the password from the environment or from `~/.local/PyRbac/database` when that file is mode `0600`. The sqlite3 data file is also mode `0600`. The product mysql database is `pyrbac`.
+mysql reads the password from the environment or from `~/.local/OpenRbac/database` when that file is mode `0600`. The sqlite3 data file is also mode `0600`. The product mysql database is `openrbac`.
 
 ```bash
-export PYRBAC_DB_PASSWORD='the-password-you-chose'
-py-rbac db-engine --engine mysql
-py-rbac db-init
+export OPENRBAC_DB_PASSWORD='the-password-you-chose'
+open-rbac db-engine --engine mysql
+open-rbac db-init
 ```
 
 ## Usage
 
-On a terminal, `py-rbac` uses the sqlite3 default file, then asks for the account name, then the password, unless a saved sign-in still matches. A match stores the account and password in encrypted files under the home folder. Both files are mode 0600. A later start decodes them and skips the question when the login still works. A failed restore removes the saved sign-in and asks again. The web sign-in page does not write those files. A menu, `serve`, or any domain verb creates the tables when they are missing. After a match it opens the menu. Esc on the sign-in question leaves without the menu. Row 9 Exit asks before it leaves. Enter or y logs out and removes the saved sign-in. n leaves and keeps it. Esc stays on the menu. Setup row 78 asks for the engine. Enter there selects sqlite3 and the default file. `py-rbac help` lists the verbs. `py-rbac serve` prints a URL and listens until you interrupt it. Menu row 7 starts that site in the background for as long as the process stays open. The web sign-in page has sqlite3 and the default file already selected. A signed-in administrator can also open Database.
+On a terminal, `open-rbac` uses the sqlite3 default file, then asks for the account name, then the password, unless a saved sign-in still matches. A match stores the account and password in encrypted files under the home folder. Both files are mode 0600. A later start decodes them and skips the question when the login still works. A failed restore removes the saved sign-in and asks again. The web sign-in page does not write those files. A menu, `serve`, or any domain verb creates the tables when they are missing. After a match it opens the menu. Esc on the sign-in question leaves without the menu. Row 9 Exit asks before it leaves. Enter or y logs out and removes the saved sign-in. n leaves and keeps it. Esc stays on the menu. Setup row 218 asks for the engine. Enter there selects sqlite3 and the default file. `open-rbac help` lists the verbs. `open-rbac serve` prints a URL and listens until you interrupt it. Server row 23 starts that site in the background for as long as the process stays open. The web sign-in page has sqlite3 and the default file already selected. A signed-in administrator can also open Database.
 
 `login`, `logout`, and `whoami` are typed verbs. They are not rows on the menu.
 
@@ -91,90 +91,90 @@ A suggested password for a new account is the parameter `sys.user.initPassword`,
 - Passwords are stored as PBKDF2-HMAC-SHA256 (`pbkdf2_sha256$…`), rather than bcrypt.
 - Signed-in sessions are rows in `sys_session`, rather than Redis.
 - Data scope uses 1, 2, 3, and 4. Scope 5 is not granted.
-- A terminal sign-in also stores the account and password encrypted under `~/.local/PyRbac`. Reading only the login file does not show the password. Logout removes that saved sign-in. The web sign-in page does not write it. Someone who can already read this account's files can still recover the password.
+- A terminal sign-in also stores the account and password encrypted under `~/.local/OpenRbac`. Reading only the login file does not show the password. Logout removes that saved sign-in. The web sign-in page does not write it. Someone who can already read this account's files can still recover the password.
 - Captcha, export, import, scheduled jobs, code generation, and a Vue application are not in this version.
 
 ### Environment
 
 | Name | Default |
 |------|---------|
-| `PYRBAC_DB_ENGINE` | `sqlite3`. The other value is `mysql` |
-| `PYRBAC_SQLITE_FILE` | `~/.local/PyRbac/pyrbac.sqlite3` |
-| `PYRBAC_DB_HOST` | `127.0.0.1` |
-| `PYRBAC_DB_PORT` | `3306` |
-| `PYRBAC_DB_NAME` | `pyrbac` |
-| `PYRBAC_DB_USER` | `pyrbac` |
-| `PYRBAC_DB_PASSWORD` | none |
-| `PYRBAC_BIND` | `127.0.0.1` |
-| `PYRBAC_PORT` | `8765` |
-| `PYRBAC_ALLOW_REMOTE` | unset. Set `yes` before binding a non-loopback address |
-| `PYRBAC_LANG` | unset. One of the thirteen menu codes. It does not write the language file |
+| `OPENRBAC_DB_ENGINE` | `sqlite3`. The other value is `mysql` |
+| `OPENRBAC_SQLITE_FILE` | `~/.local/OpenRbac/openrbac.sqlite3` |
+| `OPENRBAC_DB_HOST` | `127.0.0.1` |
+| `OPENRBAC_DB_PORT` | `3306` |
+| `OPENRBAC_DB_NAME` | `openrbac` |
+| `OPENRBAC_DB_USER` | `openrbac` |
+| `OPENRBAC_DB_PASSWORD` | none |
+| `OPENRBAC_BIND` | `127.0.0.1` |
+| `OPENRBAC_PORT` | `8765` |
+| `OPENRBAC_ALLOW_REMOTE` | unset. Set `yes` before binding a non-loopback address |
+| `OPENRBAC_LANG` | unset. One of the thirteen menu codes. It does not write the language file |
 
 ## Screenshots
 
-These are captures of the running text menu.
+These pictures are the OpenRbac 1.0.5 text menu. The front board is 1 rbac, 2 server, 3 system-log, 6 self-management, 7 language, and 9 Exit. There is no session row. The sign-in picture names the sqlite3 file for that run. The product default remains `~/.local/OpenRbac/openrbac.sqlite3`.
 
-![Front board](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/main-menu-en.png)
+![Front board](https://raw.githubusercontent.com/cloudgen/OpenRbac/main/screenshots/main-menu-en.png)
 
-*Front board after sign-in. Row 2 is access. Row 4 is language. Row 9 is Exit. There is no session row.*
+*Front board. Rows are 1 rbac, 2 server, 3 system-log, 6 self-management, 7 language, and 9 Exit. There is no session row.*
 
-![Login prompt](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/login-prompt.png)
+![Login prompt](https://raw.githubusercontent.com/cloudgen/OpenRbac/main/screenshots/login-prompt.png)
 
-*The sign-in question before the menu. It names the sqlite3 file. The password is masked.*
+*The sign-in question before the menu. It asks for the account name, then the password. The password is masked. The line names the sqlite3 file. A first run says the database was seeded.*
 
-![Exit](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/exit-prompt.png)
+![Exit](https://raw.githubusercontent.com/cloudgen/OpenRbac/main/screenshots/exit-prompt.png)
 
-*Row 9 Exit. Enter or y logs out and removes the saved sign-in. n keeps it. Esc stays.*
+*Row 9 Exit. Enter or y logs out and removes the saved sign-in. n keeps the saved sign-in. Esc stays.*
 
-![Access](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/access-menu.png)
+![Access](https://raw.githubusercontent.com/cloudgen/OpenRbac/main/screenshots/access-menu.png)
 
-*Users, roles, menus, departments, and posts.*
+*Rbac: user-list through post-add. Back returns to the main menu.*
 
-![Setup](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/setup-menu.png)
+![Setup](https://raw.githubusercontent.com/cloudgen/OpenRbac/main/screenshots/setup-menu.png)
 
-*Parameters, dictionaries, notices, and the database engine.*
+*Setup: config-list through db-engine. Back returns to the server menu.*
 
-![Audit](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/audit-menu.png)
+![Audit](https://raw.githubusercontent.com/cloudgen/OpenRbac/main/screenshots/audit-menu.png)
 
-*Operation log, login log, and online users.*
+*Audit: oper-log, login-log, online-list, and online-logout. Back returns to the server menu.*
 
-![System log](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/system-log.png)
+![System log](https://raw.githubusercontent.com/cloudgen/OpenRbac/main/screenshots/system-log.png)
 
-*System log: view, clear, and the log folder.*
+*System log: view-log, clear-log, and log-folder. Back returns to the main menu.*
 
-![Language](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/language-menu.png)
+![Language](https://raw.githubusercontent.com/cloudgen/OpenRbac/main/screenshots/language-menu.png)
 
-*Language codes 41–53.*
+*Language board. The codes are 71–83. Each name is that language's own name.*
 
-![Self-management](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/self-management.png)
+![Self-management](https://raw.githubusercontent.com/cloudgen/OpenRbac/main/screenshots/self-management.png)
 
-*Version, about, and the pip verbs.*
+*Self-management: version, about, version-check, self-update, self-uninstall, and self-install.*
 
-![Traditional Chinese](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/main-menu-zh-hant.png)
+![Traditional Chinese](https://raw.githubusercontent.com/cloudgen/OpenRbac/main/screenshots/main-menu-zh-hant.png)
 
-*The same front board after Traditional Chinese is selected. The path label is 路徑.*
+*Traditional Chinese front board. The path label is 路徑.*
 
-![Simplified Chinese](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/main-menu-zh-hans.png)
+![Simplified Chinese](https://raw.githubusercontent.com/cloudgen/OpenRbac/main/screenshots/main-menu-zh-hans.png)
 
-*Simplified Chinese.*
+*Simplified Chinese front board. The path label is 路径.*
 
-![Japanese](https://raw.githubusercontent.com/cloudgen/PyRbac/main/screenshots/main-menu-ja.png)
+![Japanese](https://raw.githubusercontent.com/cloudgen/OpenRbac/main/screenshots/main-menu-ja.png)
 
-*Japanese.*
+*Japanese front board. The path label is パス.*
 
 ## Examples
 
 ```bash
-py-rbac
-py-rbac db-init
-py-rbac login --user-name admin
-py-rbac user-list
-py-rbac whoami
-py-rbac logout
-py-rbac serve
+open-rbac
+open-rbac db-init
+open-rbac login --user-name admin
+open-rbac user-list
+open-rbac whoami
+open-rbac logout
+open-rbac serve
 ```
 
-On a terminal, after sign-in, the same `user-list` is row 2, then row 21.
+On a terminal, after sign-in, the same `user-list` is row 1, then row 11.
 
 ## Platform Compatibility
 
@@ -182,8 +182,8 @@ Linux is the primary host. The menu needs a terminal. The database client is PyM
 
 ## Related Projects
 
-- https://github.com/cloudgen/PyRbac
-- https://pypi.org/project/PyRbac/
+- https://github.com/cloudgen/OpenRbac
+- https://pypi.org/project/OpenRbac/
 - https://github.com/Wilgat/ChronicleLogger
 - https://github.com/cloudgen/ciao
 - https://github.com/cloudgen/ciao-lite
@@ -191,7 +191,7 @@ Linux is the primary host. The menu needs a terminal. The database client is PyM
 
 ## Contributing
 
-Open an issue or a pull request on https://github.com/cloudgen/PyRbac/issues. Do not send a database password or a session token in a public issue.
+Open an issue or a pull request on https://github.com/cloudgen/OpenRbac/issues. Do not send a database password or a session token in a public issue.
 
 ## License
 
@@ -199,4 +199,4 @@ MIT. Copyright (c) 2026 Wong Chun Fai, aka: Cloudgen (cloudgen.wong@gmail.com). 
 
 ## Last Update
 
-2026-10-11
+2026-10-14

@@ -6,7 +6,7 @@
 
 ## 1. Purpose
 
-Define Python coding style and defensive file I/O conventions for PyRbac: how agents and maintainers write Python so path, temp, and publish behavior stays safe across mounts, including USB, without duplicating domain or FFmpeg pipeline tables.
+Define Python coding style and defensive file I/O conventions for OpenRbac: how agents and maintainers write Python so path, temp, and publish behavior stays safe across mounts, including USB, without duplicating domain or FFmpeg pipeline tables.
 
 Pipeline-specific application of these rules is owned by `requirement-video-ffmpeg-pipeline`. The class map is owned by `requirement-python-oop`. The logger construct is owned by `requirement-python-cli-logging`.
 
@@ -28,7 +28,7 @@ Pipeline-specific application of these rules is owned by `requirement-video-ffmp
 
 | Surface | What you open | What for |
 |---------|---------------|----------|
-| `src/PyRbac/cli.py` | Running session today. `Cli` and `def main` in the end state | Entry |
+| `src/OpenRbac/cli.py` | Running session today. `Cli` and `def main` in the end state | Entry |
 | Class files named by `requirement-python-oop` | One class each, when an implement order lands them | The jobs that `cli.py` still holds |
 | Publish helper | `shutil.move` | Move the finished temp to the output name |
 
@@ -36,17 +36,17 @@ Pipeline-specific application of these rules is owned by `requirement-video-ffmp
 |---------|---------------|---------------|
 | Publish the finished file | Call `shutil.move`. Log that publish before the call, once the logger exists. | The join output name |
 | Add a behavior | Put it on the class in the map. Do not add a module-level function beside that class. | Edit that class file |
-| Import PyRbac | The import succeeds even when you only need `__version__`. It does not construct the logger. | `python -c "import PyRbac"` |
+| Import OpenRbac | The import succeeds even when you only need `__version__`. It does not construct the logger. | `python -c "import OpenRbac"` |
 
 ## 2. Core Rules (Mandatory)
 
 ### 2.1 General style (this product)
 
-1. **MUST** keep the installable package under `src/PyRbac/` with the module entry (`__main__` / console script → `cli.main`).
+1. **MUST** keep the installable package under `src/OpenRbac/` with the module entry (`__main__` / console script → `cli.main`).
 2. **MUST** cite only live `docs/requirements/requirement-*.md` keys in product-source law comments.
 3. **SHOULD** use a clear General Purpose docstring on each public method.
 4. **MUST** fail closed with a user-visible message on expected errors (missing FFmpeg, fewer than two videos, failed join).
-5. Importing the PyRbac package **MUST NOT** construct ChronicleLogger. The construct stays inside `def main` (`requirement-python-cli-logging`). **MUST NOT** re-export `ChronicleLogger`.
+5. Importing the OpenRbac package **MUST NOT** construct ChronicleLogger. The construct stays inside `def main` (`requirement-python-cli-logging`). **MUST NOT** re-export `ChronicleLogger`.
 6. The allowed end state is the class map in `requirement-python-oop`. The running tree is still the procedural session in `cli.py`, and that tree stays legal until an implement order lands the map. **MUST NOT** treat the procedural pile as the allowed end state. **MUST NOT** order a StateLogic + `Attr` rewrite. This file does not move the code.
 6a. The site that needs an object **MUST** write `ClassName(...)`. A function or a method whose job is to instantiate a class in that map is forbidden.
 
@@ -80,8 +80,8 @@ Log the temp write, the publish, and the discard of an unfinished temp before th
 
 | Item | Value |
 |------|--------|
-| **Package** | `PyRbac` |
-| **Running modules** | `src/PyRbac/cli.py`, `__main__.py`, `__init__.py` |
+| **Package** | `OpenRbac` |
+| **Running modules** | `src/OpenRbac/cli.py`, `__main__.py`, `__init__.py` |
 | **End-state modules** | Named by `requirement-python-oop`. Not on disk yet |
 | **Staging helpers** | `staging_dir_for`, `make_temp_path` (methods of `Join` in the end state) |
 | **Publish helper** | `shutil.move` |
@@ -157,7 +157,7 @@ On Termux, Git Bash, Windows cmd, or the same class, temps and the published fil
 |----------------|-------|--------|------|
 | **TP-FS-01** | `tests/test_fs_publish.py` | todo | Publish uses `shutil.move` |
 | **TP-FS-02** | `tests/test_fs_publish.py` | todo | Staging prefers the destination parent when it is writable |
-| **TP-PKG-01** | `tests/test_packaging.py` | todo | `import PyRbac` succeeds and does not construct ChronicleLogger |
+| **TP-PKG-01** | `tests/test_packaging.py` | todo | `import OpenRbac` succeeds and does not construct ChronicleLogger |
 | **TP-OOP-01** | `tests/test_oop.py` | todo | Peer: class map. Not landed |
 
 **Matrix:** `docs/reviews/requirement-test-matrix.md`
@@ -167,7 +167,7 @@ On Termux, Git Bash, Windows cmd, or the same class, temps and the published fil
 
 | Date | Status | Note |
 |------|--------|------|
-| 2026-08-09 | Active 1.0.0 | Coding style, `shutil.move`, and multi-mount file I/O for PyRbac |
+| 2026-08-09 | Active 1.0.0 | Coding style, `shutil.move`, and multi-mount file I/O for OpenRbac |
 | 2026-10-04 | Active 1.1.0 | Procedural `cli.py` is the running tree, not the allowed end state. The end state is `requirement-python-oop`. StateLogic stays unordered. Rules 7–15 are unchanged |
 | 2026-10-04 | Active 1.1.1 | Current version string is **1.0.5** |
 

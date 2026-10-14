@@ -1,5 +1,5 @@
 #!/bin/sh
-# PyRbac test runner. RBAC cases need MariaDB and pyrbac_test.
+# OpenRbac test runner. RBAC cases need MariaDB and openrbac_test.
 set -eu
 ROOT="$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"

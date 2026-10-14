@@ -90,7 +90,7 @@ class Access:
 
     def require(self, actor, perm):
         if actor is None:
-            self._fail("Sign in first.", "py-rbac login --user-name NAME --password SECRET")
+            self._fail("Sign in first.", "open-rbac login --user-name NAME --password SECRET")
         if not self.allows(actor["user_id"], perm):
             self._fail(
                 "Missing permission {0}.".format(perm),
@@ -138,7 +138,7 @@ class Access:
             self.audit.write_login(name, ipaddr, "1", "unknown account")
             self._fail(
                 "Unknown account or wrong password.",
-                "py-rbac login --user-name NAME --password SECRET",
+                "open-rbac login --user-name NAME --password SECRET",
             )
         if str(row["status"]) != "0":
             self.passwords.verify(password or "", self._dummy)
@@ -148,7 +148,7 @@ class Access:
             self.audit.write_login(name, ipaddr, "1", "wrong password")
             self._fail(
                 "Unknown account or wrong password.",
-                "py-rbac login --user-name NAME --password SECRET",
+                "open-rbac login --user-name NAME --password SECRET",
             )
         token = secrets.token_urlsafe(32)
         csrf = secrets.token_urlsafe(24)
@@ -239,7 +239,7 @@ class Access:
             (dept_id,),
         )
         if row is None:
-            self._fail("Unknown department {0}.".format(dept_id), "py-rbac dept-list")
+            self._fail("Unknown department {0}.".format(dept_id), "open-rbac dept-list")
 
     def _role_exists(self, role_id):
         row = self.store.query_one(
@@ -247,7 +247,7 @@ class Access:
             (role_id,),
         )
         if row is None:
-            self._fail("Unknown role {0}.".format(role_id), "py-rbac role-list")
+            self._fail("Unknown role {0}.".format(role_id), "open-rbac role-list")
 
     def init_password(self) -> str:
         row = self.store.query_one(
@@ -297,7 +297,7 @@ class Access:
         self.require(actor, "system:user:edit")
         user = self.user_by_id(user_id)
         if user is None:
-            self._fail("Unknown user {0}.".format(user_id), "py-rbac user-list")
+            self._fail("Unknown user {0}.".format(user_id), "open-rbac user-list")
         if int(user_id) == self.PROTECTED_USER and status is not None and str(status) != "0":
             self._fail("The built-in administrator stays enabled.", "leave status 0")
         if dept_id is not None:
@@ -333,7 +333,7 @@ class Access:
             self._fail("You cannot remove the account you are using.", "sign in as another administrator")
         user = self.user_by_id(user_id)
         if user is None:
-            self._fail("Unknown user {0}.".format(user_id), "py-rbac user-list")
+            self._fail("Unknown user {0}.".format(user_id), "open-rbac user-list")
         self.store.execute(
             """
             UPDATE sys_user
@@ -351,7 +351,7 @@ class Access:
         self.require(actor, "system:user:resetPwd")
         user = self.user_by_id(user_id)
         if user is None:
-            self._fail("Unknown user {0}.".format(user_id), "py-rbac user-list")
+            self._fail("Unknown user {0}.".format(user_id), "open-rbac user-list")
         if not password or len(password) < 5:
             self._fail("The password must be at least 5 characters.", "set --password")
         stored = self.passwords.hash(password)
@@ -397,7 +397,7 @@ class Access:
                 (int(item),),
             )
             if row is None:
-                self._fail("Unknown menu {0}.".format(item), "py-rbac menu-list")
+                self._fail("Unknown menu {0}.".format(item), "open-rbac menu-list")
             clean_menus.append(int(item))
         self.store.execute("DELETE FROM sys_role_menu WHERE role_id = %s", (role_id,))
         for menu_id in clean_menus:
@@ -459,7 +459,7 @@ class Access:
                 (int(parent_id),),
             )
             if parent is None:
-                self._fail("Unknown parent menu {0}.".format(parent_id), "py-rbac menu-list")
+                self._fail("Unknown parent menu {0}.".format(parent_id), "open-rbac menu-list")
         done = self.store.execute(
             """
             INSERT INTO sys_menu
@@ -499,7 +499,7 @@ class Access:
                 (int(parent_id),),
             )
             if parent is None:
-                self._fail("Unknown parent department {0}.".format(parent_id), "py-rbac dept-list")
+                self._fail("Unknown parent department {0}.".format(parent_id), "open-rbac dept-list")
             ancestors = "{0},{1}".format(parent["ancestors"], parent["dept_id"])
         done = self.store.execute(
             """

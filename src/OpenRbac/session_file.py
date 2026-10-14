@@ -1,6 +1,6 @@
 # =============================================================================
 # Terminal session token file.
-# requirement-environment — ~/.local/PyRbac/session mode 0600.
+# requirement-environment — ~/.local/OpenRbac/session mode 0600.
 # requirement-rbac — the token matches a sys_session row.
 # requirement-python-oop — class SessionFile.
 # =============================================================================

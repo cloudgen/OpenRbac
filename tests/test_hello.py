@@ -1,6 +1,6 @@
 # Front board and the typed gate.
 # Empty argv on a terminal opens the menu. Domain verbs do not.
-# The front board starts at access. hello, join, and list-videos are not verbs.
+# The front board starts at rbac. hello, join, and list-videos are not verbs.
 import os
 import sys
 import tempfile
@@ -11,11 +11,11 @@ _SRC = Path(__file__).resolve().parents[1] / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from PyRbac.cli import Cli
-from PyRbac.menu_model import MenuModel
-from PyRbac.menu_painter import MenuPainter
-from PyRbac.menu_session import MenuSession
-from PyRbac.tui import Tui
+from OpenRbac.cli import Cli
+from OpenRbac.menu_model import MenuModel
+from OpenRbac.menu_painter import MenuPainter
+from OpenRbac.menu_session import MenuSession
+from OpenRbac.tui import Tui
 
 
 class TestFrontBoard(unittest.TestCase):
@@ -44,40 +44,61 @@ class TestFrontBoard(unittest.TestCase):
             Cli.stdout_is_tty = staticmethod(previous)
 
     def test_front_rows_have_no_session(self):
-        home = tempfile.mkdtemp(prefix="pyrbac_menu_", dir="/tmp")
-        saved = os.environ.get("PYRBAC_LANG")
-        os.environ.pop("PYRBAC_LANG", None)
+        home = tempfile.mkdtemp(prefix="openrbac_menu_", dir="/tmp")
+        saved = os.environ.get("OPENRBAC_LANG")
+        os.environ.pop("OPENRBAC_LANG", None)
         try:
             painter = MenuPainter(home=home)
             rows = painter.rows_for("front")
             kinds = [row[3] for row in rows]
             self.assertNotIn("session", kinds)
-            self.assertEqual(rows[0], (2, "access", "users, roles, menus, departments, and posts", "access"))
-            self.assertEqual(rows[1][3], "system-log")
-            self.assertEqual(rows[2][3], "language")
-            self.assertEqual(rows[6][3], "self-management")
-            self.assertEqual(rows[7], (9, "Exit", "leave", "exit"))
-            self.assertEqual([row[0] for row in rows], [2, 3, 4, 5, 6, 7, 8, 9])
+            self.assertEqual(rows[0], (1, "rbac", "users, roles, menus, departments, and posts", "rbac"))
+            self.assertEqual(rows[1], (2, "server", "setup, audit, and the web listener", "server"))
+            self.assertEqual(rows[2][3], "system-log")
+            self.assertEqual(rows[3], (6, "self-management", "version, about, and pip lifecycle", "self-management"))
+            self.assertEqual(rows[4], (7, "language", "display language for this menu", "language"))
+            self.assertEqual(rows[5], (9, "Exit", "leave", "exit"))
+            self.assertEqual([row[0] for row in rows], [1, 2, 3, 6, 7, 9])
+            self.assertEqual(painter.rows_for("rbac")[0][0], 11)
+            self.assertEqual(painter.rows_for("rbac")[9][0], 110)
+            self.assertEqual([row[0] for row in painter.rows_for("server")], [21, 22, 23, 0])
+            self.assertEqual(painter.rows_for("setup")[-2], (218, "db-engine", "sqlite3 file or mysql", "db-engine"))
+            self.assertEqual(painter.rows_for("audit")[0][0], 221)
+            self.assertEqual(painter.rows_for("self")[0][0], 62)
             self.assertEqual(painter.rows_for("log")[0][0], 31)
-            self.assertEqual(painter.display_rows("lang")[0][0], 41)
+            self.assertEqual(painter.display_rows("lang")[0][0], 71)
             model = MenuModel(painter=painter)
             session = MenuSession(
-                "PyRbac",
+                "OpenRbac",
                 "1.0.1",
-                on_version=lambda: "PyRbac 1.0.1",
+                on_version=lambda: "OpenRbac 1.0.1",
                 on_about=lambda: "about",
                 painter=painter,
             )
             session.model = model
-            self.assertIsNone(session.model.apply_key(ord("1")))
+            self.assertIsNone(session.model.apply_key(ord("4")))
             self.assertIsNone(session.model.apply_key(10))
             self.assertEqual(model.layer, "front")
             self.assertIn("not on this list", model.error)
+            model.error = ""
+            self.assertIsNone(session.model.apply_key(ord("2")))
+            self.assertIsNone(session.model.apply_key(10))
+            self.assertEqual(model.layer, "server")
+            self.assertIsNone(session.model.apply_key(ord("2")))
+            self.assertIsNone(session.model.apply_key(ord("1")))
+            self.assertIsNone(session.model.apply_key(10))
+            self.assertEqual(model.layer, "setup")
+            self.assertIsNone(session.model.apply_key(ord("0")))
+            self.assertIsNone(session.model.apply_key(10))
+            self.assertEqual(model.layer, "server")
+            self.assertIsNone(session.model.apply_key(ord("0")))
+            self.assertIsNone(session.model.apply_key(10))
+            self.assertEqual(model.layer, "front")
         finally:
             if saved is None:
-                os.environ.pop("PYRBAC_LANG", None)
+                os.environ.pop("OPENRBAC_LANG", None)
             else:
-                os.environ["PYRBAC_LANG"] = saved
+                os.environ["OPENRBAC_LANG"] = saved
 
     def test_login_gate_asks_before_the_menu(self):
         class Desk:
@@ -105,8 +126,8 @@ class TestFrontBoard(unittest.TestCase):
             seen.append(list(lines))
             return answers.pop(0)
 
-        self.assertTrue(tui.login_gate(ask, state="seeded", database_name="pyrbac_test"))
-        self.assertIn("Database pyrbac_test: seeded.", seen[0])
+        self.assertTrue(tui.login_gate(ask, state="seeded", database_name="openrbac_test"))
+        self.assertIn("Database openrbac_test: seeded.", seen[0])
         self.assertIn("ERROR: Unknown account or wrong password.", seen[1])
         self.assertEqual(tui.app.desk.calls, [("admin", "nope"), ("admin", "admin123")])
         self.assertFalse(tui.login_gate(lambda lines: None, state="present"))

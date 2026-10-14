@@ -25,11 +25,11 @@ A successful terminal sign-in stores the account name and the password so the ne
 
 ## 2. Files
 
-Both files live in the home folder from `requirement-environment` (`PYRBAC_HOME`, otherwise `~/.local/PyRbac`).
+Both files live in the home folder from `requirement-environment` (`OPENRBAC_HOME`, otherwise `~/.local/OpenRbac`).
 
 | File | Contents |
 |------|----------|
-| `local-login` | Ciphertext. Four text lines: `PYRBACLOCAL1`, base64 nonce, base64 check, base64 ciphertext |
+| `local-login` | Ciphertext. Four text lines: `OPENRBACLOCAL1`, base64 nonce, base64 check, base64 ciphertext |
 | `local-login-key` | 32 random bytes used only to read `local-login` |
 
 The plaintext is two big-endian lengths and then the UTF-8 account name and password. Each length fits in 16 bits. The nonce is 16 random bytes. The stream and the check are both HMAC-SHA256, with different fixed labels, and the check is compared with `compare_digest`. The standard library is enough. No extra package is required.
