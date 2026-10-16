@@ -1,0 +1,26 @@
+/* OpenRbac skin: Apex.
+   requirement-html-theme.
+   This sheet sets shell colors for that name.
+   It is not a commercial template. Layout stays in /apex.css.
+   The primary is the product green. Brand controls read these tokens.
+*/
+:root {
+  --sidebar: #343a40;
+  --sidebar-foreground: #c2c7d0;
+  --sidebar-border: #343a40;
+  --header: #ffffff;
+  --header-foreground: #212529;
+  --header-border: #dee2e6;
+  --canvas: #f3f3f4;
+  --panel: #ffffff;
+  --primary: #1ab394;
+  --primary-foreground: #ffffff;
+  --background: #ffffff;
+  --foreground: #212529;
+  --card: #ffffff;
+  --muted: #f5f5f5;
+  --muted-foreground: #676a6c;
+  --border: #e7eaec;
+  --input: #e5e6e7;
+  --ring: #1ab394;
+}

@@ -29,3 +29,6 @@ open-rbac = "OpenRbac.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+OpenRbac = ["templates/*.vue", "element_plus/*.css", "element_plus/*.js", "element_plus/themes/*.css", "element_plus/LICENSE", "element_plus/icons/*.svg"]

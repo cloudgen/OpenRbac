@@ -1,0 +1,25 @@
+/* OpenRbac skin: Cryptocurrency.
+   requirement-html-theme.
+   This sheet sets shell colors for that name.
+   It is not a commercial template. Layout stays in /apex.css.
+*/
+:root {
+  --sidebar: #070b14;
+  --sidebar-foreground: #cbd5e1;
+  --sidebar-border: #1e293b;
+  --header: #0f172a;
+  --header-foreground: #f8fafc;
+  --header-border: #334155;
+  --canvas: #0b1220;
+  --panel: #111827;
+  --primary: #eab308;
+  --primary-foreground: #1c1917;
+  --background: #0b1220;
+  --foreground: #e2e8f0;
+  --card: #111827;
+  --muted: #1f2937;
+  --muted-foreground: #94a3b8;
+  --border: #334155;
+  --input: #334155;
+  --ring: #eab308;
+}

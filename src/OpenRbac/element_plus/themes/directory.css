@@ -1,0 +1,25 @@
+/* OpenRbac skin: Directory.
+   requirement-html-theme.
+   This sheet sets shell colors for that name.
+   It is not a commercial template. Layout stays in /apex.css.
+*/
+:root {
+  --sidebar: #3f2e22;
+  --sidebar-foreground: #f3e8dc;
+  --sidebar-border: #3f2e22;
+  --header: #fffdf8;
+  --header-foreground: #3f2e22;
+  --header-border: #e7d3c1;
+  --canvas: #faf7f2;
+  --panel: #fffdf8;
+  --primary: #9a3412;
+  --primary-foreground: #fff7ed;
+  --background: #faf7f2;
+  --foreground: #3f2e22;
+  --card: #fffdf8;
+  --muted: #f3e8dc;
+  --muted-foreground: #7c5c45;
+  --border: #e7d3c1;
+  --input: #d6bba3;
+  --ring: #9a3412;
+}

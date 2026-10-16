@@ -54,9 +54,9 @@ class ReportText:
             rows,
         )
 
-    def posts(self, rows) -> str:
+    def job_titles(self, rows) -> str:
         return self.table(
-            ("post_id", "post_code", "post_name", "post_sort", "status"),
+            ("job_title_id", "job_title_code", "job_title", "job_title_sort", "status"),
             rows,
         )
 

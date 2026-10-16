@@ -57,8 +57,11 @@
             </div>
           </div>
           <el-table :data="rows">
-            <el-table-column v-if="can_choose" label="Choose">
-              <input type="radio" name="user_id" :value="row.user_id">
+            <el-table-column v-if="can_choose">
+              <template #header>
+                <input class="table-check" type="checkbox" aria-label="check all">
+              </template>
+              <input class="table-check" type="checkbox" name="user_id" aria-label="Select row" :value="row.user_id">
             </el-table-column>
             <el-table-column label="User">
               <div class="user-person">

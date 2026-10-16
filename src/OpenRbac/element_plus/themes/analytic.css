@@ -1,0 +1,25 @@
+/* OpenRbac skin: Analytic.
+   requirement-html-theme.
+   This sheet sets shell colors for that name.
+   It is not a commercial template. Layout stays in /apex.css.
+*/
+:root {
+  --sidebar: #1e293b;
+  --sidebar-foreground: #e2e8f0;
+  --sidebar-border: #1e293b;
+  --header: #ffffff;
+  --header-foreground: #0f172a;
+  --header-border: #cbd5e1;
+  --canvas: #f1f5f9;
+  --panel: #ffffff;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --muted: #e2e8f0;
+  --muted-foreground: #475569;
+  --border: #cbd5e1;
+  --input: #94a3b8;
+  --ring: #2563eb;
+}

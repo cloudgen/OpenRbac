@@ -14,8 +14,8 @@ It is specialized from the HelloTui menu. The web pages are plain HTML. There is
 ## Features
 
 - A terminal with no arguments uses the sqlite3 default file. When a saved sign-in still matches, it opens the menu without asking again. Otherwise it asks for an account and a password.
-- Front board rows: 1 rbac, 2 server, 3 system-log, 6 self-management, 7 language, and 9 Exit. Server holds setup, audit, and serve. There is no session row. Exit asks before it leaves. Enter or y logs out. n keeps the saved sign-in. Esc stays.
-- The same user, role, menu, department, post, parameter, dictionary, notice, and audit actions on the menu, on the command line, and on the web page.
+- Front board rows: 1 rbac, 2 server, 3 system-log, 6 self-management, 7 language, and 9 Exit. Server holds setup, audit, serve, and theme. There is no session row. Exit asks before it leaves. Enter or y logs out. n keeps the saved sign-in. Esc stays.
+- The same user, role, menu, department, job title, parameter, dictionary, notice, and audit actions on the menu, on the command line, and on the web page.
 - Data scope 1 all, 2 custom departments, 3 this department, 4 this department and children. Any other scope shows no rows.
 - sqlite3 or MariaDB or MySQL. The default is the sqlite3 file `~/.local/OpenRbac/openrbac.sqlite3`. mysql uses the database `openrbac`.
 - ChronicleLogger for the status file. Passwords are not written there.
@@ -55,6 +55,13 @@ The first init prints `seeded`. A later init prints `present` and does not add a
 ```bash
 open-rbac db-engine --engine sqlite3
 open-rbac db-engine --engine mysql
+```
+
+`open-rbac theme` offers eleven skins. Choice 1 is Apex. Enter selects Apex. The other choices are Admindek, ArchitectUI, Adminty, Analytic, Cryptocurrency, Directory, Finance SaaS, Fiori, Hospital, and Kero. Server row 24 asks the same question. The choice is stored in `~/.local/OpenRbac/database` when that file is mode `0600`. `open-rbac theme` does not open the database. The listener reads that choice for every page. Every skin uses the Apex shell and `/apex.css`, then `/themes/<name>.css` for the colors. A choice stored while the listener is already running is the skin of the next page. The names are OpenRbac skins. They are not commercial dashboard stylesheets.
+
+```bash
+open-rbac theme --theme 1
+open-rbac theme --theme 2
 ```
 
 mysql reads the password from the environment or from `~/.local/OpenRbac/database` when that file is mode `0600`. The sqlite3 data file is also mode `0600`. The product mysql database is `openrbac`.
@@ -128,7 +135,7 @@ These pictures are the OpenRbac 1.0.5 text menu. The front board is 1 rbac, 2 se
 
 ![Access](https://raw.githubusercontent.com/cloudgen/OpenRbac/main/screenshots/access-menu.png)
 
-*Rbac: user-list through post-add. Back returns to the main menu.*
+*Rbac: user-list through job-title-add. Back returns to the main menu.*
 
 ![Setup](https://raw.githubusercontent.com/cloudgen/OpenRbac/main/screenshots/setup-menu.png)
 

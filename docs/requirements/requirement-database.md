@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-database.md
-**Status**: Active (Version 1.5.1)
+**Status**: Active (Version 1.6.2)
 **Area**: domain
 **Key**: `requirement-database`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -10,7 +10,7 @@ OpenRbac stores its RBAC tables in sqlite3 or in MariaDB or MySQL. The default i
 
 `user_name` is the login, and there is no password salt column. The password column is `VARCHAR(255)` because this product stores PBKDF2. Online sessions are `sys_session`. This product does not use Redis.
 
-This file is the structure. Who may see a department, and which menu string allows an action, stay on `requirement-rbac`.
+This file is the structure. Who may see a user row stays on `requirement-rbac`. The list and write actions for each record stay on `requirement-rbac-users`, `requirement-rbac-roles`, `requirement-rbac-menu`, `requirement-rbac-departments`, `requirement-rbac-job-titles`, `requirement-rbac-parameters`, `requirement-rbac-dictionaries`, and `requirement-rbac-notices`.
 
 ### 1.1 Human-facing
 
@@ -42,8 +42,8 @@ erDiagram
   sys_dept ||--o{ sys_dept : "parent_id"
   sys_user ||--o{ sys_user_role : "user_id"
   sys_role ||--o{ sys_user_role : "role_id"
-  sys_user ||--o{ sys_user_post : "user_id"
-  sys_post ||--o{ sys_user_post : "post_id"
+  sys_user ||--o{ sys_user_job_title : "user_id"
+  sys_job_title ||--o{ sys_user_job_title : "job_title_id"
   sys_role ||--o{ sys_role_menu : "role_id"
   sys_menu ||--o{ sys_role_menu : "menu_id"
   sys_menu ||--o{ sys_menu : "parent_id"
@@ -55,7 +55,7 @@ erDiagram
 
 `sys_oper_log` stores `dept_name` as text. `sys_logininfor` stores `user_name` as text. Neither log table points at an id.
 
-#### Departments, accounts, posts, roles, and menus
+#### Departments, accounts, job titles, roles, and menus
 
 `sys_dept` — one department. `parent_id` 0 is the root. `ancestors` is the comma-separated path of parent ids.
 
@@ -101,14 +101,14 @@ erDiagram
 | update_time | DATETIME | NULL |
 | remark | VARCHAR(500) | NULL |
 
-`sys_post` — a job title. It does not grant a permission.
+`sys_job_title` — a job title. It does not grant a permission. The list label is `Job Titles`. The add label is `add a job titles`. The compact permission token is `jobtitle`.
 
 | Column | Type | Key / default |
 |--------|------|----------------|
-| post_id | BIGINT NOT NULL AUTO_INCREMENT | PRIMARY KEY |
-| post_code | VARCHAR(64) NOT NULL | UNIQUE `uk_sys_post_code` |
-| post_name | VARCHAR(50) NOT NULL | |
-| post_sort | INT NOT NULL | no default |
+| job_title_id | BIGINT NOT NULL AUTO_INCREMENT | PRIMARY KEY |
+| job_title_code | VARCHAR(64) NOT NULL | UNIQUE `uk_sys_job_title_code` |
+| job_title | VARCHAR(50) NOT NULL | |
+| job_title_sort | INT NOT NULL | no default |
 | status | CHAR(1) NOT NULL | default `'0'` |
 | create_by | VARCHAR(64) NOT NULL | default `''` |
 | create_time | DATETIME | NULL |
@@ -167,7 +167,7 @@ Each link table is only the two ids. The pair is the primary key.
 | Table | Columns | Primary key |
 |-------|---------|-------------|
 | sys_user_role | user_id BIGINT NOT NULL, role_id BIGINT NOT NULL | (user_id, role_id) |
-| sys_user_post | user_id BIGINT NOT NULL, post_id BIGINT NOT NULL | (user_id, post_id) |
+| sys_user_job_title | user_id BIGINT NOT NULL, job_title_id BIGINT NOT NULL | (user_id, job_title_id) |
 | sys_role_menu | role_id BIGINT NOT NULL, menu_id BIGINT NOT NULL | (role_id, menu_id) |
 | sys_role_dept | role_id BIGINT NOT NULL, dept_id BIGINT NOT NULL | (role_id, dept_id) |
 
@@ -295,10 +295,10 @@ Each link table is only the two ids. The pair is the primary key.
 1. **Engine.** The engine **MUST** be `sqlite3` or `mysql`. An empty `OPENRBAC_DB_ENGINE` **MUST** mean sqlite3. The sqlite3 file **MUST** default to `openrbac.sqlite3` in the home folder from `requirement-environment`. `OPENRBAC_SQLITE_FILE` **MUST** replace that path when it is set. mysql **MUST** use the database named by `OPENRBAC_DB_NAME`. The default name is `openrbac`. mysql tests **MUST** set `openrbac_test`. The product **MUST NOT** open `ruoyi_db` or `ry` as its working database.
 2. **Privilege.** The mysql account **MUST** be limited to `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `CREATE`, `DROP`, `INDEX`, and `ALTER` on `openrbac` and `openrbac_test`. The sqlite3 file **MUST** be mode `0600`. A password **MUST** be required for mysql and **MUST NOT** be required for sqlite3.
 3. **Statements.** Every value **MUST** be a parameter. An error returned to the operator **MUST NOT** include the SQL text or the password.
-4. **Tables.** `db-init` **MUST** create `sys_dept`, `sys_user`, `sys_post`, `sys_role`, `sys_menu`, `sys_user_role`, `sys_role_menu`, `sys_role_dept`, `sys_user_post`, `sys_oper_log`, `sys_dict_type`, `sys_dict_data`, `sys_config`, `sys_logininfor`, `sys_notice`, and `sys_session` when they are missing.
+4. **Tables.** `db-init` **MUST** create `sys_dept`, `sys_user`, `sys_job_title`, `sys_role`, `sys_menu`, `sys_user_role`, `sys_role_menu`, `sys_role_dept`, `sys_user_job_title`, `sys_oper_log`, `sys_dict_type`, `sys_dict_data`, `sys_config`, `sys_logininfor`, `sys_notice`, and `sys_session` when they are missing.
 5. **Shape.** A mysql table created by `db-init` **MUST** use InnoDB and `utf8mb4` and **MUST** have the columns and keys in section 1.2. A sqlite3 table **MUST** have those columns and keys, with `INTEGER PRIMARY KEY AUTOINCREMENT` where section 1.2 says `AUTO_INCREMENT`, and **MUST NOT** declare an engine or a charset. `db-init` **MUST NOT** declare a foreign key. `db-init` **MUST NOT** change a table that already exists.
-6. **Seed once.** When `sys_user` has any row, `db-init` **MUST** return `present` and **MUST NOT** insert another admin. The first empty run **MUST** return `seeded`.
-7. **Automatic init.** The text menu, `serve`, and every domain verb **MUST** call the same init as `db-init` when the tables are missing or `sys_user` is empty. On the text menu that call **MUST** happen before the sign-in question and before a restored local sign-in. The menu **MUST** use sqlite3 and the default file for that call unless an engine is already stored. On a domain verb it **MUST** happen before the verb body. A later call **MUST** return `present` and **MUST NOT** insert another administrator. `help`, `version`, `about`, `db-engine`, and the pip verbs **MUST NOT** open the database. A connection failure **MUST** still name the settings to check. `db-init` **MUST** remain and **MUST** print `seeded` or `present`.
+6. **Seed once.** When `sys_user` has any row, `db-init` **MUST** return `present` and **MUST NOT** insert another admin. The first empty run **MUST** return `seeded`. When that present database has an empty `sys_job_title` and a `sys_post` table with rows, `db-init` **MUST** copy each post into `sys_job_title`. `post_id` becomes `job_title_id`, `post_code` becomes `job_title_code`, `post_name` becomes `job_title`, and `post_sort` becomes `job_title_sort`. `status`, `create_by`, `create_time`, `update_by`, `update_time`, and `remark` keep their values. When `sys_user_job_title` is empty, `sys_job_title` has rows, and `sys_user_post` exists, the same call **MUST** copy `user_id` and `post_id` into `sys_user_job_title` as `user_id` and `job_title_id`. A later call **MUST NOT** insert those rows again. `db-init` **MUST NOT** drop or rename `sys_post`.
+7. **Automatic init.** The text menu, `serve`, and every domain verb **MUST** call the same init as `db-init` when the tables are missing or `sys_user` is empty. On the text menu that call **MUST** happen before the sign-in question and before a restored local sign-in. The menu **MUST** use sqlite3 and the default file for that call unless an engine is already stored. On a domain verb it **MUST** happen before the verb body. A later call **MUST** return `present` and **MUST NOT** insert another administrator. `help`, `version`, `about`, `db-engine`, `theme`, and the pip verbs **MUST NOT** open the database. A connection failure **MUST** still name the settings to check. `db-init` **MUST** remain and **MUST** print `seeded` or `present`.
 8. **Choice.** The command `db-engine`, setup row 218, the web sign-in page, and the signed-in Database page **MUST** each offer choice 1 sqlite3, including the default file path, and choice 2 mysql. An empty choice **MUST** select sqlite3 and the default file. When the environment sets an engine, an empty choice **MUST** keep that engine. The text menu before sign-in **MUST NOT** ask for this choice. The environment **MUST** win over the mode-0600 file. A web sign-in from a non-loopback address **MUST NOT** switch the engine. The web sign-in page **MUST** have sqlite3 selected when that is the current engine.
 
 ## 3. Acceptance checks
@@ -311,6 +311,7 @@ Each link table is only the two ids. The pair is the primary key.
 | AC-4 | A domain verb on a database with no tables seeds once, then continues |
 | AC-5 | Choice 1 selects the default sqlite3 file and choice 2 selects mysql |
 | AC-6 | The sqlite3 file is mode 0600 |
+| AC-7 | A present database with an empty `sys_job_title` and rows in `sys_post` copies `post_code` to `job_title_code` and `post_name` to `job_title`. A second `db-init` does not insert them again |
 
 ## Terminologies
 
@@ -334,6 +335,10 @@ Each link table is only the two ids. The pair is the primary key.
 | 2026-10-11 | Active 1.4.0 | Sign-in uses the sqlite3 default file. Enter on `db-engine` selects it |
 | 2026-10-11 | Active 1.5.0 | Init still happens before a restored local sign-in |
 | 2026-10-14 | Active 1.5.1 | The menu engine choice is setup row 218 |
+| 2026-10-14 | Active 1.5.2 | Record actions are named on the eight RBAC record files |
+| 2026-10-14 | Active 1.6.0 | The job title table is `sys_job_title`. Columns are `job_title_id`, `job_title_code`, and `job_title` |
+| 2026-10-14 | Active 1.6.1 | `theme` does not open the database |
+| 2026-10-14 | Active 1.6.2 | An empty `sys_job_title` is filled from `sys_post` under the new column names |
 
 ---
 

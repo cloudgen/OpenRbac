@@ -48,6 +48,7 @@ class Cli:
         "serve",
         "db-init",
         "db-engine",
+        "theme",
         "user-list",
         "user-add",
         "user-edit",
@@ -59,8 +60,8 @@ class Cli:
         "menu-add",
         "dept-list",
         "dept-add",
-        "post-list",
-        "post-add",
+        "job-title-list",
+        "job-title-add",
         "config-list",
         "config-set",
         "config-add",
@@ -96,8 +97,8 @@ class Cli:
         "menu-add",
         "dept-list",
         "dept-add",
-        "post-list",
-        "post-add",
+        "job-title-list",
+        "job-title-add",
         "config-list",
         "config-set",
         "config-add",
@@ -216,6 +217,8 @@ class Cli:
                 "Enter there logs out. n keeps the saved sign-in. db-engine:\n"
                 "Enter selects sqlite3 and that file. 2 selects mysql.\n"
                 "db-engine does not open the database.\n"
+                "theme: Enter selects apex. A number or a name selects that skin.\n"
+                "theme does not open the database.\n"
                 "With no arguments and no terminal, prints this help and stops.\n"
                 "Product verbs: {1}.\n"
                 "The text menu has no session row. Row 7 serve starts the site.\n"
@@ -266,8 +269,8 @@ class Cli:
         parser.add_argument("--menu-type", default="", help="M directory, C page, F button.")
         parser.add_argument("--perms", default="")
         parser.add_argument("--path", default="")
-        parser.add_argument("--post-code", default="")
-        parser.add_argument("--post-name", default="")
+        parser.add_argument("--job-title-code", default="")
+        parser.add_argument("--job-title", default="")
         parser.add_argument("--dept-name", default="")
         parser.add_argument("--config-key", default="")
         parser.add_argument("--config-name", default="")
@@ -283,6 +286,11 @@ class Cli:
             "--engine",
             default="",
             help="For db-engine: sqlite3 (the default file) or mysql.",
+        )
+        parser.add_argument(
+            "--theme",
+            default="",
+            help="For theme: 1 apex, or another skin name.",
         )
         return parser
 
@@ -325,6 +333,8 @@ class Cli:
             return self._verb_serve()
         if verb == "db-engine":
             return self._verb_engine(args)
+        if verb == "theme":
+            return self._verb_theme(args)
         if verb in Cli.DOMAIN_VERBS:
             return self._verb_domain(verb, args)
         if verb is not None:
@@ -388,6 +398,33 @@ class Cli:
             return 0
         try:
             print(settings.apply_choice(picked))
+        except SettingsError as exc:
+            return self.report_error(str(exc), exc.nxt)
+        return 0
+
+    def _verb_theme(self, args):
+        """Choose a skin. This verb does not open the database."""
+        settings = self.desk.settings
+        if args.theme:
+            try:
+                print(settings.apply_theme(args.theme))
+            except SettingsError as exc:
+                return self.report_error(str(exc), exc.nxt)
+            return 0
+        try:
+            lines = settings.theme_lines()
+        except SettingsError as exc:
+            return self.report_error(str(exc), exc.nxt)
+        for line in lines:
+            print(line)
+        if not Cli.stdout_is_tty():
+            return 0
+        try:
+            picked = input("Choice [apex]: ")
+        except EOFError:
+            return 0
+        try:
+            print(settings.apply_theme(picked))
         except SettingsError as exc:
             return self.report_error(str(exc), exc.nxt)
         return 0

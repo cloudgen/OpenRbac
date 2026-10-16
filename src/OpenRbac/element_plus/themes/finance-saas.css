@@ -1,0 +1,25 @@
+/* OpenRbac skin: Finance SaaS.
+   requirement-html-theme.
+   This sheet sets shell colors for that name.
+   It is not a commercial template. Layout stays in /apex.css.
+*/
+:root {
+  --sidebar: #064e3b;
+  --sidebar-foreground: #d1fae5;
+  --sidebar-border: #064e3b;
+  --header: #ffffff;
+  --header-foreground: #064e3b;
+  --header-border: #a7f3d0;
+  --canvas: #ecfdf5;
+  --panel: #ffffff;
+  --primary: #047857;
+  --primary-foreground: #ffffff;
+  --background: #f0fdf4;
+  --foreground: #064e3b;
+  --card: #ffffff;
+  --muted: #d1fae5;
+  --muted-foreground: #065f46;
+  --border: #a7f3d0;
+  --input: #6ee7b7;
+  --ring: #047857;
+}

@@ -195,7 +195,7 @@ class TestWideColumns(unittest.TestCase):
 
             expected = {
                 "zh-Hans": [
-                    "1. rbac    : users, roles, menus, departments, and posts",
+                    "1. rbac    : users, roles, menus, departments, and job titles",
                     "2. server  : setup, audit, and the web listener",
                     "3. 系统日志: 查看、清空，以及日志文件夹",
                     "6. 自我管理: 版本、关于，以及 pip 生命周期",
@@ -203,7 +203,7 @@ class TestWideColumns(unittest.TestCase):
                     "9. 离开    : 离开",
                 ],
                 "zh-Hant": [
-                    "1. rbac    : users, roles, menus, departments, and posts",
+                    "1. rbac    : users, roles, menus, departments, and job titles",
                     "2. server  : setup, audit, and the web listener",
                     "3. 系統日誌: 查看、清空，以及日誌資料夾",
                     "6. 自我管理: 版本、關於，以及 pip 生命週期",
@@ -211,7 +211,7 @@ class TestWideColumns(unittest.TestCase):
                     "9. 離開    : 離開",
                 ],
                 "ko": [
-                    "1. rbac       : users, roles, menus, departments, and posts",
+                    "1. rbac       : users, roles, menus, departments, and job titles",
                     "2. server     : setup, audit, and the web listener",
                     "3. 시스템 로그: 보기, 비우기, 로그 폴더",
                     "6. 자기관리   : 버전, 정보, pip 수명 주기",
@@ -219,7 +219,7 @@ class TestWideColumns(unittest.TestCase):
                     "9. 종료       : 종료",
                 ],
                 "ja": [
-                    "1. rbac        : users, roles, menus, departments, and posts",
+                    "1. rbac        : users, roles, menus, departments, and job titles",
                     "2. server      : setup, audit, and the web listener",
                     "3. システムログ: 表示、消去、ログフォルダ",
                     "6. 自己管理    : バージョン、概要、pip のライフサイクル",

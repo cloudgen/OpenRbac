@@ -95,7 +95,7 @@ class MenuPainter:
     MIN_HEIGHT = MIN_MENU_ABOVE + CHROME_ROWS
     MIN_PLACEABLE = 2 + len(" " + INPUT_MARK) + 1
     MENU_ROWS = (
-        (1, "rbac", "users, roles, menus, departments, and posts", "rbac"),
+        (1, "rbac", "users, roles, menus, departments, and job titles", "rbac"),
         (2, "server", "setup, audit, and the web listener", "server"),
         (3, "system-log", "view, clear, and the log folder", "system-log"),
         (6, "self-management", "version, about, and pip lifecycle", "self-management"),
@@ -114,14 +114,15 @@ class MenuPainter:
         (19, "menu-add", "add a directory, page, or button", "menu-add"),
         (110, "dept-list", "departments", "dept-list"),
         (111, "dept-add", "add a department", "dept-add"),
-        (112, "post-list", "posts", "post-list"),
-        (113, "post-add", "add a post", "post-add"),
+        (112, "job-title-list", "Job Titles", "job-title-list"),
+        (113, "job-title-add", "add a job titles", "job-title-add"),
         (0, "Back", "return to the main menu", "back"),
     )
     SERVER_ROWS = (
         (21, "setup", "parameters, dictionaries, and notices", "setup"),
         (22, "audit", "operation log, login log, and online users", "audit"),
         (23, "serve", "start the web interface on this computer", "serve"),
+        (24, "theme", "11 skins, default apex", "theme"),
         (0, "Back", "return to the main menu", "back"),
     )
     SETUP_ROWS = (
@@ -190,8 +191,8 @@ class MenuPainter:
         "menu-add": "menu-add",
         "dept-list": "dept-list",
         "dept-add": "dept-add",
-        "post-list": "post-list",
-        "post-add": "post-add",
+        "job-title-list": "job-title-list",
+        "job-title-add": "job-title-add",
         "config-list": "config-list",
         "config-set": "config-set",
         "config-add": "config-add",
@@ -200,6 +201,7 @@ class MenuPainter:
         "notice-list": "notice-list",
         "notice-add": "notice-add",
         "db-engine": "db-engine",
+        "theme": "theme",
         "oper-log": "oper-log",
         "login-log": "login-log",
         "online-list": "online-list",

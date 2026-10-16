@@ -1,0 +1,25 @@
+/* OpenRbac skin: Admindek.
+   requirement-html-theme.
+   This sheet sets shell colors for that name.
+   It is not a commercial template. Layout stays in /apex.css.
+*/
+:root {
+  --sidebar: #1e1b4b;
+  --sidebar-foreground: #e0e7ff;
+  --sidebar-border: #312e81;
+  --header: #ffffff;
+  --header-foreground: #1e1b4b;
+  --header-border: #e0e7ff;
+  --canvas: #eef2ff;
+  --panel: #ffffff;
+  --primary: #4f46e5;
+  --primary-foreground: #ffffff;
+  --background: #f4f6fb;
+  --foreground: #1e1b4b;
+  --card: #ffffff;
+  --muted: #eef2ff;
+  --muted-foreground: #4338ca;
+  --border: #e0e7ff;
+  --input: #c7d2fe;
+  --ring: #4f46e5;
+}

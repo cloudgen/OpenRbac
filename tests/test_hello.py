@@ -52,7 +52,7 @@ class TestFrontBoard(unittest.TestCase):
             rows = painter.rows_for("front")
             kinds = [row[3] for row in rows]
             self.assertNotIn("session", kinds)
-            self.assertEqual(rows[0], (1, "rbac", "users, roles, menus, departments, and posts", "rbac"))
+            self.assertEqual(rows[0], (1, "rbac", "users, roles, menus, departments, and job titles", "rbac"))
             self.assertEqual(rows[1], (2, "server", "setup, audit, and the web listener", "server"))
             self.assertEqual(rows[2][3], "system-log")
             self.assertEqual(rows[3], (6, "self-management", "version, about, and pip lifecycle", "self-management"))
@@ -61,7 +61,8 @@ class TestFrontBoard(unittest.TestCase):
             self.assertEqual([row[0] for row in rows], [1, 2, 3, 6, 7, 9])
             self.assertEqual(painter.rows_for("rbac")[0][0], 11)
             self.assertEqual(painter.rows_for("rbac")[9][0], 110)
-            self.assertEqual([row[0] for row in painter.rows_for("server")], [21, 22, 23, 0])
+            self.assertEqual([row[0] for row in painter.rows_for("server")], [21, 22, 23, 24, 0])
+            self.assertEqual(painter.rows_for("server")[-2], (24, "theme", "11 skins, default apex", "theme"))
             self.assertEqual(painter.rows_for("setup")[-2], (218, "db-engine", "sqlite3 file or mysql", "db-engine"))
             self.assertEqual(painter.rows_for("audit")[0][0], 221)
             self.assertEqual(painter.rows_for("self")[0][0], 62)

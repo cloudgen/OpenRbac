@@ -56,7 +56,8 @@ class AuditLog:
         """General Purpose: Newest login rows."""
         return self.store.query_all(
             """
-            SELECT info_id, user_name, ipaddr, status, msg, login_time
+            SELECT info_id, user_name, ipaddr, login_location, browser, os,
+                   status, msg, login_time
             FROM sys_logininfor
             ORDER BY info_id DESC
             LIMIT %s

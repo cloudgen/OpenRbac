@@ -1,6 +1,7 @@
 # =============================================================================
 # Centralized parameters, dictionaries, and notices.
 # requirement-domain-openrbac — setup surface.
+# requirement-rbac-parameters, requirement-rbac-dictionaries, requirement-rbac-notices.
 # requirement-python-oop — class Catalog.
 # =============================================================================
 from __future__ import annotations
@@ -26,10 +27,16 @@ class Catalog:
         raise AccessError(message, nxt, logger=self.logger)
 
     def config_list(self, actor):
+        """General Purpose: Every parameter, oldest id first.
+
+        requirement-rbac-parameters — the text report keeps four columns.
+        The page also reads id, remark, and create time.
+        """
         self.access.require(actor, "system:config:list")
         return self.store.query_all(
             """
-            SELECT config_key, config_name, config_value, config_type
+            SELECT config_id, config_name, config_key, config_value, config_type,
+                   remark, create_time
             FROM sys_config
             ORDER BY config_id
             """
@@ -112,6 +119,20 @@ class Catalog:
         )
         self.audit.write_oper(actor, "Dictionary", 1, "dict_add", param=dict_type)
         return label
+
+    def dict_type_list(self, actor):
+        """General Purpose: Every dictionary type for the page.
+
+        requirement-rbac-dictionaries — the page read. It does not insert a type.
+        """
+        self.access.require(actor, "system:dict:list")
+        return self.store.query_all(
+            """
+            SELECT dict_id, dict_name, dict_type, status, remark, create_time
+            FROM sys_dict_type
+            ORDER BY dict_id
+            """
+        )
 
     def notice_list(self, actor):
         self.access.require(actor, "system:notice:list")

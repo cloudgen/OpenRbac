@@ -1,0 +1,25 @@
+/* OpenRbac skin: Kero.
+   requirement-html-theme.
+   This sheet sets shell colors for that name.
+   It is not a commercial template. Layout stays in /apex.css.
+*/
+:root {
+  --sidebar: #3b0764;
+  --sidebar-foreground: #f3e8ff;
+  --sidebar-border: #3b0764;
+  --header: #ffffff;
+  --header-foreground: #3b0764;
+  --header-border: #e9d5ff;
+  --canvas: #faf5ff;
+  --panel: #ffffff;
+  --primary: #a21caf;
+  --primary-foreground: #ffffff;
+  --background: #faf5ff;
+  --foreground: #3b0764;
+  --card: #ffffff;
+  --muted: #f3e8ff;
+  --muted-foreground: #7e22ce;
+  --border: #e9d5ff;
+  --input: #d8b4fe;
+  --ring: #a21caf;
+}

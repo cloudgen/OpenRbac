@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-python-cli-interface.md
-**Status**: Active (Version 1.5.1)
+**Status**: Active (Version 1.5.5)
 **Area**: python
 **Key**: `requirement-python-cli-interface`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -22,9 +22,9 @@
 
 Lifecycle: `help`, `version`, `about`, `self-install`, `version-check`, `self-update`, `self-uninstall`.
 
-Settings: `db-engine`. It prints choice 1 sqlite3, including the default file, and choice 2 mysql. Enter selects sqlite3 and that file. `--engine sqlite3` or `--engine mysql` stores the choice. With no `--engine` and no terminal it prints the choices and does not ask. It does not open the database.
+Settings: `db-engine` and `theme`. `db-engine` prints choice 1 sqlite3, including the default file, and choice 2 mysql. Enter selects sqlite3 and that file. `--engine sqlite3` or `--engine mysql` stores the choice. With no `--engine` and no terminal it prints the choices and does not ask. It does not open the database. `theme` prints choices 1 through 11. Enter selects apex. `--theme` accepts a number or a skin name from `requirement-html-theme`. With no `--theme` and no terminal it prints the choices and does not ask. It does not open the database.
 
-Domain: `login`, `logout`, `whoami`, `serve`, `db-init`, `user-list`, `user-add`, `user-edit`, `user-remove`, `user-reset-password`, `role-list`, `role-grant`, `menu-list`, `menu-add`, `dept-list`, `dept-add`, `post-list`, `post-add`, `config-list`, `config-set`, `config-add`, `dict-list`, `dict-add`, `notice-list`, `notice-add`, `oper-log`, `login-log`, `online-list`, `online-logout`.
+Domain: `login`, `logout`, `whoami`, `serve`, `db-init`, `user-list`, `user-add`, `user-edit`, `user-remove`, `user-reset-password`, `role-list`, `role-grant`, `menu-list`, `menu-add`, `dept-list`, `dept-add`, `job-title-list`, `job-title-add`, `config-list`, `config-set`, `config-add`, `dict-list`, `dict-add`, `notice-list`, `notice-add`, `oper-log`, `login-log`, `online-list`, `online-logout`.
 
 `language` is not a verb. `hello`, `join`, and `list-videos` are not verbs.
 
@@ -37,6 +37,7 @@ Domain: `login`, `logout`, `whoami`, `serve`, `db-init`, `user-list`, `user-add`
 5. **Password flag.** `--password` is allowed for a non-interactive test. Help **MUST** say that the process list can show it. The sign-in question and every later password question **MUST** ask one field at a time and mask the password.
 6. **Serve.** The verb `serve` **MUST** print the URL and block. Server row 23 **MUST** use the background listener.
 7. **Identity.** The program name is `OpenRbac`. The console script is `open-rbac`. The basic usage line is `open-rbac login --user-name admin`.
+8. **Theme verb.** `theme` **MUST** offer the eleven choices in `requirement-html-theme`. Choice 1 **MUST** be apex. `--theme` **MUST** accept a number from 1 to 11 or one of those names. A terminal with no `--theme` **MUST** accept Enter as apex. When the environment already sets a theme, Enter **MUST** keep that theme. No terminal and no `--theme` **MUST** print the choices and return 0. This verb **MUST NOT** open the database. Server row 24 **MUST** ask the same question. The stored choice **MUST** be the skin the listener renders (`requirement-html-theme`).
 
 ## 4. Acceptance checks
 
@@ -46,6 +47,7 @@ Domain: `login`, `logout`, `whoami`, `serve`, `db-init`, `user-list`, `user-add`
 | AC-4 | `db-engine` prints sqlite3, the default file, and mysql, and does not create the sqlite3 file |
 | AC-2 | `hello` is not a product verb |
 | AC-3 | A domain failure prints ERROR and Next |
+| AC-5 | `theme` prints apex and the other skins, stores the number, and does not create the sqlite3 file |
 
 ## Terminologies
 
@@ -66,9 +68,13 @@ Domain: `login`, `logout`, `whoami`, `serve`, `db-init`, `user-list`, `user-add`
 | 2026-10-11 | Active 1.4.0 | Empty argv uses the sqlite3 default file. Enter on `db-engine` selects it |
 | 2026-10-11 | Active 1.5.0 | A matching saved sign-in opens the menu without a question |
 | 2026-10-14 | Active 1.5.1 | The background listener is server row 23 |
+| 2026-10-14 | Active 1.5.2 | Job title verbs are `job-title-list` and `job-title-add` |
+| 2026-10-14 | Active 1.5.3 | `theme` chooses vue3 or adminlte and does not open the database |
+| 2026-10-14 | Active 1.5.4 | The stored choice is the skin the listener renders |
+| 2026-10-16 | Active 1.5.5 | `theme` chooses apex or one of the other ten skins |
 
 ---
 
-**Last Updated**: 2026-10-14
+**Last Updated**: 2026-10-16
 **Owner**: project maintainers
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

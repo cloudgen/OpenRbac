@@ -178,6 +178,8 @@ class Desk:
         """General Purpose: Run one domain verb and return the text to show."""
         if verb == "db-engine":
             return self.settings.apply_choice(self._optional(options, "engine"))
+        if verb == "theme":
+            return self.settings.apply_theme(self._optional(options, "theme"))
         if verb == "db-init":
             return self.db_init()
         self.ensure_database()
@@ -270,15 +272,15 @@ class Desk:
                 self._int(self._need(options, "parent_id", "set --parent-id"), "parent-id"),
             )
             return "Added department {0}.".format(dept_id)
-        if verb == "post-list":
-            return self.report.posts(self.access.post_list(actor))
-        if verb == "post-add":
-            post_id = self.access.post_add(
+        if verb == "job-title-list":
+            return self.report.job_titles(self.access.job_title_list(actor))
+        if verb == "job-title-add":
+            job_title_id = self.access.job_title_add(
                 actor,
-                self._need(options, "post_code", "set --post-code"),
-                self._need(options, "post_name", "set --post-name"),
+                self._need(options, "job_title_code", "set --job-title-code"),
+                self._need(options, "job_title", "set --job-title"),
             )
-            return "Added post {0}.".format(post_id)
+            return "Added job title {0}.".format(job_title_id)
         if verb == "config-list":
             return self.report.configs(self.catalog.config_list(actor))
         if verb == "config-set":

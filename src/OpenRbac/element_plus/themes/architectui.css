@@ -1,0 +1,25 @@
+/* OpenRbac skin: ArchitectUI.
+   requirement-html-theme.
+   This sheet sets shell colors for that name.
+   It is not a commercial template. Layout stays in /apex.css.
+*/
+:root {
+  --sidebar: #0f2744;
+  --sidebar-foreground: #d6e2f0;
+  --sidebar-border: #0f2744;
+  --header: #ffffff;
+  --header-foreground: #0f2744;
+  --header-border: #e8d7b0;
+  --canvas: #f7f5f2;
+  --panel: #ffffff;
+  --primary: #d97706;
+  --primary-foreground: #1c1917;
+  --background: #f7f5f2;
+  --foreground: #1c1917;
+  --card: #ffffff;
+  --muted: #f3ece3;
+  --muted-foreground: #78716c;
+  --border: #e7e5e4;
+  --input: #d6d3d1;
+  --ring: #d97706;
+}

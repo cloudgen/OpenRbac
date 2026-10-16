@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-rbac.md
-**Status**: Active (Version 1.3.0)
+**Status**: Active (Version 1.4.5)
 **Area**: domain
 **Key**: `requirement-rbac`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -11,6 +11,19 @@ This file is the RBAC system. It stands on its own: the path from a surface to a
 The scope numbers are 1 all, 2 custom departments, 3 this department, and 4 this department and children. Scope 5 is not granted. An unknown scope contributes no rows.
 
 Bind names, cookie flags, and `CREATE TABLE` text stay on their peer files. This file still names those boxes so the map can be read here.
+
+Each record has its own file. Those files own the verbs, the permission strings, the validation sentences, and the page for that record. This file keeps the two checks, the seed, and the protected rows.
+
+| Record | File |
+|--------|------|
+| Users | `requirement-rbac-users` |
+| Roles | `requirement-rbac-roles` |
+| Menus | `requirement-rbac-menu` |
+| Departments | `requirement-rbac-departments` |
+| Job Titles | `requirement-rbac-job-titles` |
+| Parameters | `requirement-rbac-parameters` |
+| Dictionaries | `requirement-rbac-dictionaries` |
+| Notices | `requirement-rbac-notices` |
 
 ### 1.1 Human-facing
 
@@ -57,7 +70,7 @@ flowchart TB
   subgraph desk [Desk]
     SET["Settings<br/>OPENRBAC_DB_* and bind"]
     SESS["SessionFile<br/>session file mode 0600"]
-    ACC["Access<br/>users, roles, menus, depts, posts"]
+    ACC["Access<br/>users, roles, menus, depts, job titles"]
     CAT["Catalog<br/>parameters, dictionaries, notices"]
     AUD["AuditLog<br/>login, operation, online session"]
     SCH["Schema<br/>db-init and one-time seed"]
@@ -107,7 +120,7 @@ Scope 4 matches the account's department and departments whose `ancestors` conta
 
 ### 1.4 Records
 
-A permission string is `sys_menu.perms`. The account reaches it through its roles. Data scope is `sys_role.data_scope`. Posts name a job. They do not grant a permission string and they do not widen data scope.
+A permission string is `sys_menu.perms`. The account reaches it through its roles. Data scope is `sys_role.data_scope`. Job titles name a job. They do not grant a permission string and they do not widen data scope.
 
 ```mermaid
 flowchart LR
@@ -118,11 +131,11 @@ flowchart LR
   R --> RD["sys_role_dept<br/>scope 2 only"]
   U --> D["sys_dept"]
   RD --> D
-  U --> UP["sys_user_post"]
-  UP --> P["sys_post"]
+  U --> UP["sys_user_job_title"]
+  UP --> P["sys_job_title"]
 ```
 
-Login attempts, successful and failed, are `sys_logininfor`. A mutation is `sys_oper_log`. The online token is `sys_session`. The table list is `requirement-database`.
+Login attempts, successful and failed, are `sys_logininfor`. A mutation is `sys_oper_log`. The online token is `sys_session`. The table list is `requirement-database`. The operation log page layout is `requirement-html-oper-log`. The `oper-log` text report stays `oper_id`, `title`, `business_type`, `oper_name`, `status`, and `oper_time`. The login log page layout is `requirement-html-login-log`. The `login-log` text report stays `info_id`, `user_name`, `ipaddr`, `status`, `msg`, and `login_time`. The online page layout is `requirement-html-online`. The `online-list` text report stays `token`, `user_name`, `ipaddr`, `surface`, and `login_time`.
 
 ### 1.5 Seeded organization
 
@@ -142,7 +155,7 @@ Group (100)
 | clerk | Platform (103) | Common | common | 3 this department | Platform only |
 | lead | Engineering (101) | Lead | lead | 4 this department and children | Engineering and Platform |
 
-Common menus are system, user list, user query, setup, parameter list, notice list, audit, operation log, and login log. They do not include user add, parameter edit, or force logout. Lead menus are system, user list, and user query. The administrator role receives every seeded menu.
+Common menus are system, user list, user query, setup, parameter list, notice list, audit, operation log, and login log. They do not include user add, user import, user export, parameter edit, or force logout. Lead menus are system, user list, and user query. The administrator role receives every seeded menu.
 
 ## 2. Normative rules
 
@@ -152,7 +165,7 @@ Common menus are system, user list, user query, setup, parameter list, notice li
 4. **Names.** A new `user_name` **MUST** match `^[A-Za-z][A-Za-z0-9_]{2,29}$`.
 5. **Passwords.** Stored passwords **MUST** use `pbkdf2_sha256$iterations$salt$hash` with 260000 iterations. Comparison **MUST** use `hmac.compare_digest`. An unknown account **MUST** still run a dummy verify. The product **MUST NOT** log a password.
 6. **Protected rows.** User 1 **MUST NOT** be removed or disabled. Role 1 **MUST NOT** be granted a different scope or menu set through `role-grant`. The signed-in account **MUST NOT** remove itself.
-7. **Seed.** When `sys_user` is empty, the init used by `db-init` and by a menu, serve, or domain verb **MUST** create admin (department 101, role admin, password `admin123`), operator (department 102, role common, scope 3, password `operator123`), clerk (department 103, role common, password `clerk123`), and lead (department 101, role lead, scope 4, password `lead123`). Common menus include user list and query, parameter list, notice list, operation log, and login log. They **MUST NOT** include user add, parameter edit, or force logout. Lead menus are system, user list, and user query.
+7. **Seed.** When `sys_user` is empty, the init used by `db-init` and by a menu, serve, or domain verb **MUST** create admin (department 101, role admin, password `admin123`), operator (department 102, role common, scope 3, password `operator123`), clerk (department 103, role common, password `clerk123`), and lead (department 101, role lead, scope 4, password `lead123`). Common menus include user list and query, parameter list, notice list, operation log, and login log. They **MUST NOT** include user add, user import, user export, parameter edit, or force logout. Lead menus are system, user list, and user query.
 8. **Audit.** A failed and a successful login **MUST** write `sys_logininfor`. A mutation **MUST** write `sys_oper_log`. The operation parameter **MUST NOT** be a password.
 9. **One path.** The text menu, a typed verb, and a web page for the same action **MUST** call the same `Access` or `Catalog` method. The permission check **MUST** be `Access.require`. A surface **MUST NOT** keep a second allow-list.
 10. **Session token.** The terminal session file and the web cookie **MUST** name a `sys_session` row. A missing user, a disabled user, or a token with no row **MUST** be treated as signed out.
@@ -187,9 +200,15 @@ Common menus are system, user list, user query, setup, parameter list, notice li
 | 2026-10-11 | Active 1.1.0 | System map, records, seeded organization, one permission path |
 | 2026-10-11 | Active 1.2.0 | The same seed runs when a menu, serve, or domain verb finds an empty database |
 | 2026-10-11 | Active 1.3.0 | Scope numbers and password storage are stated for this product |
+| 2026-10-14 | Active 1.4.0 | Object actions move to the eight record files |
+| 2026-10-14 | Active 1.4.1 | The job record is `requirement-rbac-job-titles` |
+| 2026-10-14 | Active 1.4.2 | Common and lead menus exclude user import and user export |
+| 2026-10-14 | Active 1.4.3 | The login log page layout is `requirement-html-login-log` |
+| 2026-10-14 | Active 1.4.4 | The online page layout is `requirement-html-online` |
+| 2026-10-15 | Active 1.4.5 | The operation log page layout is `requirement-html-oper-log` |
 
 ---
 
-**Last Updated**: 2026-10-11
+**Last Updated**: 2026-10-15
 **Owner**: project maintainers
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

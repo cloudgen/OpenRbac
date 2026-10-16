@@ -17,7 +17,7 @@ class MenuModel:
     the painter supplies the live rows, so a language save repaints them.
     Front rows are rbac, server, system-log, self-management, language,
     and Exit. There is no session row. Numbers 4, 5, and 8 are not rows.
-    Rbac is under 1. Server is under 2 and holds setup, audit, and serve.
+    Rbac is under 1. Server is under 2 and holds setup, audit, serve, and theme.
     System-log is under 3. Self-management is under 6. Language is under 7.
     """
 

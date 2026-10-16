@@ -31,7 +31,7 @@ class Tui:
 
     MenuModel, MenuSession, and MenuPainter live in their own modules.
     The rows are rbac, server, system-log, self-management, language,
-    and Exit. Server holds setup, audit, and serve. There is no session row.
+    and Exit. Server holds setup, audit, serve, and theme. There is no session row.
     Empty arguments ask for an account and a password before that board.
     Domain rows call Desk.
     """
@@ -97,7 +97,7 @@ class Tui:
             "about shows the about page.\n"
             "Sign in before this menu. login, logout, and whoami are typed verbs.\n"
             "rbac, setup, and audit repeat the web pages. serve starts the site.\n"
-            "setup, audit, and serve are on the server board.\n"
+            "setup, audit, serve, and theme are on the server board.\n"
             "This program does not join media or list files in this folder.\n"
             "version-check runs: python -m pip index versions {0}\n"
             "self-update runs: python -m pip install --upgrade {0}\n"
@@ -407,6 +407,41 @@ class Tui:
                     closing="Press a key to choose again.",
                 )
 
+    def _menu_theme(self, screen, model):
+        """Ask for a skin. Esc returns None. Enter selects apex.
+
+        An invalid stored name still shows the eleven choices. The question
+        stays on screen so a number or a name can replace it.
+        """
+        while True:
+            try:
+                lines = list(self.app.desk.settings.theme_lines())
+            except Exception as exc:
+                names = getattr(self.app.desk.settings, "THEMES", ())
+                lines = ["Theme. Enter uses apex."]
+                lines.extend(
+                    "{0} {1}".format(number, name)
+                    for number, name in enumerate(names, start=1)
+                )
+                nxt = getattr(exc, "nxt", "open-rbac theme")
+                lines.append("ERROR: {0}".format(exc))
+                lines.append("Next: {0}".format(nxt))
+            lines.append("Enter uses apex. Esc leaves.")
+            text = self.read_key(screen, model, lines, title="theme")
+            if text is None:
+                return None
+            try:
+                return self.app.desk.settings.apply_theme(text.strip())
+            except Exception as exc:
+                nxt = getattr(exc, "nxt", "open-rbac theme")
+                self.notice(
+                    screen,
+                    model,
+                    ["ERROR: {0}".format(exc), "Next: {0}".format(nxt)],
+                    title="theme",
+                    closing="Press a key to choose again.",
+                )
+
     def open_text_menu(self):
         """
         General Purpose: Use sqlite3 and the default file unless a choice is
@@ -625,8 +660,8 @@ class Tui:
         "menu-add",
         "dept-list",
         "dept-add",
-        "post-list",
-        "post-add",
+        "job-title-list",
+        "job-title-add",
         "config-list",
         "config-set",
         "config-add",
@@ -639,6 +674,7 @@ class Tui:
         "online-list",
         "online-logout",
         "db-engine",
+        "theme",
     )
     ASKS = {
         "login": (("user_name", "user_name", False), ("password", "password", True)),
@@ -671,7 +707,10 @@ class Tui:
             ("path", "path, or empty", False),
         ),
         "dept-add": (("dept_name", "dept_name", False), ("parent_id", "parent_id", False)),
-        "post-add": (("post_code", "post_code", False), ("post_name", "post_name", False)),
+        "job-title-add": (
+            ("job_title_code", "job_title_code", False),
+            ("job_title", "job_title", False),
+        ),
         "config-set": (("config_key", "config_key", False), ("config_value", "config_value", False)),
         "config-add": (
             ("config_key", "config_key", False),
@@ -719,6 +758,8 @@ class Tui:
             return "ERROR: This menu has no command desk.\nNext: open-rbac help"
         if kind == "db-engine":
             return self._menu_engine(screen, model)
+        if kind == "theme":
+            return self._menu_theme(screen, model)
         options = SimpleNamespace()
         fields = self.ASKS.get(kind)
         if fields:

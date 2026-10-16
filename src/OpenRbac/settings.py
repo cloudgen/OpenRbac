@@ -30,6 +30,19 @@ class Settings:
     FILE_NAME = "database"
     SQLITE_NAME = "openrbac.sqlite3"
     ENGINES = ("sqlite3", "mysql")
+    THEMES = (
+        "apex",
+        "admindek",
+        "architectui",
+        "adminty",
+        "analytic",
+        "cryptocurrency",
+        "directory",
+        "finance-saas",
+        "fiori",
+        "hospital",
+        "kero",
+    )
     DEFAULTS = {
         "OPENRBAC_DB_HOST": "127.0.0.1",
         "OPENRBAC_DB_PORT": "3306",
@@ -208,6 +221,117 @@ class Settings:
                 "export HOME or OPENRBAC_HOME",
                 logger=self.logger,
             )
+        self._write_setting("OPENRBAC_DB_ENGINE", engine)
+
+    def theme_names(self) -> str:
+        """General Purpose: The stored theme names, in choice order."""
+        return ", ".join(self.THEMES)
+
+    def theme(self) -> str:
+        """General Purpose: One skin name. An empty setting is apex.
+
+        The settings file is read again so a listener serves a choice stored
+        after that process started.
+        """
+        self._file_cache = None
+        value = self.get("OPENRBAC_THEME").strip().lower().replace(" ", "-")
+        if value == "":
+            return "apex"
+        if value not in self.THEMES:
+            raise SettingsError(
+                "OPENRBAC_THEME must be one of {0}.".format(self.theme_names()),
+                "unset OPENRBAC_THEME, or set one of those names",
+                logger=self.logger,
+            )
+        return value
+
+    def theme_lines(self) -> list:
+        """General Purpose: The theme choices. Enter selects apex.
+
+        An invalid stored name still lists the choices. The web page keeps
+        refusing that name until a choice replaces it.
+        """
+        lines = ["Theme. Enter uses apex."]
+        for number, name in enumerate(self.THEMES, start=1):
+            lines.append("{0} {1}".format(number, name))
+        self._file_cache = None
+        raw = self.get("OPENRBAC_THEME").strip().lower().replace(" ", "-")
+        if raw in self.THEMES:
+            lines.append("Current: {0}".format(raw))
+        elif raw == "":
+            lines.append("Current: apex")
+        else:
+            lines.append("Current: {0} is not a theme. Enter stores apex.".format(raw))
+        return lines
+
+    def theme_sentence(self) -> str:
+        """General Purpose: One sentence naming the stored theme."""
+        return "Theme: {0}.".format(self.theme())
+
+    def parse_theme(self, token: str) -> str:
+        """General Purpose: A number or a name. Enter is apex."""
+        raw = "" if token is None else str(token).strip().lower().replace(" ", "-")
+        if raw == "":
+            return "apex"
+        if raw.isdigit():
+            number = int(raw)
+            if 1 <= number <= len(self.THEMES):
+                return self.THEMES[number - 1]
+        if raw in self.THEMES:
+            return raw
+        raise SettingsError(
+            "The theme must be one of {0}.".format(self.theme_names()),
+            "choose 1 for apex, or a theme name",
+            logger=self.logger,
+        )
+
+    def apply_theme(self, token: str) -> str:
+        """General Purpose: Store one skin. Enter selects apex.
+
+        A set environment value wins and is not overwritten.
+        """
+        raw = "" if token is None else str(token).strip()
+        theme = self.parse_theme(raw)
+        env = self.environ.get("OPENRBAC_THEME", "").strip().lower().replace(" ", "-")
+        if env:
+            if env not in self.THEMES:
+                raise SettingsError(
+                    "OPENRBAC_THEME must be one of {0}.".format(self.theme_names()),
+                    "unset OPENRBAC_THEME, or set one of those names",
+                    logger=self.logger,
+                )
+            if env != theme:
+                if raw == "":
+                    return self.theme_sentence() + " The environment wins."
+                raise SettingsError(
+                    "OPENRBAC_THEME is set in the environment.",
+                    "unset OPENRBAC_THEME to store the choice in the database file",
+                    logger=self.logger,
+                )
+            return self.theme_sentence()
+        self.save_theme(theme)
+        return self.theme_sentence()
+
+    def save_theme(self, theme: str) -> None:
+        """General Purpose: Store the theme in the mode-0600 file. Other lines stay."""
+        theme = "" if theme is None else str(theme).strip().lower().replace(" ", "-")
+        if theme not in self.THEMES:
+            raise SettingsError(
+                "The theme must be one of {0}.".format(self.theme_names()),
+                "choose 1 for apex, or a theme name",
+                logger=self.logger,
+            )
+        self._write_setting("OPENRBAC_THEME", theme)
+
+    def _write_setting(self, key: str, value: str) -> None:
+        """General Purpose: Replace one line in the mode-0600 file. Other lines stay."""
+        folder = self.app_home()
+        if not folder:
+            raise SettingsError(
+                "The home folder is not set.",
+                "export HOME or OPENRBAC_HOME",
+                logger=self.logger,
+            )
         os.makedirs(folder, mode=0o700, exist_ok=True)
         os.chmod(folder, 0o700)
         path = self.database_file()
@@ -226,20 +350,20 @@ class Settings:
             except OSError as exc:
                 raise SettingsError(
                     "The database file could not be read.",
-                    "check the database file, then choose the engine again",
+                    "check the database file, then choose again",
                     logger=self.logger,
                 ) from exc
         found = False
         rewritten = []
         for line in lines:
-            key = line.split("=", 1)[0].strip() if "=" in line else ""
-            if key == "OPENRBAC_DB_ENGINE":
-                rewritten.append("OPENRBAC_DB_ENGINE={0}".format(engine))
+            name = line.split("=", 1)[0].strip() if "=" in line else ""
+            if name == key:
+                rewritten.append("{0}={1}".format(key, value))
                 found = True
             else:
                 rewritten.append(line)
         if not found:
-            rewritten.append("OPENRBAC_DB_ENGINE={0}".format(engine))
+            rewritten.append("{0}={1}".format(key, value))
         payload = ("\n".join(rewritten).rstrip("\n") + "\n").encode("utf-8")
         temporary = path + ".tmp"
         descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)

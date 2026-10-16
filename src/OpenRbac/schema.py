@@ -70,19 +70,19 @@ class Schema:
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """,
         """
-        CREATE TABLE IF NOT EXISTS sys_post (
-          post_id BIGINT NOT NULL AUTO_INCREMENT,
-          post_code VARCHAR(64) NOT NULL,
-          post_name VARCHAR(50) NOT NULL,
-          post_sort INT NOT NULL,
+        CREATE TABLE IF NOT EXISTS sys_job_title (
+          job_title_id BIGINT NOT NULL AUTO_INCREMENT,
+          job_title_code VARCHAR(64) NOT NULL,
+          job_title VARCHAR(50) NOT NULL,
+          job_title_sort INT NOT NULL,
           status CHAR(1) NOT NULL DEFAULT '0',
           create_by VARCHAR(64) NOT NULL DEFAULT '',
           create_time DATETIME DEFAULT NULL,
           update_by VARCHAR(64) NOT NULL DEFAULT '',
           update_time DATETIME DEFAULT NULL,
           remark VARCHAR(500) DEFAULT NULL,
-          PRIMARY KEY (post_id),
-          UNIQUE KEY uk_sys_post_code (post_code)
+          PRIMARY KEY (job_title_id),
+          UNIQUE KEY uk_sys_job_title_code (job_title_code)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """,
         """
@@ -138,10 +138,10 @@ class Schema:
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """,
         """
-        CREATE TABLE IF NOT EXISTS sys_user_post (
+        CREATE TABLE IF NOT EXISTS sys_user_job_title (
           user_id BIGINT NOT NULL,
-          post_id BIGINT NOT NULL,
-          PRIMARY KEY (user_id, post_id)
+          job_title_id BIGINT NOT NULL,
+          PRIMARY KEY (user_id, job_title_id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """,
         """
@@ -285,15 +285,22 @@ class Schema:
         (1003, "User edit", 100, 3, "", "F", "system:user:edit"),
         (1004, "User remove", 100, 4, "", "F", "system:user:remove"),
         (1005, "Reset password", 100, 5, "", "F", "system:user:resetPwd"),
+        (1006, "User import", 100, 6, "", "F", "system:user:import"),
+        (1007, "User export", 100, 7, "", "F", "system:user:export"),
         (101, "Role", 1, 2, "role", "C", "system:role:list"),
         (1011, "Role query", 101, 1, "", "F", "system:role:query"),
         (1012, "Role edit", 101, 2, "", "F", "system:role:edit"),
+        (1013, "Role add", 101, 3, "", "F", "system:role:add"),
+        (1014, "Role remove", 101, 4, "", "F", "system:role:remove"),
+        (1015, "Role export", 101, 5, "", "F", "system:role:export"),
         (102, "Menu", 1, 3, "menu", "C", "system:menu:list"),
         (1021, "Menu add", 102, 1, "", "F", "system:menu:add"),
+        (1022, "Menu edit", 102, 2, "", "F", "system:menu:edit"),
+        (1023, "Menu remove", 102, 3, "", "F", "system:menu:remove"),
         (103, "Department", 1, 4, "dept", "C", "system:dept:list"),
         (1031, "Department add", 103, 1, "", "F", "system:dept:add"),
-        (104, "Post", 1, 5, "post", "C", "system:post:list"),
-        (1041, "Post add", 104, 1, "", "F", "system:post:add"),
+        (104, "Job Titles", 1, 5, "job-titles", "C", "system:jobtitle:list"),
+        (1041, "add a job titles", 104, 1, "", "F", "system:jobtitle:add"),
         (2, "Setup", 0, 2, "setup", "M", ""),
         (110, "Parameter", 2, 1, "config", "C", "system:config:list"),
         (1101, "Parameter edit", 110, 1, "", "F", "system:config:edit"),
@@ -357,9 +364,60 @@ class Schema:
         row = self.store.query_one("SELECT COUNT(*) AS n FROM sys_user")
         count = 0 if row is None else int(row["n"])
         if count:
+            self._copy_posts()
             return "present"
         self._seed()
         return "seeded"
+
+    def _table_exists(self, name) -> bool:
+        """General Purpose: Whether that table is already in this database."""
+        if self.store.settings.engine() == "sqlite3":
+            found = self.store.query_one(
+                "SELECT name FROM sqlite_master WHERE type = 'table' AND name = %s",
+                (name,),
+            )
+        else:
+            found = self.store.query_one(
+                """
+                SELECT TABLE_NAME AS name FROM information_schema.TABLES
+                WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = %s
+                """,
+                (name,),
+            )
+        return found is not None
+
+    def _copy_posts(self) -> None:
+        """Copy sys_post into sys_job_title when the new table is empty.
+
+        post_id, post_code, post_name, and post_sort become job_title_id,
+        job_title_code, job_title, and job_title_sort. The old table stays.
+        """
+        if self._table_exists("sys_post"):
+            titles = self.store.query_one("SELECT COUNT(*) AS n FROM sys_job_title")
+            if titles is not None and int(titles["n"]) == 0:
+                self.store.execute(
+                    """
+                    INSERT INTO sys_job_title
+                      (job_title_id, job_title_code, job_title, job_title_sort, status,
+                       create_by, create_time, update_by, update_time, remark)
+                    SELECT post_id, post_code, post_name, post_sort, status,
+                           create_by, create_time, update_by, update_time, remark
+                    FROM sys_post
+                    """
+                )
+        if not self._table_exists("sys_user_post"):
+            return
+        links = self.store.query_one("SELECT COUNT(*) AS n FROM sys_user_job_title")
+        titles = self.store.query_one("SELECT COUNT(*) AS n FROM sys_job_title")
+        if links is None or titles is None:
+            return
+        if int(links["n"]) == 0 and int(titles["n"]) > 0:
+            self.store.execute(
+                """
+                INSERT INTO sys_user_job_title (user_id, job_title_id)
+                SELECT user_id, post_id FROM sys_user_post
+                """
+            )
 
     def _seed(self) -> None:
         passwords = self.passwords
@@ -402,17 +460,17 @@ class Schema:
                     """,
                     (item[0], item[1], item[2], item[3], item[4], now, now),
                 )
-            posts = (
+            job_titles = (
                 (1, "ceo", "Chief", 1),
                 (2, "se", "Engineer", 2),
                 (3, "hr", "People", 3),
                 (4, "user", "Staff", 4),
             )
-            for item in posts:
+            for item in job_titles:
                 run(
                     """
-                    INSERT INTO sys_post
-                      (post_id, post_code, post_name, post_sort, status, create_by, create_time)
+                    INSERT INTO sys_job_title
+                      (job_title_id, job_title_code, job_title, job_title_sort, status, create_by, create_time)
                     VALUES (%s, %s, %s, %s, '0', 'schema', %s)
                     """,
                     (item[0], item[1], item[2], item[3], now),

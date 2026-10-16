@@ -5,7 +5,7 @@
   <table class="table table-bordered table-striped">
   <thead>
   <tr>
-    <th><input type="checkbox" aria-label="Select all on page" class="h-4 w-4 rounded border-input"></th>
+    <th class="table-check-col"><input class="table-check h-4 w-4 rounded border-input" type="checkbox" aria-label="check all"></th>
     <th>User</th>
     <th data-prop="dept_name">Department</th>
     <th data-prop="phone">Phone</th>
@@ -16,7 +16,7 @@
   </thead>
   <tbody>
   <tr v-for="row in rows">
-    <td><input type="checkbox" aria-label="Select row" class="h-4 w-4 rounded border-input" :value="row.user_id"></td>
+    <td class="table-check-col"><input type="checkbox" aria-label="Select row" class="table-check h-4 w-4 rounded border-input" :value="row.user_id"></td>
     <td>
       <div class="user-person">
         <span class="user-person-mark">{{ row.initials }}</span>

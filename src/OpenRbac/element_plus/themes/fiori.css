@@ -1,0 +1,25 @@
+/* OpenRbac skin: Fiori.
+   requirement-html-theme.
+   This sheet sets shell colors for that name.
+   It is not a commercial template. Layout stays in /apex.css.
+*/
+:root {
+  --sidebar: #f5f6f7;
+  --sidebar-foreground: #32363a;
+  --sidebar-border: #d9dde3;
+  --header: #1565c0;
+  --header-foreground: #ffffff;
+  --header-border: #0d47a1;
+  --canvas: #f7f7f7;
+  --panel: #ffffff;
+  --primary: #1565c0;
+  --primary-foreground: #ffffff;
+  --background: #f7f7f7;
+  --foreground: #32363a;
+  --card: #ffffff;
+  --muted: #eef1f4;
+  --muted-foreground: #556070;
+  --border: #d9dde3;
+  --input: #c5ccd6;
+  --ring: #1565c0;
+}

@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-python-oop.md
-**Status**: Active (Version 1.1.3)
+**Status**: Active (Version 1.2.0)
 **Area**: python
 **Key**: `requirement-python-oop`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -44,6 +44,8 @@ Each module defines one class. An error type may sit beside the class that raise
 | `session_file.py` | `SessionFile` |
 | `local_login.py` | `LocalLogin` |
 | `web_app.py` | `WebApp` |
+| `html_template.py` | `HtmlTemplate` |
+| `element_plus/<tag>.py` | One Element Plus component class, named by `requirement-html-element-plus` |
 
 ## 3. Normative rules
 
@@ -68,6 +70,7 @@ Each module defines one class. An error type may sit beside the class that raise
 | 2026-10-11 | Active 1.1.1 | Version string 1.0.2. Store still one class for both engines |
 | 2026-10-11 | Active 1.1.2 | Version string 1.0.4. Class `LocalLogin` |
 | 2026-10-14 | Active 1.1.3 | Version string 1.0.5 |
+| 2026-10-14 | Active 1.2.0 | `HtmlTemplate` and one class per Element Plus component |
 
 ---
 
